@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 
 public enum EnemyState
@@ -11,12 +12,12 @@ public class Enemy : MonoBehaviour
     [Tooltip("How fast the enemy approaches the player, in \"meters\" per second")]
     [SerializeField] private float walkingSpeed;
     
-    [Tooltip("Distance at which the enemy starts attacking.")]
+    [Tooltip("When the enemy is this close to the player, it will start attacking.")]
     [SerializeField] private float attackingDistance;
     
     private BeltCharacter beltChar;
-    private EnemyState currentState = EnemyState.Approaching;
-    
+    StateMachine<EnemyState> stateMachine = new();
+
     #region Approaching-State Values
     /// <summary>
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
@@ -36,32 +37,42 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         this.GetComponentOrError(out beltChar);
-        SetState(this.currentState); // initialize state
+        stateMachine.AddState(EnemyState.Approaching, EnterApproaching, UpdateApproaching, null);
+        stateMachine.AddState(EnemyState.Attacking, EnterAttacking, UpdateAttacking, null);
+        stateMachine.AddState(EnemyState.Hurt, EnterHurt, UpdateHurt, null);
+        stateMachine.FinalizeAndSetState(EnemyState.Approaching);
     }
 
     private void Update()
     {
-        switch (currentState)
-        {
-            case EnemyState.Approaching:
-                UpdateApproaching();
-                break;
-            case EnemyState.Attacking:
-                UpdateAttacking();
-                break;
-            case EnemyState.Hurt:
-                UpdateHurt();
-                break;
-        }
+        stateMachine.Update();
     }
 
     void EnterApproaching()
     {
-        // TODO: get players by the Player component, and sort them for the nearest.
-        approachingCurrentTarget = GameObject.FindWithTag("Player").GetComponent<BeltCharacter>();
+        // TODO: get players by the Player component instead of tag "Player"
+        var playerBeltChars =
+            GameObject.FindGameObjectsWithTag("Player")
+            .Select(x => x.GetComponent<BeltCharacter>())
+            .Where(x => x != null)
+            .ToList();
+        // find closest player (because list.MinBy only exists in future version >_<)
+        BeltCharacter nearest = null;
+        float nearestDist = float.MaxValue;
+        foreach (var b in playerBeltChars)
+        {
+            var dist = Vector3.Distance(b.internalPosition, this.beltChar.internalPosition);
+            if (dist < nearestDist)
+            {
+                nearest = b;
+                nearestDist = dist;
+            }
+        }
+
+        approachingCurrentTarget = nearest;
     }
     
-    void UpdateApproaching()
+    EnemyState UpdateApproaching()
     {
         var walkTo = approachingCurrentTarget.internalPosition;
         walkTo.y = this.beltChar.internalPosition.y;
@@ -73,8 +84,10 @@ public class Enemy : MonoBehaviour
 
         if (Vector3.Distance(beltChar.internalPosition, walkTo) < attackingDistance)
         {
-            SetState(EnemyState.Attacking);
+            return EnemyState.Attacking;
         }
+
+        return stateMachine.currentState;
     }
 
     void EnterAttacking()
@@ -83,17 +96,17 @@ public class Enemy : MonoBehaviour
         print("Enemy: WHAM!!");
     }
     
-    void UpdateAttacking()
+    EnemyState UpdateAttacking()
     {
         attackingTimeLeft -= Time.deltaTime;
-        if (attackingTimeLeft <= 0) SetState(EnemyState.Approaching);
+        if (attackingTimeLeft <= 0) return EnemyState.Approaching;
+        else return stateMachine.currentState;
     }
 
     public void Hurt(float damage)
     {
         print($"health down to {100 - damage}");
-        // health -= damage
-        SetState(EnemyState.Hurt);
+        stateMachine.SetState(EnemyState.Hurt);
     }
     
     void EnterHurt()
@@ -101,28 +114,10 @@ public class Enemy : MonoBehaviour
         print("Enemy: Ouch!!");
     }
     
-    void UpdateHurt()
+    EnemyState UpdateHurt()
     {
         hurtTimeLeft -= Time.deltaTime;
-        if (hurtTimeLeft <= 0) SetState(EnemyState.Approaching);
-    }
-
-    void SetState(EnemyState newState)
-    {
-        currentState = newState;
-        switch (newState)
-        {
-            case EnemyState.Approaching:
-                EnterApproaching();
-                break;
-            case EnemyState.Attacking:
-                EnterAttacking();
-                break;
-            case EnemyState.Hurt:
-                EnterHurt();
-                break;
-            default:
-                throw new Exception($"state ({newState}) doesn't exist :<");
-        }
+        if (hurtTimeLeft <= 0) return EnemyState.Approaching;
+        else return stateMachine.currentState;
     }
 }
