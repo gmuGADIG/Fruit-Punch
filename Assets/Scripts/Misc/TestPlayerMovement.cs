@@ -3,48 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class TestPlayerMovement : MonoBehaviour
 {
-    public Rigidbody2D rb;
     public float moveSpeed = 5f;
-    public TestActions playerControls;
 
     public Vector2 moveDir = Vector2.zero;
     private InputAction move;
     private InputAction fire;
 
-    private void Awake()
-    {
-        playerControls = new TestActions();
-    }
+    PlayerInput input;
+
     // Start is called before the first frame update
     void Start()
     {
-        move = playerControls.Player.Move;
-        move.Enable();
+        TryGetComponent(out input);
     }
 
-    private void OnEnable()
-    {
-        move = playerControls.Player.Move;
-        move.Enable();
-    }
+    void FixedUpdate() {
+        var leftRight = input.actions["gameplay/Left/Right"];
+        var upDown = input.actions["gameplay/Up/Down"];
+        var moveDir = Vector3.ClampMagnitude(new Vector3(
+            leftRight.ReadValue<float>(),
+            upDown.ReadValue<float>(),
+            0
+        ), 1);
 
-    private void FixedUpdate()
-    {
-
-        Debug.Log("X: " + moveDir.x + "Y: " + moveDir.y);
-        rb.velocity = new Vector2(moveDir.x * moveSpeed, moveDir.y * moveSpeed);
-    }
-
-    private void OnDisable()
-    {
-        move.Disable();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        moveDir = move.ReadValue<Vector2>();
+        transform.position += moveDir * Time.fixedDeltaTime * 2f * moveSpeed;
     }
 }
