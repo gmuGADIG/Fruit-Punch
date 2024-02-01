@@ -7,18 +7,11 @@ public class TestInputPlayerSpawner : MonoBehaviour
 {
     public GameObject prefab;
 
-    void Start()
-    {
+    public void SpawnPlayer(JoinContext context) {
         PlayerInput.Instantiate(
-            prefab, 
-            controlScheme: "KeyboardLeft", 
-            pairWithDevice: Keyboard.current
-        );
-
-        PlayerInput.Instantiate(
-            prefab, 
-            controlScheme: "KeyboardRight", 
-            pairWithDevice: Keyboard.current
+            prefab,
+            controlScheme: context.ControlScheme,
+            pairWithDevice: context.InputDevice
         );
     }
 }
