@@ -69,7 +69,7 @@ public class BeltCharacter : MonoBehaviour
             .Where(SimilarZPosition)
             .ToList();
 
-        /* True if the collider is in a similar z-position (which requires it either has a BeltController or HurtBox component) */
+        /* True if the belt character is in a similar z-position */
         bool SimilarZPosition(BeltCharacter beltChar)
         {
             var zDistance = Mathf.Abs(beltChar.internalPosition.z - this.internalPosition.z);
