@@ -12,7 +12,7 @@ using UnityEngine;
 [ExecuteAlways]
 public class BeltCharacter : MonoBehaviour
 {
-    public static float zMin = -1, zMax = 0;
+    public static float zMin = -1.5f, zMax = 0;
     
     /// <summary>
     /// Moves the real position by this much for each internal z movement. <br/>
