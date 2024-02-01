@@ -26,16 +26,9 @@ public class PauseScreenButtons : MonoBehaviour
 
     public void RestartLevel() //restarts level
     {
-        for(int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            if(SceneManager.GetSceneAt(i).name != "PauseScreen")
-            {
-                SceneManager.LoadSceneAsync(SceneManager.GetSceneAt(i).name);
-            }
-            Time.timeScale = 1.0f;
-            SceneManager.UnloadSceneAsync("PauseScreen");
-            Debug.Log("RestartedLevel");
-        }
+        Scene currScene = SceneManager.GetActiveScene();
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(currScene.buildIndex);
     }
 
     public void MainMenu() //returns to mainMenu
