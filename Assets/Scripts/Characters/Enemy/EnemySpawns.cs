@@ -12,6 +12,10 @@ public class EnemySpawns : MonoBehaviour
 
     public float spawnRate = 2.0f;
 
+    [Tooltip("Should the enemies be spawning")]
+    [SerializeField]
+    private bool isSpawning = true;
+
     private enum AuraType{Red, Blue, Yellow, Green};
 
 
@@ -22,12 +26,21 @@ public class EnemySpawns : MonoBehaviour
 
     private int spawnsRemaining;
 
+    public void StartSpawningEnemies()
+    {
+        isSpawning = true;
+    }
+
     public void SpawnEnemy()
     {
 
         GameObject enemy = Instantiate(testEnemy, transform.position, Quaternion.identity);
 
         spawnsRemaining -= 1;
+        if (spawnsRemaining <= 0)
+        {
+            isSpawning = false;
+        }
     }
 
 
@@ -42,10 +55,11 @@ public class EnemySpawns : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (spawnsRemaining <= 0)
+        if (!isSpawning)
         {
             return;
         }
+
         if (timer > 0.0f)
         {
             timer -= Time.deltaTime;
@@ -56,5 +70,10 @@ public class EnemySpawns : MonoBehaviour
 
             timer = spawnRate;
         }
+    }
+
+    private void OnDrawGizmos()
+    {
+
     }
 }

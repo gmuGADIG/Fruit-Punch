@@ -10,14 +10,21 @@ using UnityEngine.Events;
 public class CameraTrigger : MonoBehaviour
 {
     [Tooltip("Triggers when this object is inside the camera bounds.")]
-    public UnityEvent OnTrigger;
+    [SerializeField]
+    private UnityEvent OnTrigger;
 
     private bool hasFired = false;
+
+    #region Debug Properties
+    // Leaving these here if we want a more sophisticated gizmo later. Right now it's just the icon.
+    //private static Color gizmoColor = Color.red;
+    //private static float gizmoSize = 0.1f;
+    #endregion
 
     // Start is called before the first frame update
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -37,5 +44,11 @@ public class CameraTrigger : MonoBehaviour
     {
         if (cam == null) return false;
         return cam.OrthographicBoundingRect().Contains(transform.position);
+    }
+
+    private void OnDrawGizmos()
+    {
+        //Gizmos.color = gizmoColor;
+        //Gizmos.DrawSphere(transform.position, gizmoSize);
     }
 }

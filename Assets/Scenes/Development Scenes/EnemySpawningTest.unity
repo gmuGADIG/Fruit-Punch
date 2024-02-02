@@ -201,7 +201,7 @@ Transform:
   m_GameObject: {fileID: 205896738}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.11, y: -3.71, z: 0}
+  m_LocalPosition: {x: 11.88, y: -3.58, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -266,7 +266,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -274,7 +274,7 @@ SpriteRenderer:
   m_Size: {x: 0.2, y: 0.2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!4 &738905133
@@ -286,7 +286,7 @@ Transform:
   m_GameObject: {fileID: 738905131}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.84, y: -0.45, z: 0}
+  m_LocalPosition: {x: 10.81, y: -0.21, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -306,19 +306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   OnTrigger:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2008290479}
-        m_TargetAssemblyTypeName: EnemySpawns, Assembly-CSharp
-        m_MethodName: SpawnEnemy
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1 &924375106
 GameObject:
   m_ObjectHideFlags: 0
@@ -437,7 +425,7 @@ Transform:
   m_GameObject: {fileID: 1426390666}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 12.75, y: 1.27, z: 0}
+  m_LocalPosition: {x: 10.41, y: -2.52, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -460,7 +448,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2008290479}
         m_TargetAssemblyTypeName: EnemySpawns, Assembly-CSharp
-        m_MethodName: SpawnEnemy
+        m_MethodName: StartSpawningEnemies
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -502,6 +490,7 @@ MonoBehaviour:
   enemyCountTotal: 37
   burstSpawnCount: 1
   spawnRate: 5.31
+  isSpawning: 1
   testEnemy: {fileID: 205896738}
 --- !u!4 &2008290480
 Transform:
