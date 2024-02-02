@@ -20,4 +20,17 @@ public static class Utils
         if (obj.TryGetComponent(out result)) return;
         else throw new Exception($"`{obj.name}` is missing component of type `{typeof(T).Name}`!");
     }
+
+    /// <summary>
+    /// Returns a Rect with world space coordinates of the edges of the camera's view.
+    /// Throws an error if the camera is not orthographic.
+    /// </summary>
+    public static Rect OrthographicBoundingRect(this Camera cam)
+    {
+        if (cam.orthographic == false) throw new Exception("Camera must be orthographic to get 2d bounds.");
+        float screenAspect = (float)Screen.width / (float)Screen.height;
+        float cameraHeight = cam.orthographicSize * 2;
+        float cameraWidth = cameraHeight * screenAspect;
+        return new Rect(cam.transform.position.x - cameraWidth / 2, cam.transform.position.y - cameraHeight / 2, cameraWidth, cameraHeight);
+    }
 }
