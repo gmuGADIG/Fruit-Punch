@@ -40,16 +40,6 @@ public class TestPlayerMovement : MonoBehaviour
     public void OnDebugRebindControl() {
         Debug.Log("DebugRebindControl Pressed!");
 
-        var index = strike.action.bindings
-            .Select((b, index) => (Binding: b, Index: index))
-            .Where(t => t.Binding.groups == input.currentControlScheme)
-            .Select(t => t.Index)
-            .First();
-        
-        var bindings = strike.action.bindings;
-        
-        Debug.Log($"index: {index}");
-
         var actionIter = input.actions.actionMaps.Aggregate(
             new List<InputAction>().AsEnumerable(),
             (aux, next) => aux.Concat(next).Concat(next)
@@ -60,10 +50,27 @@ public class TestPlayerMovement : MonoBehaviour
 
         action.Disable();
         action.PerformInteractiveRebinding()
+            // .OnApplyBinding((operation, bindingPath) => {
+            //     var arr = InputConfigManager.Instance.Rebindings;
+            //     arr.Add(new Rebinding {
+            //         Device = input.devices[0],
+            //         ControlScheme = input.currentControlScheme,
+            //         ActionId = action.id,
+            //         BindingPath = bindingPath
+            //     });
+            // })
             .OnComplete(operation => {
                 Debug.Log("Rebinding complete!");
 
                 action.Enable();
+                var bindingPath = action.bindings[0].effectivePath;
+                var arr = InputConfigManager.Instance.Rebindings;
+                arr.Add(new Rebinding {
+                    Device = input.devices[0],
+                    ControlScheme = input.currentControlScheme,
+                    ActionId = action.id,
+                    BindingPath = bindingPath
+                });
 
                 operation.Dispose(); // manual memory management: c# is not a real language
             })
