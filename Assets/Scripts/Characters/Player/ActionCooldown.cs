@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ActionCooldown : MonoBehaviour
 {
-    public float cooldownTime = 3;
+    public float cooldownTime = 3; 
 
     private float nextFireTime = 0;
 
