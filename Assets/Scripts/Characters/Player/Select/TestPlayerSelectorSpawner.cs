@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 public class TestPlayerSelectorSpawner : MonoBehaviour
 {
     public GameObject prefab;
+    public GameObject blankPOneSelector;
+    public GameObject blankPTwoSelector;
     public void ConnectPlayer(JoinContext context)
     {
         PlayerInput.Instantiate(
@@ -13,5 +15,10 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
             controlScheme: context.ControlScheme,
             pairWithDevice: context.InputDevice
         );
+
+        if (blankPOneSelector != null)
+            Destroy(blankPOneSelector);
+        else if (blankPTwoSelector != null)
+            Destroy(blankPTwoSelector);
     }
 }
