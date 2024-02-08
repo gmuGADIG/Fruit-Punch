@@ -15,10 +15,15 @@ public class TestPlayerMovement : MonoBehaviour
 
     PlayerInput input;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         TryGetComponent(out input);
+    }
+
+    void Update() {
+        var jumpAction = input.actions["gameplay/Jump"];
+        if (jumpAction.WasPerformedThisFrame()) {
+            Debug.Log("Player jumped!");
+        }
     }
 
     void FixedUpdate() {
@@ -40,40 +45,10 @@ public class TestPlayerMovement : MonoBehaviour
     public void OnDebugRebindControl() {
         Debug.Log("DebugRebindControl Pressed!");
 
-        var actionIter = input.actions.actionMaps.Aggregate(
-            new List<InputAction>().AsEnumerable(),
-            (aux, next) => aux.Concat(next).Concat(next)
+        InputConfigManager.StartRebinding(
+            input,
+            strike.action.id,
+            () => Debug.Log("Rebinding complete!")
         );
-        var action = actionIter
-            .Where(action => action.id == strike.action.id)
-            .First();
-
-        action.Disable();
-        action.PerformInteractiveRebinding()
-            // .OnApplyBinding((operation, bindingPath) => {
-            //     var arr = InputConfigManager.Instance.Rebindings;
-            //     arr.Add(new Rebinding {
-            //         Device = input.devices[0],
-            //         ControlScheme = input.currentControlScheme,
-            //         ActionId = action.id,
-            //         BindingPath = bindingPath
-            //     });
-            // })
-            .OnComplete(operation => {
-                Debug.Log("Rebinding complete!");
-
-                action.Enable();
-                var bindingPath = action.bindings[0].effectivePath;
-                var arr = InputConfigManager.Instance.Rebindings;
-                arr.Add(new Rebinding {
-                    Device = input.devices[0],
-                    ControlScheme = input.currentControlScheme,
-                    ActionId = action.id,
-                    BindingPath = bindingPath
-                });
-
-                operation.Dispose(); // manual memory management: c# is not a real language
-            })
-            .Start();
     }
 }

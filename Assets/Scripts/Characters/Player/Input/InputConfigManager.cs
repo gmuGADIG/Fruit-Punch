@@ -56,4 +56,42 @@ public class InputConfigManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    /// <summary>
+    /// Rebinds an action for a player input. <br/>
+    /// This function will wait for user input and rebind the action to said 
+    /// user input. <br/>
+    /// This will also create a record of the rebind in the 
+    /// InputConfigManager's Rebindings array for the device the player input 
+    /// is using. It will call afterRebinding after the action is rebound.
+    /// </summary>
+    /// <param name="input">The PlayerInput in question.</param>
+    /// <param name="actionId">The action to rebind.</param>
+    /// <param name="afterRebinding">Callback for after the action has been rebound.</param>
+    public static void StartRebinding(
+            PlayerInput input, 
+            Guid actionId,
+            Action? afterRebinding
+    ) {
+        var action = input.PlayerInputActionOfActionId(actionId);
+        action.Disable();
+        action.PerformInteractiveRebinding()
+            .OnComplete(operation => {
+                action.Enable();
+                // note: all of the bindings for this action were set
+                // to the new binding path, hence why action.bindings[0] works
+                var bindingPath = action.bindings[0].effectivePath;
+                Instance.Rebindings.Add(new Rebinding {
+                    Device = input.devices[0],
+                    ControlScheme = input.currentControlScheme,
+                    ActionId = action.id,
+                    BindingPath = bindingPath
+                });
+
+                operation.Dispose(); // manual memory management: c# is not a real language
+
+                afterRebinding?.Invoke();
+            })
+            .Start();
+    }
 }
