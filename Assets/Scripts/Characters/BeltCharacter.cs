@@ -12,7 +12,7 @@ using UnityEngine;
 [ExecuteAlways]
 public class BeltCharacter : MonoBehaviour
 {
-    public static float zMin = -1, zMax = 0;
+    public static float zMin = -1.5f, zMax = 0;
     
     /// <summary>
     /// Moves the real position by this much for each internal z movement. <br/>
@@ -69,7 +69,7 @@ public class BeltCharacter : MonoBehaviour
             .Where(SimilarZPosition)
             .ToList();
 
-        /* True if the collider is in a similar z-position (which requires it either has a BeltController or HurtBox component) */
+        /* True if the belt character is in a similar z-position */
         bool SimilarZPosition(BeltCharacter beltChar)
         {
             var zDistance = Mathf.Abs(beltChar.internalPosition.z - this.internalPosition.z);
