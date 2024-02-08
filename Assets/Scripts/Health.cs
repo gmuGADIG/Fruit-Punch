@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,13 +20,12 @@ Magic of Events Implemented by Justin from designed code.
 public class Health : MonoBehaviour
 {
 
-    [SerializedField]
+    [SerializeField]
     public float maxHealth = 100;
-    [InspectorReadOnly]
+    [ReadOnlyInInspector]
     private float currentHealth;
 
     private bool isPlayer;
-    private HealthBar healthBar;
 
     /// <summary>
     /// Invoked when this character's health reaches zero.
@@ -36,13 +36,17 @@ public class Health : MonoBehaviour
     /// Invoked with the amount of damage and knockback whenever hurt.
     /// </summary>
     private event Action<float, Vector2> onHurt;
+
+    /// <summary>
+    /// Invoked when the player health is changed to update the health bar.
+    /// </summary>
+    private event Action onPlayerHealth;
     
     void Start()
     {
         currentHealth = maxHealth;
         if(this.tag == "Player"){
             isPlayer = true;
-            healthBar = gameObject.getComponent<HealthBar>();
         } else
         {
             isPlayer = false;
@@ -61,7 +65,10 @@ public class Health : MonoBehaviour
         {
             currentHealth -= amount;
         }
-        healthBar.UpdateHealthBar();
+        if (isPlayer)
+        {
+            onPlayerHealth?.Invoke();
+        }
         onHurt.Invoke(amount, knockback);
         if (currentHealth <= 0)
         {
@@ -71,7 +78,10 @@ public class Health : MonoBehaviour
 
     public void Heal(float amount)
     {
-        healthBar.UpdateHealthBar();
+        if (isPlayer)
+        {
+            onPlayerHealth?.Invoke();
+        }
         currentHealth = Mathf.MoveTowards(currentHealth, maxHealth, amount);
     }
 
