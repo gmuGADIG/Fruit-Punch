@@ -39,4 +39,17 @@ public static class Utils
             .Where(action => action.id == actionId)
             .First();
     }
+
+    /// <summary>
+    /// Returns a Rect with world space coordinates of the edges of the camera's view.
+    /// Throws an error if the camera is not orthographic.
+    /// </summary>
+    public static Rect OrthographicBoundingRect(this Camera cam)
+    {
+        if (cam.orthographic == false) throw new Exception("Camera must be orthographic to get 2d bounds.");
+        float screenAspect = (float)Screen.width / (float)Screen.height;
+        float cameraHeight = cam.orthographicSize * 2;
+        float cameraWidth = cameraHeight * screenAspect;
+        return new Rect(cam.transform.position.x - cameraWidth / 2, cam.transform.position.y - cameraHeight / 2, cameraWidth, cameraHeight);
+    }
 }
