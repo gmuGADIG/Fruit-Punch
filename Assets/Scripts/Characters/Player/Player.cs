@@ -12,7 +12,7 @@ public enum PlayerState
 
 /// <summary>
 /// Playable character script. <br/>
-/// Handled through a state machine. For specific state code, see functions like NormalUpdate, JumpingEnter, etc.
+/// To get a good idea of how everything works, see how the state machine is set up in Start.
 /// </summary>
 [RequireComponent(typeof(BeltCharacter)), RequireComponent(typeof(Animator))]
 public class Player : MonoBehaviour
@@ -38,19 +38,27 @@ public class Player : MonoBehaviour
     [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
     [SerializeField] float gravity;
 
-    [Header("Animation Details")]
-    [SerializeField] AnimationClip strike1Clip;
-    [SerializeField] AnimationClip strike2Clip;
-    [SerializeField] AnimationClip strike3Clip;
+    float strike1Length = -1;
+    float strike2Length = -1;
+    float strike3Length = -1;
     
     void Start()
     {
+        // gett components
         this.GetComponentOrError(out beltChar);
         this.GetComponentOrError(out anim);
 
-        if (strike1Clip == null || strike2Clip == null || strike3Clip == null)
-            throw new Exception("Null strike animation clips!");
+        // get animation lengths
+        foreach (var clip in anim.runtimeAnimatorController.animationClips)
+        {
+            if (clip.name == "PlayerStrike1") strike1Length = clip.length;
+            else if (clip.name == "PlayerStrike2") strike2Length = clip.length;
+            else if (clip.name == "PlayerStrike3") strike3Length = clip.length;
+        }
+        if (strike1Length < 0 || strike2Length < 0 || strike3Length < 0)
+            throw new Exception("Animation clips weren't found!");
 
+        // set up state machine
         stateMachine = new StateMachine<PlayerState>();
         stateMachine.AddState(PlayerState.Normal, NormalEnter, NormalUpdate, null);
         stateMachine.AddState(PlayerState.Jumping, JumpEnter, JumpUpdate, null);
@@ -76,11 +84,16 @@ public class Player : MonoBehaviour
             targetVel,
             runAccel * Time.deltaTime * controlMult
         );
+
+        // flip according to direction
+        if (targetVel.x < 0) transform.localScale = new Vector3(-1, 1, 1);
+        else if (targetVel.x > 0) transform.localScale = new Vector3(1, 1, 1);
     }
 
     void NormalEnter()
     {
-        anim.SetTrigger("Idle");
+        print("returning to normal");
+        anim.Play("Idle");
     }
 
     PlayerState NormalUpdate()
@@ -98,7 +111,7 @@ public class Player : MonoBehaviour
 
     void JumpEnter()
     {
-        anim.SetTrigger("Jump");
+        // anim.Play("Jump");
         velocity += Vector3.up * jumpSpeed;
     }
 
@@ -119,8 +132,9 @@ public class Player : MonoBehaviour
 
     void StrikeEnter(int strikeState)
     {
+        print($"Strike{strikeState}");
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
-        anim.SetTrigger($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
+        anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
     }
 
     PlayerState StrikeUpdate(int strikeState)
@@ -134,10 +148,11 @@ public class Player : MonoBehaviour
             if (strikeState == 2) return PlayerState.Strike3;
         }
 
-        var animLengths = new[] { strike1Clip.length, strike2Clip.length, strike3Clip.length };
+        var animLengths = new[] { strike1Length, strike2Length, strike3Length };
         var thisAnimLength = animLengths[strikeState - 1];
         if (stateMachine.timeInState >= thisAnimLength)
         {
+            print($"{stateMachine.timeInState} >= {thisAnimLength}");
             return PlayerState.Normal;
         }
 
