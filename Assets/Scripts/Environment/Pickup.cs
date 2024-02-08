@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using UnityEngine;
 
 /// <summary>
@@ -14,13 +15,27 @@ public class Pickup : MonoBehaviour
     [SerializeField]
     private int healthRestore = 20;
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    [ReadOnlyInInspector]
+    private BeltCharacter beltCharacter;
+
+    private List<BeltCharacter> collisions;
+
+    private void Start()
     {
-        Health health = collision.GetComponent<Health>();
-        if(health != null)
+        beltCharacter = gameObject.GetComponent<BeltCharacter>();
+    }
+
+    private void Update()
+    {
+        collisions = beltCharacter.GetOverlappingBeltCharacters(gameObject.GetComponent<Collider2D>(), Physics2D.AllLayers);
+        foreach(BeltCharacter i in collisions)
         {
-            health.Heal(healthRestore);
-            Destroy(gameObject);
+            Health health = i.GetComponent<Health>();
+            if (health != null && i.tag == "Player")
+            {
+                health.Heal(healthRestore);
+                Destroy(gameObject);
+            }
         }
     }
 }
