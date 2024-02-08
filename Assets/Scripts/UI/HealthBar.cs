@@ -23,6 +23,19 @@ public class HealthBar : MonoBehaviour
     }
 
     /// <summary>
+    /// adds listener from Health script to update the health bar
+    /// </summary>
+    private void OnEnable()
+    {
+        healthScript.onPlayerHealth.AddListener(UpdateHealthBar);
+    }
+
+    private void OnDisable()
+    {
+        healthScript.onPlayerHealth.RemoveListener(UpdateHealthBar);
+    }
+
+    /// <summary>
     /// divides current health and max health and return the percentage(float)
     /// </summary>
     /// <param name="playerHealth"></param>
