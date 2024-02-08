@@ -1,18 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TestPlayerSelector : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public GameObject playerOneSelector;
+    public GameObject playerTwoSelector;
+    public bool playerOneJoined = false;
+    public bool playerTwoJoined = false;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
