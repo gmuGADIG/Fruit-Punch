@@ -21,7 +21,8 @@ public class StateMachine<TState>
 where TState : struct, Enum
 {
     public TState currentState { get; private set; }
-    public bool setupDone;
+    public float timeInState { get; private set; }
+    private bool setupDone;
     Dictionary<TState, StateCallbacks<TState>> callbacks = new();
 
     /// <summary>
@@ -71,6 +72,7 @@ where TState : struct, Enum
         if (callbacks.ContainsKey(newState) == false) Debug.LogError($"Attempting to set state `{newState}`, but no callbacks exist! Make sure it's set up with `stateManager.AddState`");
         if (newState.Equals(currentState)) return;
         callbacks[currentState].exit?.Invoke();
+        timeInState = 0;
         currentState = newState;
         callbacks[currentState].enter?.Invoke();
     }
@@ -87,5 +89,7 @@ where TState : struct, Enum
             var newState = updateCallback.Invoke();
             this.SetState(newState);
         }
+
+        timeInState += Time.deltaTime;
     }
 }
