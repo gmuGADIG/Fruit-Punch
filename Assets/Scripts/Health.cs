@@ -43,7 +43,7 @@ public class Health : MonoBehaviour
     /// Invoked with the new health whenever it's changed, positively or negatively. <br/>
     /// (run before onHurt and onDeath)
     /// </summary>
-    public event Action<float> onHealthChange;
+    public event Action<HealthChange> onHealthChange;
 
     public event Action<DamageInfo> onDamageImmune;
     
@@ -69,7 +69,7 @@ public class Health : MonoBehaviour
         
         currentHealth = Mathf.MoveTowards(currentHealth, 0, info.damage);
         
-        onHealthChange?.Invoke(currentHealth);
+        onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
         
         if (currentHealth <= 0) Die();
@@ -95,7 +95,7 @@ public class Health : MonoBehaviour
     public void Heal(float amount)
     {
         currentHealth = Mathf.MoveTowards(currentHealth, maxHealth, amount);
-        onHealthChange?.Invoke(currentHealth);
+        onHealthChange?.Invoke(new HealthChange(currentHealth));
     }
 
     private void Die()
@@ -103,4 +103,13 @@ public class Health : MonoBehaviour
         onDeath?.Invoke();
     }
 
+}
+
+public struct HealthChange
+{
+    public float newHealthValue;
+    public HealthChange(float newHealthValue)
+    {
+        this.newHealthValue = newHealthValue;
+    }
 }
