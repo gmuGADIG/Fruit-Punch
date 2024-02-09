@@ -6,7 +6,6 @@ using UnityEngine;
 public enum PlayerState
 {
     Normal,
-    Jumping,
     Strike1, Strike2, Strike3
 }
 
@@ -28,15 +27,6 @@ public class Player : MonoBehaviour
     
     [Tooltip("How quickly the player accelerates and decelerates (m/s^2).")]
     [SerializeField] float runAccel;
-    
-    [Tooltip("From 0 to 1, how much the player can influence their motion while midair.")]
-    [SerializeField] float jumpControlMult = 1;
-
-    [Tooltip("Initial vertical speed when the player jumps (m/s).")]
-    [SerializeField] float jumpSpeed;
-
-    [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
-    [SerializeField] float gravity;
 
     float strike1Length = -1;
     float strike2Length = -1;
@@ -61,7 +51,6 @@ public class Player : MonoBehaviour
         // set up state machine
         stateMachine = new StateMachine<PlayerState>();
         stateMachine.AddState(PlayerState.Normal, NormalEnter, NormalUpdate, null);
-        stateMachine.AddState(PlayerState.Jumping, JumpEnter, JumpUpdate, null);
         stateMachine.AddState(PlayerState.Strike1, () => StrikeEnter(1), () => StrikeUpdate(1), null);
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
@@ -99,36 +88,13 @@ public class Player : MonoBehaviour
     PlayerState NormalUpdate()
     {
         ApplyDirectionalMovement();
-
-        if (Input.GetKeyDown(KeyCode.Space)) // todo: swap with new input system
-            return PlayerState.Jumping;
-
+        
         if (Input.GetKeyDown(KeyCode.Z))
             return PlayerState.Strike1;
 
         return stateMachine.currentState;
     }
-
-    void JumpEnter()
-    {
-        // anim.Play("Jump");
-        velocity += Vector3.up * jumpSpeed;
-    }
-
-    PlayerState JumpUpdate()
-    {
-        ApplyDirectionalMovement(jumpControlMult);
-
-        velocity += Vector3.down * (gravity * Time.deltaTime);
-        if (velocity.y < 0 && beltChar.internalPosition.y  <= 0)
-        {
-            beltChar.internalPosition.y = 0;
-            velocity.y = 0;
-            return PlayerState.Normal;
-        }
-
-        return stateMachine.currentState;
-    }
+    
 
     void StrikeEnter(int strikeState)
     {
