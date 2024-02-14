@@ -6,16 +6,10 @@ using UnityEngine.SceneManagement;
 public class LoadPauseScreen : MonoBehaviour
 {
     public string pauseScreen;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Escape) && Time.timeScale != 0.0f)
+        if (Input.GetKeyUp(KeyCode.Escape) && Time.timeScale != 0.0f) //Update when input system gets finished
         {
             SceneManager.LoadSceneAsync(pauseScreen, LoadSceneMode.Additive);
         }
