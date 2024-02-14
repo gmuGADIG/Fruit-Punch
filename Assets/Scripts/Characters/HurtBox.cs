@@ -11,6 +11,7 @@ public class HurtBox : MonoBehaviour
     private new Collider2D collider;
     public BeltCharacter beltCharacter;
     public LayerMask hitLayers;
+    public float damage;
 
     private List<BeltCharacter> previousHits = new();
 
@@ -28,7 +29,7 @@ public class HurtBox : MonoBehaviour
         {
             if (previousHits.Contains(hit)) continue;
             // todo: handle collision here
-            // e.g. if (hits.TryGetComponent<Enemy>(out var enemy)) enemy.Hurt()
+            if (hit.TryGetComponent<Enemy>(out var enemy)) enemy.Hurt(this.damage);
         }
         previousHits = hits;
     }

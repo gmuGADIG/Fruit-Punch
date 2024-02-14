@@ -15,10 +15,15 @@ public class TestPlayerMovement : MonoBehaviour
 
     PlayerInput input;
 
-    // Start is called before the first frame update
-    void Start()
-    {
+    void Start() {
         TryGetComponent(out input);
+    }
+
+    void Update() {
+        var jumpAction = input.actions["gameplay/Jump"];
+        if (jumpAction.WasPerformedThisFrame()) {
+            Debug.Log("Player jumped!");
+        }
     }
 
     void FixedUpdate() {
@@ -40,33 +45,10 @@ public class TestPlayerMovement : MonoBehaviour
     public void OnDebugRebindControl() {
         Debug.Log("DebugRebindControl Pressed!");
 
-        var index = strike.action.bindings
-            .Select((b, index) => (Binding: b, Index: index))
-            .Where(t => t.Binding.groups == input.currentControlScheme)
-            .Select(t => t.Index)
-            .First();
-        
-        var bindings = strike.action.bindings;
-        
-        Debug.Log($"index: {index}");
-
-        var actionIter = input.actions.actionMaps.Aggregate(
-            new List<InputAction>().AsEnumerable(),
-            (aux, next) => aux.Concat(next).Concat(next)
+        InputConfigManager.StartRebinding(
+            input,
+            strike.action.id,
+            () => Debug.Log("Rebinding complete!")
         );
-        var action = actionIter
-            .Where(action => action.id == strike.action.id)
-            .First();
-
-        action.Disable();
-        action.PerformInteractiveRebinding()
-            .OnComplete(operation => {
-                Debug.Log("Rebinding complete!");
-
-                action.Enable();
-
-                operation.Dispose(); // manual memory management: c# is not a real language
-            })
-            .Start();
     }
 }

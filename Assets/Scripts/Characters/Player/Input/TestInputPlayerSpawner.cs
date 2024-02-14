@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class TestInputPlayerSpawner : MonoBehaviour
 {
@@ -13,5 +14,13 @@ public class TestInputPlayerSpawner : MonoBehaviour
             controlScheme: context.ControlScheme,
             pairWithDevice: context.InputDevice
         );
+
+        InputConfigManager.Instance.ApplyRebindings();
+    }
+
+    public void Update() {
+        if (Input.GetKeyDown(KeyCode.Delete)) {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 }
