@@ -4,8 +4,27 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
+    [SerializeField]
     private int health;
-    private int maxHealth;
+    [SerializeField]
+    private int maxHealth = 100;
+
+    public int Health
+    {
+        get { return health; }
+    }
+
+    public int MaxHealth
+    {
+        get { return maxHealth; }
+    }
+
+
+
+    public void Start()
+    {
+        health = maxHealth;
+    }
 
     public void removeHealth(int damage){
         health -= damage;
