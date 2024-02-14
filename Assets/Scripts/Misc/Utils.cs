@@ -25,17 +25,25 @@ public static class Utils
     }
 
     /// <summary>
+    /// Returns an iterator of actions the player input has.
+    /// </summary>
+    /// <param name="input">The input in question</param>
+    /// <returns>IEnumerable for the PlayerInput's actions</returns>
+    public static IEnumerable<InputAction> ActionIter(this PlayerInput input) {
+        return input.actions.actionMaps.Aggregate(
+            new List<InputAction>().AsEnumerable(),
+            (aux, next) => aux.Concat(next).Concat(next)
+        );
+    }
+
+    /// <summary>
     /// Gets the action the player input has for a given action id.
     /// </summary>
     /// <param name="input">The player input in question</param>
     /// <param name="actionId">The ID of the action</param>
     /// <returns>The player input's copy of the action</returns>
     public static InputAction PlayerInputActionOfActionId(this PlayerInput input, Guid actionId) {
-        var actionIter = input.actions.actionMaps.Aggregate(
-            new List<InputAction>().AsEnumerable(),
-            (aux, next) => aux.Concat(next).Concat(next)
-        );
-        return actionIter
+        return input.ActionIter()
             .Where(action => action.id == actionId)
             .First();
     }
