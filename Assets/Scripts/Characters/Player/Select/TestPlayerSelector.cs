@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -18,14 +15,13 @@ public class TestPlayerSelector : MonoBehaviour
     [SerializeField]
     public Sprite[] images;
     private Image characterImage;
-    int numCharacters;
-    Character character;
+    private int numCharacters;
+    private Character character;
 
-    byte selectState;
+    public bool characterSelected;
 
     private void Start()
     {
-        selectState = 0;
         characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
         numCharacters = Character.GetNames(typeof(Character)).Length;
         if (numCharacters != images.Length)
@@ -37,7 +33,7 @@ public class TestPlayerSelector : MonoBehaviour
 
     void OnUp()
     {
-        if (selectState!=0)
+        if (characterSelected)
             return;
 
         character++;
@@ -48,7 +44,7 @@ public class TestPlayerSelector : MonoBehaviour
 
     void OnDown()
     {
-        if (selectState!=0)
+        if (characterSelected)
             return;
 
         character--;
@@ -59,23 +55,28 @@ public class TestPlayerSelector : MonoBehaviour
 
     void OnConfirm()
     {
-        if (selectState<2)
+        if (characterSelected)
         {
-            selectState++;
+            
+        }
+        else
+        {
+            characterSelected = true;
         }
     }
 
     void OnBack()
     {
-        if (selectState >= 0)
+        Debug.Log("Back");
+        if (characterSelected)
         {
-            selectState--;
+            characterSelected = false;
         }
         else
         {
             //FIXME: temporary solution because the edge cases of character leave would be terrible.
             //Uncreate Character
-            //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
     }
 
