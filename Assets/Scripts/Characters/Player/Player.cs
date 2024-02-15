@@ -139,7 +139,7 @@ public class Player : MonoBehaviour
         var thisAnimLength = animLengths[strikeState - 1];
         if (stateMachine.timeInState >= thisAnimLength)
         {
-            print($"{stateMachine.timeInState} >= {thisAnimLength}");
+            // print($"{stateMachine.timeInState} >= {thisAnimLength}");
             return PlayerState.Normal;
         }
 
