@@ -13,11 +13,11 @@ public class CharacterSelectorManager : MonoBehaviour
         {
             if (playerTwoSelector != null) //two players
             {
-                return playerOneSelector.GetComponent<TestPlayerSelector>() && playerTwoSelector.GetComponent<TestPlayerSelector>(); //return true if both have selected characters
+                return playerOneSelector.GetComponent<TestPlayerSelector>().characterSelected && playerTwoSelector.GetComponent<TestPlayerSelector>().characterSelected; //return true if both have selected characters
             }
             else //one player
             {
-                return playerOneSelector.GetComponent<TestPlayerSelector>(); //return true if player has selected
+                return playerOneSelector.GetComponent<TestPlayerSelector>().characterSelected; //return true if player has selected
             }
         }
         else
