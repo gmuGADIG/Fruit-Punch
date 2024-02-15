@@ -12,7 +12,15 @@ using UnityEngine;
 [ExecuteAlways]
 public class BeltCharacter : MonoBehaviour
 {
-    public static float zMin = -1, zMax = 0;
+    /// <summary>
+    /// These objects will have their position set as if the player is on the ground, and their z-index will be set to `shadowZ`. <br/>
+    /// This allows shadows to appear below the player, even when in air. <br/>
+    /// Note that the local position of the shadow is completely ignored. If an offset is required, make the sprite a child of the shadow transform.
+    /// </summary>
+    [SerializeField] Transform[] shadows;
+    public float shadowZ = 9;
+    
+    public static float zMin = -1.9f, zMax = -0.35f;
     
     /// <summary>
     /// Moves the real position by this much for each internal z movement. <br/>
@@ -38,7 +46,7 @@ public class BeltCharacter : MonoBehaviour
     }
     
     [ExecuteAlways]
-    void Update()
+    void LateUpdate()
     {
         // in the editor, edit the internal position and nothing else
         if (Application.isPlaying == false)
@@ -51,6 +59,14 @@ public class BeltCharacter : MonoBehaviour
         // set transform position based on internal position, and clamp z-position
         internalPosition.z = Mathf.Clamp(internalPosition.z, zMin, zMax);
         transform.position = internalPosition + zTranslation * internalPosition.z;
+
+        foreach (var obj in shadows)
+        {
+            var shadowPosition = new Vector3(internalPosition.x, 0, 0);
+            shadowPosition += zTranslation * internalPosition.z;
+            shadowPosition.z = shadowZ;
+            obj.position = shadowPosition;
+        }
     }
 
     /// <summary>
@@ -69,7 +85,7 @@ public class BeltCharacter : MonoBehaviour
             .Where(SimilarZPosition)
             .ToList();
 
-        /* True if the collider is in a similar z-position (which requires it either has a BeltController or HurtBox component) */
+        /* True if the belt character is in a similar z-position */
         bool SimilarZPosition(BeltCharacter beltChar)
         {
             var zDistance = Mathf.Abs(beltChar.internalPosition.z - this.internalPosition.z);
