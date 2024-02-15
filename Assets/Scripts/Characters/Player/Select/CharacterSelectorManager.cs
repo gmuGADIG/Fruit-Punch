@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class CharacterSelectorManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject playerOneSelector;
+    public GameObject playerTwoSelector;
+
+    public bool GetPlayersReady()
     {
-        
+        if (playerOneSelector != null)
+        {
+            if (playerTwoSelector != null) //two players
+            {
+                return playerOneSelector.GetComponent<TestPlayerSelector>() && playerTwoSelector.GetComponent<TestPlayerSelector>(); //return true if both have selected characters
+            }
+            else //one player
+            {
+                return playerOneSelector.GetComponent<TestPlayerSelector>(); //return true if player has selected
+            }
+        }
+        else
+            return false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
