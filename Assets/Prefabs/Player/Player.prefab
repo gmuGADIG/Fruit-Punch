@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6201840292595266921}
   - component: {fileID: 3794462670084737583}
   - component: {fileID: 1303734734897972015}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: HurtBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 5087417677774483037}
   - component: {fileID: 4033087471224058494}
   - component: {fileID: 9084029444549754630}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ MonoBehaviour:
   shadows:
   - {fileID: 1116415113221405965}
   shadowZ: 9
-  internalPosition: {x: -0.044, y: 0, z: -1.9116665}
+  internalPosition: {x: -0.21, y: 0, z: -1.3833332}
 --- !u!114 &1740479588405230058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +156,9 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   maxSpeed: 2
   runAccel: 40
+  jumpControlMult: 0.3
+  jumpSpeed: 3.2
+  gravity: 9
 --- !u!58 &3591174525589135915
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -265,7 +268,7 @@ GameObject:
   m_Component:
   - component: {fileID: 96800430940467201}
   - component: {fileID: 4516769140236419451}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BadApple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +352,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1116415113221405965}
   - component: {fileID: 1515062665273934878}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
