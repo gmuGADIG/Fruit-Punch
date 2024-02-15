@@ -24,4 +24,17 @@ public class CharacterSelectorManager : MonoBehaviour
             return false;
     }
 
+    public int GetOtherCharacter()
+    {
+        if (playerOneSelector.GetComponent<TestPlayerSelector>().characterSelected)
+        {
+            return (int)playerOneSelector.GetComponent<TestPlayerSelector>().character;
+        }
+        else if (playerTwoSelector.GetComponent<TestPlayerSelector>().characterSelected)
+        {
+            return (int)playerTwoSelector.GetComponent<TestPlayerSelector>().character;
+        }
+        return -1;
+    }
+
 }
