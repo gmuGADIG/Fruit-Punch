@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1351190632733158541}
   - component: {fileID: 3218388671297147060}
   - component: {fileID: 5528883301703829071}
+  - component: {fileID: -5670781486173189894}
   m_Layer: 0
   m_Name: EnemyBase
   m_TagString: Untagged
@@ -91,6 +92,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93584ea10a5d20046b663b531985e54d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shadows: []
+  shadowZ: 9
   internalPosition: {x: 1.583, y: 0, z: -0.4583333}
 --- !u!114 &5528883301703829071
 MonoBehaviour:
@@ -106,3 +109,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkingSpeed: 1
   attackingDistance: 0.5
+--- !u!114 &-5670781486173189894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2217596612548616759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81aad30ffbcd440458a1a4c8d1234de4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vulnerableTypes: 0
+  maxHealth: 100
+  currentHealth: 0
