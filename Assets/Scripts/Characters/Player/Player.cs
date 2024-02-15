@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public enum PlayerState
 {
@@ -13,12 +14,17 @@ public enum PlayerState
 /// Playable character script. <br/>
 /// To get a good idea of how everything works, see how the state machine is set up in Start.
 /// </summary>
-[RequireComponent(typeof(BeltCharacter)), RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(BeltCharacter))] 
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(InputBuffer))]
 public class Player : MonoBehaviour
 {
     private StateMachine<PlayerState> stateMachine;
     private BeltCharacter beltChar;
     private Animator anim;
+    private PlayerInput playerInput;
+    private InputBuffer inputBuffer;
     
     [ReadOnlyInInspector, SerializeField] private Vector3 velocity = Vector3.zero;
 
@@ -32,11 +38,15 @@ public class Player : MonoBehaviour
     float strike2Length = -1;
     float strike3Length = -1;
     
+    bool strikeAnimationOver = false;
+    
     void Start()
     {
         // gett components
         this.GetComponentOrError(out beltChar);
         this.GetComponentOrError(out anim);
+        this.GetComponentOrError(out playerInput);
+        this.GetComponentOrError(out inputBuffer);
 
         // get animation lengths
         foreach (var clip in anim.runtimeAnimatorController.animationClips)
@@ -66,7 +76,13 @@ public class Player : MonoBehaviour
 
     void ApplyDirectionalMovement(float controlMult = 1)
     {
-        var targetVel = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * maxSpeed;
+
+        var targetVel = new Vector3(
+            playerInput.actions["gameplay/Left/Right"].ReadValue<float>(),
+            0,
+            playerInput.actions["gameplay/Up/Down"].ReadValue<float>()
+        ).normalized * maxSpeed;
+
         targetVel.y = velocity.y;
         velocity = Vector3.MoveTowards(
             velocity,
@@ -89,8 +105,9 @@ public class Player : MonoBehaviour
     {
         ApplyDirectionalMovement();
         
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (playerInput.actions["gameplay/Strike"].triggered) {
             return PlayerState.Strike1;
+        }
 
         return stateMachine.currentState;
     }
@@ -98,6 +115,10 @@ public class Player : MonoBehaviour
 
     void StrikeEnter(int strikeState)
     {
+        // avoid reading inputs before we entered this state
+        inputBuffer.ClearAction("gameplay/Strike");
+        strikeAnimationOver = false;
+
         print($"Strike{strikeState}");
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
@@ -108,7 +129,7 @@ public class Player : MonoBehaviour
         velocity = Vector3.MoveTowards(velocity, Vector3.zero, runAccel * Time.deltaTime);
 
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (strikeAnimationOver && inputBuffer.CheckAction("gameplay/Strike"))
         {
             if (strikeState == 1) return PlayerState.Strike2;
             if (strikeState == 2) return PlayerState.Strike3;
@@ -123,5 +144,9 @@ public class Player : MonoBehaviour
         }
 
         return stateMachine.currentState;
+    }
+
+    public void OnStikeAnimationOver() {
+        strikeAnimationOver = true;
     }
 }
