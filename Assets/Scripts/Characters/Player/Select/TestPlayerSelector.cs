@@ -67,7 +67,8 @@ public class TestPlayerSelector : MonoBehaviour
         }
         else
         {
-            if(manager.GetOtherCharacter())
+            int other = manager.GetOtherCharacter();
+            if (other == -1 || (Character)other!=character)
                 characterSelected = true;
         }
     }
