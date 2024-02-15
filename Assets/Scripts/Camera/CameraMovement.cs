@@ -4,32 +4,43 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private bool enemyOnScreen = true;
-    private int NumEnemy = 0; //do the tags for the enemies
     public Transform target; // Reference to the player's Transform component
     public Vector3 offset = new Vector3(0f, 2f); // Adjust as needed
     public GameObject player;
     public Vector3 startPosition = new Vector3(0f, 2f); // Adjust as needed
+    public Transform playerTransform; // Reference to the player's transform
+    public float smoothSpeed = 0.125f; // Smoothness of camera movement
+    public bool isSpawn = false; // Boolean variable from another script
+    private bool areEnemiesPresent = false; // Boolean to track if enemies are present
+
 
 
     // Start is called before the first frame update
     void Start()
     {
-        enemyOnScreen = true;
         transform.position = startPosition;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (NumEnemy == 0)
+        // Check if enemies are present using the EnemyDetector script
+        if (!EnemyDetector.AreEnemiesPresent && !isSpawn)
         {
-            enemyOnScreen = false; //makes enemyOnScren false when there are no enemies
+            areEnemiesPresent = false;
+        }
+        else
+        {
+            areEnemiesPresent = true;
         }
 
-        if (!enemyOnScreen || target == null)
-            return; //stops if player is dead or there are no enemies on screen
-        transform.position = target.position + offset;
+        // Move the camera to follow the player if conditions are met
+        if (!areEnemiesPresent && !isSpawn && playerTransform != null)
+        {
+            Vector3 desiredPosition = playerTransform.position;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+            transform.position = smoothedPosition;
+        }
     }
 
 
