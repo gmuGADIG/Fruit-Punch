@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerHealthBarUI : MonoBehaviour
 {
-    public PlayerHealth playerHealth;
+    //public PlayerHealth playerHealth;
     public TMP_Text healthUI;
     public Image maxHealthBar;
     public Image currentHealthBar;
@@ -20,9 +20,9 @@ public class PlayerHealthBarUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int health = playerHealth.Health;
-        int maxHealth = playerHealth.MaxHealth;
-        healthUI.text = health.ToString() + "/" + maxHealth;
-        currentHealthBar.fillAmount = (float) health / maxHealth;
+        //int health = playerHealth.Health;
+        //int maxHealth = playerHealth.MaxHealth;
+        //healthUI.text = health.ToString() + "/" + maxHealth;
+        //currentHealthBar.fillAmount = (float) health / maxHealth;
     }
 }
