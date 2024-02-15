@@ -11,17 +11,19 @@ public enum Character
 
 public class TestPlayerSelector : MonoBehaviour
 {
-    
+    public static CharacterSelectorManager manager;
+
     [SerializeField]
     public Sprite[] images;
     private Image characterImage;
     private int numCharacters;
-    private Character character;
-
+    
+    public Character character;
     public bool characterSelected;
 
     private void Start()
     {
+        manager = GameObject.Find("Manager").GetComponent<CharacterSelectorManager>();
         characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
         numCharacters = Character.GetNames(typeof(Character)).Length;
         if (numCharacters != images.Length)
@@ -57,17 +59,21 @@ public class TestPlayerSelector : MonoBehaviour
     {
         if (characterSelected)
         {
-            
+            if (manager.GetPlayersReady())
+            {
+                //Start Game
+                Debug.Log("Characters Selected");
+            }
         }
         else
         {
-            characterSelected = true;
+            if(manager.GetOtherCharacter())
+                characterSelected = true;
         }
     }
 
     void OnBack()
     {
-        Debug.Log("Back");
         if (characterSelected)
         {
             characterSelected = false;
