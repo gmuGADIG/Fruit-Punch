@@ -173,6 +173,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3687140372066837118}
+  - component: {fileID: 353397114237909231}
   m_Layer: 5
   m_Name: PlayerHealthBar
   m_TagString: Untagged
@@ -202,6 +203,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &353397114237909231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7282333145548215583}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 542ce6d70235dd4488e21d89f53569bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthUI: {fileID: 7572115911375693014}
+  maxHealthBar: {fileID: 1473091255024793521}
+  currentHealthBar: {fileID: 2281241728232777362}
+  playerHealth: {fileID: 0}
 --- !u!1 &8585453073903638339
 GameObject:
   m_ObjectHideFlags: 0
@@ -213,7 +230,6 @@ GameObject:
   - component: {fileID: 2943220635180938405}
   - component: {fileID: 4445137775980372091}
   - component: {fileID: 7572115911375693014}
-  - component: {fileID: 5207345506973973869}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -268,7 +284,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: ABCD
+  m_text: 100/100
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -337,19 +353,3 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!114 &5207345506973973869
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8585453073903638339}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542ce6d70235dd4488e21d89f53569bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerHealth: {fileID: 0}
-  healthUI: {fileID: 7572115911375693014}
-  maxHealthBar: {fileID: 1473091255024793521}
-  currentHealthBar: {fileID: 2281241728232777362}
