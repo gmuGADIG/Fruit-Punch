@@ -50,26 +50,18 @@ public class Enemy : MonoBehaviour
 
     void EnterApproaching()
     {
-        // TODO: get players by the Player component instead of tag "Player"
+        // find all player belt characters
         var playerBeltChars =
-            GameObject.FindGameObjectsWithTag("Player")
+            FindObjectsOfType<Player>()
             .Select(x => x.GetComponent<BeltCharacter>())
-            .Where(x => x != null)
-            .ToList();
-        // find closest player (because list.MinBy only exists in future version >_<)
-        BeltCharacter nearest = null;
-        float nearestDist = float.MaxValue;
-        foreach (var b in playerBeltChars)
-        {
-            var dist = Vector3.Distance(b.internalPosition, this.beltChar.internalPosition);
-            if (dist < nearestDist)
-            {
-                nearest = b;
-                nearestDist = dist;
-            }
-        }
+            .Where(x => x != null);
 
-        approachingCurrentTarget = nearest;
+        // start approaching the nearest one
+        // (note: sometimes it feels like differences in z-position are exaggerated for this? might want to use transform position instead, idk)
+        approachingCurrentTarget =
+            playerBeltChars
+            .OrderBy(bc => Vector3.Distance(this.beltChar.internalPosition, bc.internalPosition))
+            .First();
     }
     
     EnemyState UpdateApproaching()
@@ -93,7 +85,7 @@ public class Enemy : MonoBehaviour
     void EnterAttacking()
     {
         attackingTimeLeft = 2;
-        print("Enemy: WHAM!!");
+        // print("Enemy: WHAM!!");
     }
     
     EnemyState UpdateAttacking()
@@ -103,7 +95,7 @@ public class Enemy : MonoBehaviour
         else return stateMachine.currentState;
     }
 
-    public void Hurt(float damage)
+    public void Hurt(float damage, Vector2 knockback)
     {
         print($"health down to {100 - damage}");
         stateMachine.SetState(EnemyState.Hurt);

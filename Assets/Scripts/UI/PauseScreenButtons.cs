@@ -1,49 +1,79 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Windows;
 
 public class PauseScreenButtons : MonoBehaviour
 {
+
     public string mainMenuScene;
     // Start is called before the first frame update
     void Start()
     {
+        /*
+        PlayerInput.Instantiate(
+        playerPrefab,
+        controlScheme: "Keyboardleft",
+        pairWithDevice: Keyboard.current
+        );
+        */
         Time.timeScale = 0.0f;
+        
+        
     }
 
-    private void Update()
+    /// <summary>
+    /// Pause key hit, Resume game
+    /// </summary>
+    public void OnPause()
     {
-        if(Input.GetKeyUp(KeyCode.Escape))
-        { Resume(); }
+        Resume();
     }
-    public void Resume() //closes pause screen resumes game
+
+    /// <summary>
+    /// Closes pause screen, Resumes game
+    /// </summary>
+    public void Resume() 
     {
         Time.timeScale = 1.0f;
         SceneManager.UnloadSceneAsync("PauseScreen");
         Debug.Log("PauseScreen unloaded");
     }
 
-    public void RestartLevel() //restarts level
+    /// <summary>
+    /// Restarts Level
+    /// </summary>
+    public void RestartLevel()
     {
         Scene currScene = SceneManager.GetActiveScene();
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(currScene.buildIndex);
     }
-
-    public void MainMenu() //returns to mainMenu
+    /// <summary>
+    /// Returns to Main menu
+    /// </summary>
+    public void MainMenu()
     {
         SceneManager.LoadScene(mainMenuScene);
         Debug.Log("Return to Main");
     }
-    public void QuitGame() //Quits the game
+    /// <summary>
+    /// Quits the Game
+    /// </summary>
+    public void QuitGame() 
     {
         //add script to save game
         Application.Quit();
         Debug.Log("Quit Game");
     }
 
-    public void OptionsMenu() //Opens options menu
+    /// <summary>
+    /// Opens Option menu (Options menu currently doesn't exist)
+    /// </summary>
+    public void OptionsMenu() //Change when options menu get created
     {
         Debug.Log("Open Options Menu");
     }
