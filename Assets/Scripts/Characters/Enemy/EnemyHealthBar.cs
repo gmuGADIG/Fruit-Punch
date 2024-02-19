@@ -7,19 +7,18 @@ public class EnemyHealthBar : MonoBehaviour
 {
     public Slider healthBar;
 
-    //Replace to tie max health and current Health to actual enemy
-    public float maxHealth;
-    public float currentHealth;
-    // Start is called before the first frame update
+    Health enemyHealth;
+
     void Start()
     {
-        healthBar.maxValue = maxHealth;
-        healthBar.minValue = 0;
+        enemyHealth = GetComponentInParent<Health>();
+        enemyHealth.onHealthChange += UpdateHealthbar;
+        //healthBar.maxValue = enemyHealth.MaxHealth;
+        //healthBar.minValue = 0;
     }
 
-    // Update is called once per frame
-    void Update()
+    void UpdateHealthbar(HealthChange change)
     {
-        healthBar.value = currentHealth;
+        healthBar.value = change.newHealthValue / enemyHealth.MaxHealth * healthBar.maxValue;
     }
 }

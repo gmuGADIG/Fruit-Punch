@@ -123,26 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &906652372 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5037888598912874329, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
-  m_PrefabInstance: {fileID: 1474633107}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &906652373
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 906652372}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 81aad30ffbcd440458a1a4c8d1234de4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  vulnerableTypes: 15
-  maxHealth: 100
-  currentHealth: 0
 --- !u!1001 &1474633107
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -151,10 +131,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 901608857678194811, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
     - target: {fileID: 4058682035419029229, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
       propertyPath: m_LocalPosition.x
       value: -6.153
@@ -199,29 +175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyCarrot
       objectReference: {fileID: 0}
-    - target: {fileID: 5037888598912874329, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 8329304203546997834, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
-      propertyPath: m_Layer
-      value: 11
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612663500208997850, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
-      propertyPath: internalPosition.x
-      value: -6.153
-      objectReference: {fileID: 0}
-    - target: {fileID: 8612663500208997850, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
-      propertyPath: internalPosition.z
-      value: -4.1249933
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5037888598912874329, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 906652373}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b34e2225c70a3dd4bbd5719994e1a105, type: 3}
 --- !u!1 &1615437388
 GameObject:

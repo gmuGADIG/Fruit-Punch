@@ -13,12 +13,12 @@ public class PlayerHealthBarUI : MonoBehaviour
     public Image maxHealthBar;
     public Image currentHealthBar;
 
-    [SerializeField]
     private Health playerHealth;
 
     // Start is called before the first frame update
     void Start()
     {
+        playerHealth = FindObjectOfType<Player>().GetComponent<Health>();
         playerHealth.onHealthChange += UIUpdate;
     }
 

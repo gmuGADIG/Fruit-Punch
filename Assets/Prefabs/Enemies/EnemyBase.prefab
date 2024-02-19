@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1351190632733158541}
   - component: {fileID: 3218388671297147060}
   - component: {fileID: 5528883301703829071}
-  - component: {fileID: -5670781486173189894}
+  - component: {fileID: 2723358761222827117}
   m_Layer: 0
   m_Name: EnemyBase
   m_TagString: Untagged
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkingSpeed: 1
   attackingDistance: 0.5
---- !u!114 &-5670781486173189894
+--- !u!114 &2723358761222827117
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -121,6 +121,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81aad30ffbcd440458a1a4c8d1234de4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vulnerableTypes: 0
+  vulnerableTypes: 15
   maxHealth: 100
   currentHealth: 0

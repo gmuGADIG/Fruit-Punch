@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5024470373885550607}
   - component: {fileID: 4820164953573520433}
   - component: {fileID: 4119434623808538756}
-  m_Layer: 9
+  m_Layer: 0
   m_Name: Item
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,6 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93584ea10a5d20046b663b531985e54d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shadows: []
+  shadowZ: 9
   internalPosition: {x: 0, y: 0, z: 0}
 --- !u!61 &4119434623808538756
 BoxCollider2D:

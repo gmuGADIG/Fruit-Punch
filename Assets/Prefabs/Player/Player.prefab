@@ -50,6 +50,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   damage: 1
+  knockback: {x: 0, y: 0}
+  aura: 0
 --- !u!58 &1303734734897972015
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -98,6 +100,7 @@ GameObject:
   - component: {fileID: 1740479588405230058}
   - component: {fileID: 3591174525589135915}
   - component: {fileID: 5087417677774483037}
+  - component: {fileID: 5171601649900177564}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -154,9 +157,6 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   maxSpeed: 2
   runAccel: 40
-  jumpControlMult: 0.2
-  jumpSpeed: 4
-  gravity: 10
 --- !u!58 &3591174525589135915
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -213,6 +213,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5171601649900177564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370847992972462549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81aad30ffbcd440458a1a4c8d1234de4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vulnerableTypes: -1
+  maxHealth: 100
+  currentHealth: 0
 --- !u!1 &7444369387174406894
 GameObject:
   m_ObjectHideFlags: 0

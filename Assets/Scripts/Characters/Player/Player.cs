@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
     private StateMachine<PlayerState> stateMachine;
     private BeltCharacter beltChar;
     private Animator anim;
+    private HurtBox hurtBox;
     
     [ReadOnlyInInspector, SerializeField] private Vector3 velocity = Vector3.zero;
 

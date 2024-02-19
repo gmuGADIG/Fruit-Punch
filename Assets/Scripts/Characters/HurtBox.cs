@@ -31,7 +31,10 @@ public class HurtBox : MonoBehaviour
         {
             if (previousHits.Contains(hit)) continue;
             // todo: handle collision here
-            if (hit.TryGetComponent<Health>(out var thingTakingDamage)) thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura)); // Makes the thingTakingDamage take damage based on the aura, damage, and knockback (set in the hurtbox)
+            if (hit.TryGetComponent<Health>(out var thingTakingDamage))
+            {
+                thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura)); // Makes the thingTakingDamage take damage based on the aura, damage, and knockback (set in the hurtbox)
+            }
         }   
         previousHits = hits;
     }
