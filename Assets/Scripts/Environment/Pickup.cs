@@ -4,20 +4,17 @@ using System.ComponentModel;
 using UnityEngine;
 
 /// <summary>
-/// A script that makes a healing pickup that disappears on touch.
-/// Can be modified to make other types of pickups, like a temp buff.
+/// A abstract script that makes a pickup that disappears on touch.
+/// Can be extended to make other types of pickups, like healing or powerups.
 /// </summary>
-public class Pickup : MonoBehaviour
+public abstract class Pickup : MonoBehaviour
 {
-    /// <summary>
-    /// The amount of health to be healed.
-    /// </summary>
-    [SerializeField]
-    private int healthRestore = 20;
-
     [ReadOnlyInInspector]
     private BeltCharacter beltCharacter;
 
+    /// <summary>
+    /// A list of all objects that collides with the pickup
+    /// </summary>
     private List<BeltCharacter> collisions;
 
     private void Start()
@@ -25,17 +22,26 @@ public class Pickup : MonoBehaviour
         beltCharacter = gameObject.GetComponent<BeltCharacter>();
     }
 
+    /// <summary>
+    /// Checks if pickup is colliding with the player before applying the pickup effect
+    /// </summary>
     private void Update()
     {
         collisions = beltCharacter.GetOverlappingBeltCharacters(gameObject.GetComponent<Collider2D>(), Physics2D.AllLayers);
         foreach(BeltCharacter i in collisions)
         {
-            Health health = i.GetComponent<Health>();
-            if (health != null && i.tag == "Player")
+            GameObject obj = i.gameObject;
+            if (obj != null && i.GetComponent<Player>())
             {
-                health.Heal(healthRestore);
+                Effect(obj);
                 Destroy(gameObject);
             }
         }
     }
+
+    /// <summary>
+    /// The effect of the pickup. Something like healing or buffing the player.
+    /// </summary>
+    /// <param name="player"></param>
+    public abstract void Effect(GameObject player);
 }
