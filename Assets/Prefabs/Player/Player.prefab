@@ -101,6 +101,8 @@ GameObject:
   - component: {fileID: 3591174525589135915}
   - component: {fileID: 5087417677774483037}
   - component: {fileID: 5171601649900177564}
+  - component: {fileID: 4033087471224058494}
+  - component: {fileID: 4340506222115504097}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -157,6 +159,9 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   maxSpeed: 2
   runAccel: 40
+  jumpControlMult: 0.3
+  jumpSpeed: 3.2
+  gravity: 9
 --- !u!58 &3591174525589135915
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -228,6 +233,49 @@ MonoBehaviour:
   vulnerableTypes: -1
   maxHealth: 100
   currentHealth: 0
+--- !u!114 &4033087471224058494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370847992972462549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 6aa772acffd2362d7805b4f9f399b0de, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: KeyboardLeft
+  m_DefaultActionMap: gameplay
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!114 &4340506222115504097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370847992972462549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9464c5481b1c0202c86b548700a17b6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BufferLength: 0.16
 --- !u!1 &7444369387174406894
 GameObject:
   m_ObjectHideFlags: 0
