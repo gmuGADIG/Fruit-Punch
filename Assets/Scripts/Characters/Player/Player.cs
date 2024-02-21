@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 public enum PlayerState
 {
     Normal,
+    Jump,
     Strike1, Strike2, Strike3
 }
 
@@ -25,14 +26,24 @@ public class Player : MonoBehaviour
     private Animator anim;
     private PlayerInput playerInput;
     private InputBuffer inputBuffer;
+    private HurtBox hurtBox;
     
     [ReadOnlyInInspector, SerializeField] private Vector3 velocity = Vector3.zero;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
-    [SerializeField] float maxSpeed;
+    [SerializeField] float maxSpeed = 2f;
     
     [Tooltip("How quickly the player accelerates and decelerates (m/s^2).")]
-    [SerializeField] float runAccel;
+    [SerializeField] float runAccel = 40f;
+    
+    [Tooltip("From 0 to 1, how much the player can influence their motion while midair.")]
+    [SerializeField] float jumpControlMult = 0.3f;
+
+    [Tooltip("Initial vertical speed when the player jumps (m/s).")]
+    [SerializeField] float jumpSpeed = 3.2f;
+
+    [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
+    [SerializeField] float gravity = 9;
 
     float strike1Length = -1;
     float strike2Length = -1;
@@ -61,6 +72,7 @@ public class Player : MonoBehaviour
         // set up state machine
         stateMachine = new StateMachine<PlayerState>();
         stateMachine.AddState(PlayerState.Normal, NormalEnter, NormalUpdate, null);
+        stateMachine.AddState(PlayerState.Jump, JumpEnter, JumpUpdate, null);
         stateMachine.AddState(PlayerState.Strike1, () => StrikeEnter(1), () => StrikeUpdate(1), null);
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
@@ -104,14 +116,40 @@ public class Player : MonoBehaviour
     PlayerState NormalUpdate()
     {
         ApplyDirectionalMovement();
+
+        if (playerInput.actions["gameplay/Jump"].triggered)
+        {
+            return PlayerState.Jump;
+        }
         
-        if (playerInput.actions["gameplay/Strike"].triggered) {
+        if (playerInput.actions["gameplay/Strike"].triggered)
+        {
             return PlayerState.Strike1;
         }
 
         return stateMachine.currentState;
     }
+
+    void JumpEnter()
+    {
+        // anim.Play("Jump");
+        velocity += Vector3.up * jumpSpeed;
+    }
     
+    PlayerState JumpUpdate()
+    {
+        ApplyDirectionalMovement(jumpControlMult);
+
+        velocity += Vector3.down * (gravity * Time.deltaTime);
+        if (velocity.y < 0 && beltChar.internalPosition.y  <= 0)
+        {
+            beltChar.internalPosition.y = 0;
+            velocity.y = 0;
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
+    }
 
     void StrikeEnter(int strikeState)
     {

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6201840292595266921}
   - component: {fileID: 3794462670084737583}
   - component: {fileID: 1303734734897972015}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: HurtBox
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -50,6 +50,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   damage: 1
+  knockback: {x: 0, y: 0}
+  aura: 0
 --- !u!58 &1303734734897972015
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -98,8 +100,9 @@ GameObject:
   - component: {fileID: 1740479588405230058}
   - component: {fileID: 3591174525589135915}
   - component: {fileID: 5087417677774483037}
+  - component: {fileID: 5171601649900177564}
   - component: {fileID: 4033087471224058494}
-  - component: {fileID: 9084029444549754630}
+  - component: {fileID: 4340506222115504097}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -140,7 +143,7 @@ MonoBehaviour:
   shadows:
   - {fileID: 1116415113221405965}
   shadowZ: 9
-  internalPosition: {x: -0.044, y: 0, z: -1.9116665}
+  internalPosition: {x: -0.21, y: 0, z: -1.3833332}
 --- !u!114 &1740479588405230058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -156,6 +159,9 @@ MonoBehaviour:
   velocity: {x: 0, y: 0, z: 0}
   maxSpeed: 2
   runAccel: 40
+  jumpControlMult: 0.3
+  jumpSpeed: 3.2
+  gravity: 9
 --- !u!58 &3591174525589135915
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -212,6 +218,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &5171601649900177564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370847992972462549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81aad30ffbcd440458a1a4c8d1234de4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vulnerableTypes: -1
+  maxHealth: 100
+  currentHealth: 0
 --- !u!114 &4033087471224058494
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,12 +258,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_ActionEvents: []
-  m_NeverAutoSwitchControlSchemes: 1
+  m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KeyboardLeft
   m_DefaultActionMap: gameplay
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!114 &9084029444549754630
+--- !u!114 &4340506222115504097
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -254,7 +275,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9464c5481b1c0202c86b548700a17b6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BufferLength: Infinity
+  BufferLength: 0.16
 --- !u!1 &7444369387174406894
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,7 +286,7 @@ GameObject:
   m_Component:
   - component: {fileID: 96800430940467201}
   - component: {fileID: 4516769140236419451}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BadApple
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -349,7 +370,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1116415113221405965}
   - component: {fileID: 1515062665273934878}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Shadow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
