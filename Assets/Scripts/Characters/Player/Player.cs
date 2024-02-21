@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     private Animator anim;
     private PlayerInput playerInput;
     private InputBuffer inputBuffer;
+    private HurtBox hurtBox;
     
     [ReadOnlyInInspector, SerializeField] private Vector3 velocity = Vector3.zero;
 
