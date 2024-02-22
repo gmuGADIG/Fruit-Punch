@@ -10,6 +10,14 @@ public class LoadGameOverScreen : MonoBehaviour
     public string GameOverScene;
 
     //currently only set up for one player death, will work on making it work for 1 and 2 player
+    /*
+     * Current idea
+     * playerHealth<LIST> = FindObjects
+     * get num of living players
+     * onEnable -> onDeath subtract num of living players
+     * when num of living players = 0, game over 
+     * 
+     */
 
     Health playerHealth;
     // Start is called before the first frame update
