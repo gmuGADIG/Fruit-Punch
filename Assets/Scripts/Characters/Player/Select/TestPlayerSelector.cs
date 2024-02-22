@@ -7,7 +7,7 @@ public enum Character
     None=-1,
     Apple=0,
     Banana,
-    Orange
+    Carrot
 }
 
 public class TestPlayerSelector : MonoBehaviour
