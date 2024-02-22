@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public enum Character
 {
-    Apple,
+    None=-1,
+    Apple=0,
     Banana,
     Orange
 }
@@ -25,7 +26,7 @@ public class TestPlayerSelector : MonoBehaviour
     {
         manager = GameObject.Find("Manager").GetComponent<CharacterSelectorManager>();
         characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
-        numCharacters = Character.GetNames(typeof(Character)).Length;
+        numCharacters = Character.GetNames(typeof(Character)).Length-1;
         if (numCharacters != images.Length)
             Debug.LogWarning("TestPlayerSelector.cs: The player enum and images provided do not have equivilent length.");
         
@@ -51,7 +52,7 @@ public class TestPlayerSelector : MonoBehaviour
 
         character--;
         if (character < 0)
-            character = (Character)(numCharacters - 1);
+            character = (Character)(numCharacters-1);
         characterImage.sprite = images[(int)character];
     }
 
@@ -67,8 +68,8 @@ public class TestPlayerSelector : MonoBehaviour
         }
         else
         {
-            int other = manager.GetOtherCharacter();
-            if (other == -1 || (Character)other!=character)
+            //Character other = manager.GetOtherCharacter();
+            //if (other == Character.None || (Character)other!=character)
                 characterSelected = true;
         }
     }
