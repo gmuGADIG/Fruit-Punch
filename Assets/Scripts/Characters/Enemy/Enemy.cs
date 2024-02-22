@@ -8,10 +8,11 @@ public enum EnemyState
     Wandering, Aggressive, Attacking, Hurt
 }
 
+[RequireComponent(typeof(Health))]
 public class Enemy : MonoBehaviour
 {
     private static int currentAttackingEnemies = 0;
-    private static int MaxSimultaneousAttackers = 2;
+    private const int MaxSimultaneousAttackers = 2;
     
     [Tooltip("How fast the enemy approaches the player, in \"meters\" per second")]
     [SerializeField] private float walkingSpeed;
@@ -19,14 +20,16 @@ public class Enemy : MonoBehaviour
     [Tooltip("When the enemy is this close to the player, it will start attacking.")]
     [SerializeField] private float attackingDistance;
 
-    [SerializeField] private float wanderingTimeMin = 5;
-    [SerializeField] private float wanderingTimeMax = 10;
+    [SerializeField] private float wanderingTimeMin = 5000;
+    [SerializeField] private float wanderingTimeMax = 10000;
     
     private BeltCharacter beltChar;
     StateMachine<EnemyState> stateMachine = new();
 
     #region Wandering-State Values
     private float wanderingTimeTillAttack = 0;
+    private Vector2 wanderingToPosition;
+    private float wanderingTimeTillWander;
     #endregion
     
     #region Aggressive-State Values
@@ -67,6 +70,7 @@ public class Enemy : MonoBehaviour
     
     EnemyState WanderingUpdate()
     {
+        // changing to aggressive state after waiting some time
         wanderingTimeTillAttack -= Time.deltaTime;
         if (wanderingTimeTillAttack <= 0)
         {
@@ -75,6 +79,15 @@ public class Enemy : MonoBehaviour
                 return EnemyState.Aggressive;
             }
         }
+        
+        // random movement
+        // if (wanderingTimeTillWander > 0)
+        // {
+        //     
+        // }
+        // var position2d = new Vector2(beltChar.internalPosition.x, beltChar.internalPosition.y);
+        // var movement = (wanderingToPosition - position2d);
+        // if (movement.magnitude <= 0.02f)
         
         return stateMachine.currentState;
     }
@@ -133,10 +146,10 @@ public class Enemy : MonoBehaviour
         currentAttackingEnemies -= 1;
     }
 
-    public void Hurt(float damage, Vector2 knockback)
+    public void Hurt(DamageInfo info)
     {
-        print($"health down to {100 - damage}");
-        stateMachine.SetState(EnemyState.Hurt);
+        // print($"health down to {100 - damage}");
+        // stateMachine.SetState(EnemyState.Hurt);
     }
     
     void HurtEnter()
@@ -148,7 +161,7 @@ public class Enemy : MonoBehaviour
     EnemyState HurtUpdate()
     {
         hurtTimeLeft -= Time.deltaTime;
-        if (hurtTimeLeft <= 0) return EnemyState.Wandering;
+        if (hurtTimeLeft <= 0) return EnemyState.Aggressive;
         else return stateMachine.currentState;
     }
 }
