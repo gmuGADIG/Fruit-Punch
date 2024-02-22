@@ -9,13 +9,16 @@ public class LoadGameOverScreen : MonoBehaviour
     [Tooltip ("Name of game over scene")]
     public string GameOverScene;
 
+    //currently only set up for one player death, will work on making it work for 1 and 2 player
+
     Health playerHealth;
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         playerHealth = FindObjectOfType<Health>();
         
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -28,11 +31,20 @@ public class LoadGameOverScreen : MonoBehaviour
             Debug.Log("Should be damaged");
         }
     }
+
     /// <summary>
-    /// Should Load Scene when player dies?
+    /// Load Scene when player dies
     /// </summary>
-    public void onDeath()
+    private void DoLoadGameOverScreen()
     {
         SceneManager.LoadSceneAsync(GameOverScene, LoadSceneMode.Additive);
     }
+    
+   
+    private void OnEnable()
+    {
+        playerHealth.onDeath += DoLoadGameOverScreen; 
+    }
+
+    
 }
