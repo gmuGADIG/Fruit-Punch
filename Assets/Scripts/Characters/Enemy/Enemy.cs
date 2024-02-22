@@ -84,12 +84,10 @@ public class Enemy : MonoBehaviour
                 Debug.Log(script);
             }
 
-            PlayerHealth health = approachingCurrentTarget.GetComponent<PlayerHealth>();
-
-            Debug.Log(health.Health);
+            Health health = approachingCurrentTarget.GetComponent<Health>();
 
             // HARDCODED DAMAGE - TODO: make this a variable
-            health.removeHealth(90);
+            health.Damage(new DamageInfo(90, Vector2.zero, AuraType.Strike));
             return EnemyState.Attacking;
         }
 
