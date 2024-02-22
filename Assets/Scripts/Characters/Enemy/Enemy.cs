@@ -66,6 +66,9 @@ public class Enemy : MonoBehaviour
     void WanderingEnter()
     {
         wanderingTimeTillAttack = Random.Range(wanderingTimeMin, wanderingTimeMax);
+        
+        var position2d = new Vector2(beltChar.internalPosition.x, beltChar.internalPosition.y);
+        wanderingToPosition = position2d + new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
     }
     
     EnemyState WanderingUpdate()
@@ -81,13 +84,20 @@ public class Enemy : MonoBehaviour
         }
         
         // random movement
-        // if (wanderingTimeTillWander > 0)
-        // {
-        //     
-        // }
-        // var position2d = new Vector2(beltChar.internalPosition.x, beltChar.internalPosition.y);
-        // var movement = (wanderingToPosition - position2d);
-        // if (movement.magnitude <= 0.02f)
+        if (wanderingTimeTillWander > 0)
+        {
+            wanderingTimeTillWander -= Time.deltaTime;
+        }
+        else
+        {
+            var position2d = new Vector2(beltChar.internalPosition.x, beltChar.internalPosition.y);
+            var movement = (wanderingToPosition - position2d);
+            if (movement.magnitude <= 0.02f)
+            {
+                wanderingToPosition = position2d + new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
+            }
+            else wanderingTimeTillWander = 2;
+        }
         
         return stateMachine.currentState;
     }
