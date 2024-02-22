@@ -1,29 +1,40 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum EnemyState
 {
-    Approaching, Attacking, Hurt
+    Wandering, Aggressive, Attacking, Hurt
 }
 
 public class Enemy : MonoBehaviour
 {
+    private static int currentAttackingEnemies = 0;
+    private static int MaxSimultaneousAttackers = 2;
+    
     [Tooltip("How fast the enemy approaches the player, in \"meters\" per second")]
     [SerializeField] private float walkingSpeed;
     
     [Tooltip("When the enemy is this close to the player, it will start attacking.")]
     [SerializeField] private float attackingDistance;
+
+    [SerializeField] private float wanderingTimeMin = 5;
+    [SerializeField] private float wanderingTimeMax = 10;
     
     private BeltCharacter beltChar;
     StateMachine<EnemyState> stateMachine = new();
 
-    #region Approaching-State Values
+    #region Wandering-State Values
+    private float wanderingTimeTillAttack = 0;
+    #endregion
+    
+    #region Aggressive-State Values
     /// <summary>
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
     /// Otherwise, it's value is meaningless.
     /// </summary>
-    private BeltCharacter approachingCurrentTarget = null;
+    private BeltCharacter aggressiveCurrentTarget = null;
     #endregion
 
     #region Attacking-State Values
@@ -37,10 +48,11 @@ public class Enemy : MonoBehaviour
     private void Start()
     {
         this.GetComponentOrError(out beltChar);
-        stateMachine.AddState(EnemyState.Approaching, EnterApproaching, UpdateApproaching, null);
-        stateMachine.AddState(EnemyState.Attacking, EnterAttacking, UpdateAttacking, null);
-        stateMachine.AddState(EnemyState.Hurt, EnterHurt, UpdateHurt, null);
-        stateMachine.FinalizeAndSetState(EnemyState.Approaching);
+        stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, null);
+        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, null);
+        stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExit);
+        stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, null);
+        stateMachine.FinalizeAndSetState(EnemyState.Wandering);
     }
 
     private void Update()
@@ -48,8 +60,29 @@ public class Enemy : MonoBehaviour
         stateMachine.Update();
     }
 
-    void EnterApproaching()
+    void WanderingEnter()
     {
+        wanderingTimeTillAttack = Random.Range(wanderingTimeMin, wanderingTimeMax);
+    }
+    
+    EnemyState WanderingUpdate()
+    {
+        wanderingTimeTillAttack -= Time.deltaTime;
+        if (wanderingTimeTillAttack <= 0)
+        {
+            if (currentAttackingEnemies >= MaxSimultaneousAttackers) // TODO: multiply by player count
+            {
+                return EnemyState.Aggressive;
+            }
+        }
+        
+        return stateMachine.currentState;
+    }
+
+    void AggressiveEnter()
+    {
+        currentAttackingEnemies += 1;
+        
         // find all player belt characters
         var playerBeltChars =
             FindObjectsOfType<Player>()
@@ -58,15 +91,15 @@ public class Enemy : MonoBehaviour
 
         // start approaching the nearest one
         // (note: sometimes it feels like differences in z-position are exaggerated for this? might want to use transform position instead, idk)
-        approachingCurrentTarget =
+        aggressiveCurrentTarget =
             playerBeltChars
             .OrderBy(bc => Vector3.Distance(this.beltChar.internalPosition, bc.internalPosition))
             .First();
     }
     
-    EnemyState UpdateApproaching()
+    EnemyState AggressiveUpdate()
     {
-        var walkTo = approachingCurrentTarget.internalPosition;
+        var walkTo = aggressiveCurrentTarget.internalPosition;
         walkTo.y = this.beltChar.internalPosition.y;
         beltChar.internalPosition = Vector3.MoveTowards(
             beltChar.internalPosition, 
@@ -82,17 +115,22 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    void EnterAttacking()
+    void AttackingEnter()
     {
         attackingTimeLeft = 2;
         // print("Enemy: WHAM!!");
     }
     
-    EnemyState UpdateAttacking()
+    EnemyState AttackingUpdate()
     {
         attackingTimeLeft -= Time.deltaTime;
-        if (attackingTimeLeft <= 0) return EnemyState.Approaching;
+        if (attackingTimeLeft <= 0) return EnemyState.Wandering;
         else return stateMachine.currentState;
+    }
+
+    void AttackingExit()
+    {
+        currentAttackingEnemies -= 1;
     }
 
     public void Hurt(float damage, Vector2 knockback)
@@ -101,15 +139,16 @@ public class Enemy : MonoBehaviour
         stateMachine.SetState(EnemyState.Hurt);
     }
     
-    void EnterHurt()
+    void HurtEnter()
     {
         print("Enemy: Ouch!!");
+        currentAttackingEnemies -= 1;
     }
     
-    EnemyState UpdateHurt()
+    EnemyState HurtUpdate()
     {
         hurtTimeLeft -= Time.deltaTime;
-        if (hurtTimeLeft <= 0) return EnemyState.Approaching;
+        if (hurtTimeLeft <= 0) return EnemyState.Wandering;
         else return stateMachine.currentState;
     }
 }

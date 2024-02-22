@@ -62,6 +62,7 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Damage(DamageInfo info)
     {
+        print("Oww!");
         if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {

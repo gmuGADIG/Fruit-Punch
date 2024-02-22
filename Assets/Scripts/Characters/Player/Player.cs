@@ -109,7 +109,6 @@ public class Player : MonoBehaviour
 
     void NormalEnter()
     {
-        print("returning to normal");
         anim.Play("Idle");
     }
 
@@ -157,7 +156,6 @@ public class Player : MonoBehaviour
         inputBuffer.ClearAction("gameplay/Strike");
         strikeAnimationOver = false;
 
-        print($"Strike{strikeState}");
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
     }

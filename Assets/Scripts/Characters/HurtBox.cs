@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Utils;
@@ -21,6 +22,11 @@ public class HurtBox : MonoBehaviour
     {
         this.GetComponentOrError(out collider);
         Assert(beltCharacter != null);
+    }
+
+    private void OnEnable()
+    {
+        previousHits.Clear();
     }
 
     private void Update()
