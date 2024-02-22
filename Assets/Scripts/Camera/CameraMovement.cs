@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
@@ -12,13 +13,20 @@ public class CameraMovement : MonoBehaviour
     public float smoothSpeed = 0.125f; // Smoothness of camera movement
     public bool isSpawn = false; // Boolean variable from another script
     private bool areEnemiesPresent = false; // Boolean to track if enemies are present
+    public enum CameraState
+    {
+        follow, frozen
+    }
+    private CameraState currentState;
+    private float avgPos;
+    private List<Player> players = new List<Player>();
 
-
-
-    // Start is called before the first frame update
+    // Start is called before the first frame updae
     void Start()
     {
         transform.position = startPosition;
+        currentState = CameraState.follow;
+        players = FindObjectsOfType<Player>().ToList();
     }
 
     // Update is called once per frame
@@ -34,11 +42,18 @@ public class CameraMovement : MonoBehaviour
             areEnemiesPresent = true;
         }
 
+
+
         // Move the camera to follow the player if conditions are met
         if (!areEnemiesPresent && !isSpawn && playerTransform != null)
         {
-            Vector3 desiredPosition = playerTransform.position;
-            Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
+            Vector3 averagePos = Vector3.zero;
+            for (int i = 0; i < players.Count; i++)
+            {
+                averagePos += players[i].transform.position;
+            }
+            averagePos /= players.Count;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, averagePos, smoothSpeed);
             transform.position = smoothedPosition;
         }
     }
