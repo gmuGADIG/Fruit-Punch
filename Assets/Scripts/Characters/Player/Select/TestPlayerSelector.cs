@@ -33,7 +33,7 @@ public class TestPlayerSelector : MonoBehaviour
         characterImage.sprite = images[0];
     }
 
-    void OnUp()
+    void OnRight()
     {
         if (characterSelected)
             return;
@@ -44,7 +44,7 @@ public class TestPlayerSelector : MonoBehaviour
         characterImage.sprite = images[(int)character];
     }
 
-    void OnDown()
+    void OnLeft()
     {
         if (characterSelected)
             return;
