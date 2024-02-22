@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour
     public string playerTwoControlScheme;
 
 
-    void Start()
+    void Awake()
     {
         if (gameManager == null)
             gameManager = this;
