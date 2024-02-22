@@ -13,13 +13,7 @@ public class PauseScreenButtons : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        /*
-        PlayerInput.Instantiate(
-        playerPrefab,
-        controlScheme: "Keyboardleft",
-        pairWithDevice: Keyboard.current
-        );
-        */
+
         Time.timeScale = 0.0f;
         
         
