@@ -5,11 +5,8 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    public Transform target; // Reference to the player's Transform component
     public Vector3 offset = new Vector3(0f, 2f); // Adjust as needed
-    public GameObject player;
     public Vector3 startPosition = new Vector3(0f, 2f); // Adjust as needed
-    public Transform playerTransform; // Reference to the player's transform
     public float smoothSpeed = 0.125f; // Smoothness of camera movement
     public bool isSpawn = false; // Boolean variable from another script
     private bool areEnemiesPresent = false; // Boolean to track if enemies are present
@@ -45,7 +42,7 @@ public class CameraMovement : MonoBehaviour
 
 
         // Move the camera to follow the player if conditions are met
-        if (!areEnemiesPresent && !isSpawn && playerTransform != null)
+        if (!areEnemiesPresent && !isSpawn)
         {
             Vector3 averagePos = Vector3.zero;
             for (int i = 0; i < players.Count; i++)
@@ -53,6 +50,8 @@ public class CameraMovement : MonoBehaviour
                 averagePos += players[i].transform.position;
             }
             averagePos /= players.Count;
+            averagePos += offset;
+            averagePos.z = transform.position.z;
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, averagePos, smoothSpeed);
             transform.position = smoothedPosition;
         }
