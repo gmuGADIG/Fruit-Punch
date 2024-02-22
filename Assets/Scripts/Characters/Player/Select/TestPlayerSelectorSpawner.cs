@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class TestPlayerSelectorSpawner : MonoBehaviour
@@ -20,6 +21,8 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
             controlScheme: context.ControlScheme,
             pairWithDevice: context.InputDevice
         );
+
+        
 
         if(GameManager.gameManager == null)
             GameManager.gameManager = new GameManager();

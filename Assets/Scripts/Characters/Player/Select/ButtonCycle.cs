@@ -24,6 +24,7 @@ public class ButtonCycle : MonoBehaviour
         if (index >= images.Length)
             index = 0;
         yield return new WaitForSeconds(1);
+        StartCoroutine(Cycle());
     }
 
 
