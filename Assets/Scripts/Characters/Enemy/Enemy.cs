@@ -85,7 +85,7 @@ public class Enemy : MonoBehaviour
     void EnterAttacking()
     {
         attackingTimeLeft = 2;
-        print("Enemy: WHAM!!");
+        // print("Enemy: WHAM!!");
     }
     
     EnemyState UpdateAttacking()
@@ -95,7 +95,7 @@ public class Enemy : MonoBehaviour
         else return stateMachine.currentState;
     }
 
-    public void Hurt(float damage)
+    public void Hurt(float damage, Vector2 knockback)
     {
         print($"health down to {100 - damage}");
         stateMachine.SetState(EnemyState.Hurt);
