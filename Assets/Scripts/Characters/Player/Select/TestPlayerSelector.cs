@@ -21,6 +21,7 @@ public class TestPlayerSelector : MonoBehaviour
     
     public Character character;
     public bool characterSelected;
+    public bool isPlayerOne;
 
     private void Start()
     {
@@ -60,17 +61,23 @@ public class TestPlayerSelector : MonoBehaviour
     {
         if (characterSelected)
         {
+            
             if (manager.GetPlayersReady())
             {
                 //Start Game
+                SceneManager.LoadScene("PostCharacterSelector");
                 Debug.Log("Characters Selected");
             }
         }
         else
         {
+            if (isPlayerOne)
+                GameManager.gameManager.playerOne = character;
+            else
+                GameManager.gameManager.playerTwo = character;
             //Character other = manager.GetOtherCharacter();
             //if (other == Character.None || (Character)other!=character)
-                characterSelected = true;
+            characterSelected = true;
         }
     }
 
@@ -79,6 +86,10 @@ public class TestPlayerSelector : MonoBehaviour
         if (characterSelected)
         {
             characterSelected = false;
+            if (isPlayerOne)
+                GameManager.gameManager.playerOne = Character.None;
+            else
+                GameManager.gameManager.playerTwo = Character.None;
         }
         else
         {
