@@ -225,10 +225,14 @@ GameObject:
   m_Component:
   - component: {fileID: 2084766921}
   - component: {fileID: 2084766920}
+  - component: {fileID: 2084766928}
   - component: {fileID: 2084766922}
   - component: {fileID: 2084766919}
   - component: {fileID: 2084766923}
   - component: {fileID: 2084766924}
+  - component: {fileID: 2084766927}
+  - component: {fileID: 2084766926}
+  - component: {fileID: 2084766925}
   m_Layer: 10
   m_Name: PlayerTest
   m_TagString: Player
@@ -314,6 +318,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hasItem: 0
+  throwForce: 1
+  playerSpeed: 5
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 256
 --- !u!114 &2084766923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -326,6 +335,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93584ea10a5d20046b663b531985e54d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shadows: []
+  shadowZ: 9
   internalPosition: {x: -4.98, y: 0, z: 0}
 --- !u!61 &2084766924
 BoxCollider2D:
@@ -372,6 +383,88 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &2084766925
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084766917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9464c5481b1c0202c86b548700a17b6a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BufferLength: 0.16
+--- !u!114 &2084766926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084766917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: 0}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: 
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
+--- !u!95 &2084766927
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084766917}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &2084766928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084766917}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64cb2fc818698104d9b5eda094f6258c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0, z: 0}
+  maxSpeed: 2
+  runAccel: 40
+  jumpControlMult: 0.3
+  jumpSpeed: 3.2
+  gravity: 9
 --- !u!1001 &1236363974843350929
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -423,10 +516,6 @@ PrefabInstance:
     - target: {fileID: 6266875365588334979, guid: 64f8a1bf7d93f1740af7fedc15338bef, type: 3}
       propertyPath: m_Name
       value: Item
-      objectReference: {fileID: 0}
-    - target: {fileID: 6266875365588334979, guid: 64f8a1bf7d93f1740af7fedc15338bef, type: 3}
-      propertyPath: m_Layer
-      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3579499850805792992, guid: 64f8a1bf7d93f1740af7fedc15338bef, type: 3}

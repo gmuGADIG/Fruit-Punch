@@ -15,6 +15,9 @@ public class PlayerGrabItem : MonoBehaviour
     public float throwForce = 5;
     [Tooltip("Player test object speed. Currently this var is an int.")]
     public int playerSpeed = 5;
+
+    [Tooltip("The layer on which items are sitting on. Player can NOT pick up items if they aren't on this layer.")]
+    public LayerMask itemLayer;
     #endregion
 
     #region Private Vars
@@ -44,19 +47,24 @@ public class PlayerGrabItem : MonoBehaviour
         //Test Movement for the player test object. Remove when no longer needed.
         if (Input.GetKey(KeyCode.A))
         {
+            //Flip the Player
             bc.internalPosition += new Vector3(-playerSpeed * Time.deltaTime, 0, 0);
         }
         if (Input.GetKey(KeyCode.D)) 
         {
+            //Flip the Player
             bc.internalPosition += new Vector3(playerSpeed * Time.deltaTime, 0, 0);
         }
         #endregion
 
         #region Interact System
         //Current way items can be picked up and dropped. This should be changed when able.
-        if (Input.GetKeyDown(KeyCode.E) && hasItem == false)
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            GetItem();
+            if (hasItem == false)
+            {
+                GetItem();
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space) && hasItem == true)
@@ -75,7 +83,7 @@ public class PlayerGrabItem : MonoBehaviour
     /// </summary>
     public void GetItem()
     {
-        overlappingItems = bc.GetOverlappingBeltCharacters(col, LayerMask.GetMask("Item"));
+        overlappingItems = bc.GetOverlappingBeltCharacters(col, itemLayer);
         for(int i = 0; i < overlappingItems.Count; i++)
         {
             BeltCharacter currentBC = overlappingItems[i];
@@ -97,12 +105,16 @@ public class PlayerGrabItem : MonoBehaviour
     /// </summary>
     public void ThrowItem()
     {
-        GetComponentInChildren<BeltCharacter>().enabled = true;
+    
         GetComponentInChildren<Transform>().position += new Vector3(throwForce, throwForce, 0);
-        
+
+
         transform.DetachChildren();
         hasItem = false;
     }
+
+
+
     #endregion
 
     #endregion
