@@ -16,6 +16,7 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
             pairWithDevice: context.InputDevice
         );
 
+
         
         if (blankPOneSelector != null)
         {
@@ -23,6 +24,8 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -100, 0);
             Destroy(blankPOneSelector);
             GameObject.Find("Manager").GetComponent<CharacterSelectorManager>().playerOneSelector = p.gameObject;
+            GameManager.gameManager.playerOneInputDevice  = context.InputDevice;
+            GameManager.gameManager.playerTwoControlScheme = context.ControlScheme;
         }
         else if (blankPTwoSelector != null)
         {
@@ -30,6 +33,9 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(250, -100, 0);
             Destroy(blankPTwoSelector);
             GameObject.Find("Manager").GetComponent<CharacterSelectorManager>().playerTwoSelector = p.gameObject;
+            GameManager.gameManager.playerOneInputDevice = context.InputDevice;
+            GameManager.gameManager.playerOneControlScheme = context.ControlScheme;
         }
+        return null;
     }
 }
