@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
     private PlayerInput playerInput;
     private InputBuffer inputBuffer;
     private HurtBox hurtBox;
+    private float halfPlayerSizeX;
     
     [ReadOnlyInInspector, SerializeField] private Vector3 velocity = Vector3.zero;
 
@@ -77,7 +78,9 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
+        halfPlayerSizeX = GetComponent<SpriteRenderer>().bounds.size.x / 2;
     }
+    
 
     void Update()
     {
@@ -88,7 +91,7 @@ public class Player : MonoBehaviour
 
     void ApplyDirectionalMovement(float controlMult = 1)
     {
-
+        clampPlayerMovement();
         var targetVel = new Vector3(
             playerInput.actions["gameplay/Left/Right"].ReadValue<float>(),
             0,
@@ -186,5 +189,18 @@ public class Player : MonoBehaviour
 
     public void OnStikeAnimationOver() {
         strikeAnimationOver = true;
+    }
+
+    void clampPlayerMovement()
+    {
+        Vector3 position = transform.position;
+
+        float distance = transform.position.x - Camera.main.transform.position.x;
+
+        float leftBorder = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)).x + halfPlayerSizeX;
+        float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - halfPlayerSizeX;
+
+        position.x = Mathf.Clamp(position.x, leftBorder, rightBorder);
+        transform.position = position;
     }
 }
