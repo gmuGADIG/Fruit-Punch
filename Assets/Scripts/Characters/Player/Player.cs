@@ -15,21 +15,18 @@ public enum PlayerState
 /// Playable character script. <br/>
 /// To get a good idea of how everything works, see how the state machine is set up in Start.
 /// </summary>
-[RequireComponent(typeof(BeltCharacter))] 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(InputBuffer))]
 public class Player : MonoBehaviour
 {
     private StateMachine<PlayerState> stateMachine;
-    private BeltCharacter beltChar;
+    private Rigidbody rb;
     private Animator anim;
     private PlayerInput playerInput;
     private InputBuffer inputBuffer;
     private HurtBox hurtBox;
     
-    [ReadOnlyInInspector, SerializeField] private Vector3 velocity = Vector3.zero;
-
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
     
@@ -53,8 +50,8 @@ public class Player : MonoBehaviour
     
     void Start()
     {
-        // gett components
-        this.GetComponentOrError(out beltChar);
+        // get components
+        this.GetComponentOrError(out rb);
         this.GetComponentOrError(out anim);
         this.GetComponentOrError(out playerInput);
         this.GetComponentOrError(out inputBuffer);
@@ -82,22 +79,19 @@ public class Player : MonoBehaviour
     void Update()
     {
         stateMachine.Update();
-        
-        beltChar.internalPosition += velocity * Time.deltaTime;
     }
 
     void ApplyDirectionalMovement(float controlMult = 1)
     {
-
         var targetVel = new Vector3(
             playerInput.actions["gameplay/Left/Right"].ReadValue<float>(),
             0,
             playerInput.actions["gameplay/Up/Down"].ReadValue<float>()
         ).normalized * maxSpeed;
 
-        targetVel.y = velocity.y;
-        velocity = Vector3.MoveTowards(
-            velocity,
+        targetVel.y = rb.velocity.y;
+        rb.velocity = Vector3.MoveTowards(
+            rb.velocity,
             targetVel,
             runAccel * Time.deltaTime * controlMult
         );
@@ -105,6 +99,23 @@ public class Player : MonoBehaviour
         // flip according to direction
         if (targetVel.x < 0) transform.localScale = new Vector3(-1, 1, 1);
         else if (targetVel.x > 0) transform.localScale = new Vector3(1, 1, 1);
+    }
+
+    bool IsGrounded()
+    {
+        // overlap a box below the player to see if it's grounded
+        // uses the hitbox's x and z size, with an arbitrary height
+        var hitBox = GetComponent<BoxCollider>();
+        const float groundBoxHeight = 0.05f;
+        
+        var overlaps = Physics.OverlapBox(
+            transform.position, 
+            new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
+            Quaternion.identity,
+            LayerMask.GetMask("Ground")
+        );
+
+        return overlaps.Length > 0;
     }
 
     void NormalEnter()
@@ -116,6 +127,7 @@ public class Player : MonoBehaviour
     PlayerState NormalUpdate()
     {
         ApplyDirectionalMovement();
+        rb.velocity += Vector3.down * (gravity * Time.deltaTime); // gravity, just in case it isn't quite grounded
 
         if (playerInput.actions["gameplay/Jump"].triggered)
         {
@@ -133,18 +145,20 @@ public class Player : MonoBehaviour
     void JumpEnter()
     {
         // anim.Play("Jump");
-        velocity += Vector3.up * jumpSpeed;
+        print("Jumping");
+        rb.velocity += Vector3.up * jumpSpeed;
     }
     
     PlayerState JumpUpdate()
     {
         ApplyDirectionalMovement(jumpControlMult);
+        rb.velocity += Vector3.down * (gravity * Time.deltaTime);
 
-        velocity += Vector3.down * (gravity * Time.deltaTime);
-        if (velocity.y < 0 && beltChar.internalPosition.y  <= 0)
+        var isFalling = rb.velocity.y < 0;
+        if (isFalling && IsGrounded())
         {
-            beltChar.internalPosition.y = 0;
-            velocity.y = 0;
+            // transform.position = new Vector3(transform.position.x, 0, transform.position.y);
+            // rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
             return PlayerState.Normal;
         }
 
@@ -164,7 +178,7 @@ public class Player : MonoBehaviour
 
     PlayerState StrikeUpdate(int strikeState)
     {
-        velocity = Vector3.MoveTowards(velocity, Vector3.zero, runAccel * Time.deltaTime);
+        rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
 
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         if (strikeAnimationOver && inputBuffer.CheckAction("gameplay/Strike"))

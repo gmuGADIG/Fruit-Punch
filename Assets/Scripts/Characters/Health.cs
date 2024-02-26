@@ -16,7 +16,7 @@ Max Health, Current Health, Decrease and Increase health functions.
 Magic of Events Implemented by Justin from designed code. 
 
 */
-
+[RequireComponent(typeof(Rigidbody))]
 public class Health : MonoBehaviour
 {
     public AuraType vulnerableTypes;
@@ -53,14 +53,22 @@ public class Health : MonoBehaviour
     {
         currentHealth = maxHealth;
     }
-    
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<HurtBox>(out var hurtBox))
+        {
+            this.Damage(hurtBox.GetDamageInfo());
+        }
+    }
+
     /// <summary>
     /// Attempts to damage the character, decreasing its health towards zero (no lower). <br/>
     /// Factors in the aura of the attack, and ignoring it's damage if this character isn't vulnerable. <br/>
     /// Doesn't do anything with knockback; that's up the player or enemy script. <br/>
     /// (onHealthChange, onHurt, and onDeath are invoked if applicable)
     /// </summary>
-    public void Damage(DamageInfo info)
+    private void Damage(DamageInfo info)
     {
         if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))

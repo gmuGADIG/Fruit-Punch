@@ -15,7 +15,7 @@ public class Enemy : MonoBehaviour
     [Tooltip("When the enemy is this close to the player, it will start attacking.")]
     [SerializeField] private float attackingDistance;
     
-    private BeltCharacter beltChar;
+    private Rigidbody rb;
     StateMachine<EnemyState> stateMachine = new();
 
     #region Approaching-State Values
@@ -23,7 +23,7 @@ public class Enemy : MonoBehaviour
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
     /// Otherwise, it's value is meaningless.
     /// </summary>
-    private BeltCharacter approachingCurrentTarget = null;
+    private Transform approachingCurrentTarget = null;
     #endregion
 
     #region Attacking-State Values
@@ -36,7 +36,8 @@ public class Enemy : MonoBehaviour
 
     private void Start()
     {
-        this.GetComponentOrError(out beltChar);
+        this.GetComponentOrError(out rb);
+        
         stateMachine.AddState(EnemyState.Approaching, EnterApproaching, UpdateApproaching, null);
         stateMachine.AddState(EnemyState.Attacking, EnterAttacking, UpdateAttacking, null);
         stateMachine.AddState(EnemyState.Hurt, EnterHurt, UpdateHurt, null);
@@ -51,30 +52,28 @@ public class Enemy : MonoBehaviour
     void EnterApproaching()
     {
         // find all player belt characters
-        var playerBeltChars =
-            FindObjectsOfType<Player>()
-            .Select(x => x.GetComponent<BeltCharacter>())
-            .Where(x => x != null);
+        var players = FindObjectsOfType<Player>();
 
         // start approaching the nearest one
         // (note: sometimes it feels like differences in z-position are exaggerated for this? might want to use transform position instead, idk)
         approachingCurrentTarget =
-            playerBeltChars
-            .OrderBy(bc => Vector3.Distance(this.beltChar.internalPosition, bc.internalPosition))
+            players
+            .Select(p => p.transform)
+            .OrderBy(t => Vector3.Distance(this.transform.position, t.position))
             .First();
     }
     
     EnemyState UpdateApproaching()
     {
-        var walkTo = approachingCurrentTarget.internalPosition;
-        walkTo.y = this.beltChar.internalPosition.y;
-        beltChar.internalPosition = Vector3.MoveTowards(
-            beltChar.internalPosition, 
+        var walkTo = approachingCurrentTarget.transform.position;
+        walkTo.y = this.transform.position.y;
+        transform.position = Vector3.MoveTowards(
+            transform.position, 
             walkTo,
             walkingSpeed *  Time.deltaTime
         );
 
-        if (Vector3.Distance(beltChar.internalPosition, walkTo) < attackingDistance)
+        if (Vector3.Distance(transform.position, walkTo) < attackingDistance)
         {
             return EnemyState.Attacking;
         }
