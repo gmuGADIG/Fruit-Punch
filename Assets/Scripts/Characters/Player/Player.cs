@@ -41,6 +41,8 @@ public class Player : MonoBehaviour
 
     [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
     [SerializeField] float gravity = 9;
+    
+    LayerMask collidingLayers;
 
     float strike1Length = -1;
     float strike2Length = -1;
@@ -65,6 +67,9 @@ public class Player : MonoBehaviour
         }
         if (strike1Length < 0 || strike2Length < 0 || strike3Length < 0)
             throw new Exception("Animation clips weren't found!");
+        
+        // set layer
+        collidingLayers = Utils.GetCollidingLayerMask(LayerMask.NameToLayer("Player"));
 
         // set up state machine
         stateMachine = new StateMachine<PlayerState>();
@@ -112,7 +117,7 @@ public class Player : MonoBehaviour
             transform.position, 
             new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
             Quaternion.identity,
-            LayerMask.GetMask("Ground")
+            collidingLayers
         );
 
         return overlaps.Length > 0;

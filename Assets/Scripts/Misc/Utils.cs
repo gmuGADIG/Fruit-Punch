@@ -60,4 +60,21 @@ public static class Utils
         float cameraWidth = cameraHeight * screenAspect;
         return new Rect(cam.transform.position.x - cameraWidth / 2, cam.transform.position.y - cameraHeight / 2, cameraWidth, cameraHeight);
     }
+
+    /// <summary>
+    /// For a given layer (0 to 31), returns the mask of all layers which it collides with, according to the physics collision matrix. <br/>
+    /// Note that this function loops through 32 layers each call, so you might want to avoid calling it in Update.
+    /// </summary>
+    /// <param name="layerNumber"></param>
+    /// <returns></returns>
+    public static LayerMask GetCollidingLayerMask(int layerNumber)
+    {
+        LayerMask result = 0;
+        for (int i = 0; i < 32; i++) {
+            if(!Physics.GetIgnoreLayerCollision(layerNumber, i))  {
+                result |= 1 << i;
+            }
+        }
+        return result;
+    }
 }
