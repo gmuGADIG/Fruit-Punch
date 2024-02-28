@@ -7,22 +7,12 @@ using UnityEngine;
 /// When attached along with a sprite renderer, makes it display correctly to a rotated camera. <br/>
 /// Since the rotated camera will compress the sprite, this calculates how much it needs to stretch to cancel it. <br/>
 /// This was chosen over a simple billboard to create a better experience in the scene view. <br/>
-/// Runs in the inspector.
+/// Only runs in the inspector.
 /// </summary>
-[ExecuteAlways]
+[ExecuteInEditMode]
 public class SpriteFixer : MonoBehaviour
 {
-    void Update()
-    {
-        if (Application.isPlaying == false) AdjustScale();
-    }
-
-    void Start()
-    {
-        AdjustScale();
-    }
-
-    void AdjustScale()
+    void OnValidate()
     {
         var xRotation = transform.eulerAngles.x;
         var rotationFromCam = xRotation - Camera.main.transform.eulerAngles.x;
