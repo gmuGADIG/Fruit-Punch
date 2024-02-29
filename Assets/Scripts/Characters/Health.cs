@@ -22,7 +22,9 @@ public class Health : MonoBehaviour
     public AuraType vulnerableTypes;
     
     [SerializeField]
-    public float maxHealth = 100;
+    private float maxHealth = 100;
+
+    public float MaxHealth => maxHealth;
     
     [ReadOnlyInInspector, SerializeField]
     private float currentHealth;

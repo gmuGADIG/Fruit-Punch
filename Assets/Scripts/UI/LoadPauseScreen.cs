@@ -1,17 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class LoadPauseScreen : MonoBehaviour
 {
+
     public string pauseScreen;
-    
-    void Update()
+    /// <summary>
+    /// Pause key hit, pause game
+    /// </summary>
+    public void OnPause()
     {
-        if (Input.GetKeyUp(KeyCode.Escape) && Time.timeScale != 0.0f) //Update when input system gets finished
+        if( Time.timeScale != 0)
         {
             SceneManager.LoadSceneAsync(pauseScreen, LoadSceneMode.Additive);
         }
+
     }
 }
