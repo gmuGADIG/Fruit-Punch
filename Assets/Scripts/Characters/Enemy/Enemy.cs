@@ -11,6 +11,10 @@ public enum EnemyState
 [RequireComponent(typeof(Health))]
 public class Enemy : MonoBehaviour
 {
+    /// <summary>
+    /// To prevent too many enemies from attacking at once, this stores the current amount. <br/>
+    /// Incremented when aggressive, decremented when an attack ends.
+    /// </summary>
     private static int currentAttackingEnemies = 0;
     private const int MaxSimultaneousAttackers = 2;
     
@@ -27,9 +31,9 @@ public class Enemy : MonoBehaviour
     StateMachine<EnemyState> stateMachine = new();
 
     #region Wandering-State Values
-    private float wanderingTimeTillAttack = 0;
-    private Vector2 wanderingToPosition;
-    private float wanderingTimeTillWander;
+    [SerializeField, ReadOnlyInInspector] private float wanderingTimeTillAttack = 0;
+    [SerializeField, ReadOnlyInInspector] private Vector3 wanderingToPosition;
+    [SerializeField, ReadOnlyInInspector] private float wanderingTimeTillWander;
     #endregion
     
     #region Aggressive-State Values
@@ -66,9 +70,8 @@ public class Enemy : MonoBehaviour
     void WanderingEnter()
     {
         wanderingTimeTillAttack = Random.Range(wanderingTimeMin, wanderingTimeMax);
-        
-        var position2d = new Vector2(beltChar.internalPosition.x, beltChar.internalPosition.y);
-        wanderingToPosition = position2d + new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
+
+        wanderingToPosition = beltChar.internalPosition;
     }
     
     EnemyState WanderingUpdate()
@@ -84,20 +87,14 @@ public class Enemy : MonoBehaviour
         }
         
         // random movement
-        if (wanderingTimeTillWander > 0)
+        beltChar.internalPosition = Vector3.MoveTowards(beltChar.internalPosition, wanderingToPosition, walkingSpeed * Time.deltaTime);
+        if (wanderingTimeTillWander < 0)
         {
-            wanderingTimeTillWander -= Time.deltaTime;
+            wanderingToPosition = beltChar.internalPosition + new Vector3(Random.Range(-1, 1), 0, Random.Range(-1, 1));
+            wanderingTimeTillWander = 3;
         }
-        else
-        {
-            var position2d = new Vector2(beltChar.internalPosition.x, beltChar.internalPosition.y);
-            var movement = (wanderingToPosition - position2d);
-            if (movement.magnitude <= 0.02f)
-            {
-                wanderingToPosition = position2d + new Vector2(Random.Range(-2, 2), Random.Range(-2, 2));
-            }
-            else wanderingTimeTillWander = 2;
-        }
+
+        wanderingTimeTillWander -= Time.deltaTime;
         
         return stateMachine.currentState;
     }

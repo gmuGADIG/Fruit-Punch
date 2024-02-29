@@ -84,7 +84,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
-        halfPlayerSizeX = GetComponent<SpriteRenderer>().bounds.size.x / 2;
+        halfPlayerSizeX = GetComponentInChildren<SpriteRenderer>().bounds.size.x / 2;
     }
     
 
