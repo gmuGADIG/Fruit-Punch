@@ -113,9 +113,9 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 2048
-  damage: 1
+  damage: 20
   knockback: {x: 0, y: 0}
-  aura: 0
+  _aura: 0
 --- !u!58 &1303734734897972015
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -161,12 +161,12 @@ GameObject:
   m_Component:
   - component: {fileID: 269422184631147026}
   - component: {fileID: 3146298313448415716}
-  - component: {fileID: 1740479588405230058}
   - component: {fileID: 3591174525589135915}
   - component: {fileID: 5087417677774483037}
   - component: {fileID: 5171601649900177564}
   - component: {fileID: 4033087471224058494}
   - component: {fileID: 4340506222115504097}
+  - component: {fileID: 7395463061143411911}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -207,25 +207,7 @@ MonoBehaviour:
   shadows:
   - {fileID: 1116415113221405965}
   shadowZ: 9
-  internalPosition: {x: 0.054, y: 0, z: -0.89166665}
---- !u!114 &1740479588405230058
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5370847992972462549}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 64cb2fc818698104d9b5eda094f6258c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  velocity: {x: 0, y: 0, z: 0}
-  maxSpeed: 2
-  runAccel: 40
-  jumpControlMult: 0.3
-  jumpSpeed: 3.2
-  gravity: 9
+  internalPosition: {x: -0.21, y: 0, z: -1.3833332}
 --- !u!58 &3591174525589135915
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -340,6 +322,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BufferLength: 0.16
+--- !u!114 &7395463061143411911
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370847992972462549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca24de0cca1304243b961e24896f580f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0, z: 0}
+  maxSpeed: 2
+  runAccel: 40
+  jumpControlMult: 0.3
+  jumpSpeed: 3.2
+  gravity: 9
 --- !u!1 &7444369387174406894
 GameObject:
   m_ObjectHideFlags: 0
