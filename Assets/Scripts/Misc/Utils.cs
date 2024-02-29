@@ -25,6 +25,19 @@ public static class Utils
     }
 
     /// <summary>
+    /// Similar to GetComponentInChildren, except an error will be thrown if no such component exists.
+    /// </summary>
+    public static void GetComponentInChildrenOrError<T>(
+        this MonoBehaviour obj, 
+        out T result
+    ) {
+        result = obj.GetComponentInChildren<T>();
+        if (result == null) {
+            throw new Exception($"`{obj.name}`'s children are missing component of type `{typeof(T).Name}`!");
+        }
+    }
+
+    /// <summary>
     /// Returns an iterator of actions the player input has.
     /// </summary>
     /// <param name="input">The input in question</param>
