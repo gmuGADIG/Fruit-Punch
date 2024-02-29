@@ -9,22 +9,21 @@ public class LoadGameOverScreen : MonoBehaviour
     [Tooltip ("Name of game over scene")]
     public string GameOverScene;
 
-    //currently only set up for one player death, will work on making it work for 1 and 2 player
     /*
-     * Current idea
-     * playerHealth<LIST> = FindObjects
-     * get num of living players
-     * onEnable -> onDeath subtract num of living players
-     * when num of living players = 0, game over 
+     * On Awake gets num of living players
+     * When a player dies, it subtracts the number of living players
+     * If living players equal zero load the Game over screen
      * 
      */
 
-    Health playerHealth;
+    Health[] playersHealth;
+    int numOfLivingPlayers;
     // Start is called before the first frame update
     void Awake()
     {
-        playerHealth = FindObjectOfType<Health>();
-        
+        playersHealth = FindObjectsOfType<Health>();
+        numOfLivingPlayers = playersHealth.Length;
+        Debug.Log("num of lliving players " + numOfLivingPlayers);
     }
     
 
@@ -35,8 +34,13 @@ public class LoadGameOverScreen : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.J))
         {
-            playerHealth.Damage(damageInfo);
-            Debug.Log("Should be damaged");
+            playersHealth[0].Damage(damageInfo);
+            Debug.Log("Player 1 Should be damaged");
+        }
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            playersHealth[1].Damage(damageInfo);
+            Debug.Log("Player 2 Should be damaged");
         }
     }
 
@@ -47,11 +51,24 @@ public class LoadGameOverScreen : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(GameOverScene, LoadSceneMode.Additive);
     }
-    
+    /// <summary>
+    /// Will reduce number of living players, if no living players, GAME OVER
+    /// </summary>
+    private void APlayerDied()
+    {
+        numOfLivingPlayers--;
+        Debug.Log("A player has died");
+        if(numOfLivingPlayers == 0)
+        { DoLoadGameOverScreen(); }
+    }
    
     private void OnEnable()
     {
-        playerHealth.onDeath += DoLoadGameOverScreen; 
+        for(int i = 0; i < numOfLivingPlayers; i++)
+        {
+            playersHealth[i].onDeath += APlayerDied;
+        }
+        
     }
 
     
