@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -17,6 +18,7 @@ public class TestPlayerSelector : MonoBehaviour
     [SerializeField]
     public Sprite[] images;
     private Image characterImage;
+    private TextMeshProUGUI text;
     private int numCharacters;
     
     public Character character;
@@ -27,6 +29,7 @@ public class TestPlayerSelector : MonoBehaviour
     {
         manager = GameObject.Find("Manager").GetComponent<CharacterSelectorManager>();
         characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
+        text = transform.Find("Confirm Text").gameObject.GetComponent<TextMeshProUGUI>();
         numCharacters = Character.GetNames(typeof(Character)).Length-1;
         if (numCharacters != images.Length)
             Debug.LogWarning("TestPlayerSelector.cs: The player enum and images provided do not have equivilent length.");
@@ -77,6 +80,7 @@ public class TestPlayerSelector : MonoBehaviour
                 GameManager.gameManager.playerTwo = character;
             //Character other = manager.GetOtherCharacter();
             //if (other == Character.None || (Character)other!=character)
+            text.text = "Press\r\n\r\n\r\nto start";
             characterSelected = true;
         }
     }
@@ -86,6 +90,7 @@ public class TestPlayerSelector : MonoBehaviour
         if (characterSelected)
         {
             characterSelected = false;
+            text.text = "Press\r\n\r\n\r\nto select";
             if (isPlayerOne)
                 GameManager.gameManager.playerOne = Character.None;
             else

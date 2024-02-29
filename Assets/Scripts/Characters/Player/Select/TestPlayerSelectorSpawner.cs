@@ -27,9 +27,11 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
         if(GameManager.gameManager == null)
             GameManager.gameManager = new GameManager();
 
+        p.gameObject.transform.Find("Button Image").GetComponent<ButtonConfirm>().SetButton(context.ControlScheme);
 
         if (blankPOneSelector != null)
         {
+            //Debug.Log(context.ControlScheme);
             p.gameObject.transform.parent = GameObject.Find("Canvas").transform;
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -100, 0);
             Destroy(blankPOneSelector);
