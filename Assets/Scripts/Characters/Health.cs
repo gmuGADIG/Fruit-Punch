@@ -28,7 +28,7 @@ public class Health : MonoBehaviour
     
     [ReadOnlyInInspector, SerializeField]
     private float currentHealth;
-    
+    public float CurrentHealth => currentHealth;
     /// <summary>
     /// Invoked when this character's health reaches zero. <br/>
     /// (run after onHealthChange and onHurt)
@@ -53,7 +53,13 @@ public class Health : MonoBehaviour
     {
         currentHealth = maxHealth;
     }
-    
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.K))
+        {
+            Damage(new DamageInfo(100, Vector2.zero, (AuraType)(-1)));
+        }
+    }
     /// <summary>
     /// Attempts to damage the character, decreasing its health towards zero (no lower). <br/>
     /// Factors in the aura of the attack, and ignoring it's damage if this character isn't vulnerable. <br/>
@@ -105,6 +111,10 @@ public class Health : MonoBehaviour
         onDeath?.Invoke();
     }
 
+    public bool HasAura()
+    {
+        return vulnerableTypes != 0;
+    }
 }
 
 public struct HealthChange

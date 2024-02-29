@@ -5,71 +5,31 @@ using UnityEngine;
 
 public class EnemySpawns : MonoBehaviour
 {
-
-    public int enemyCountTotal = 1;
-
-    public int burstSpawnCount = 1;
-
-    public float spawnRate = 2.0f;
-
-    [Tooltip("Should the enemies be spawning")]
-    [SerializeField]
-    private bool isSpawning = true;
-
-    private enum AuraType{Red, Blue, Yellow, Green};
-
-
-    public GameObject testEnemy;
-
-
-    private float timer;
-
-    private int spawnsRemaining;
-
-    public void StartSpawningEnemies()
+    /// <summary>
+    /// Spawner type that affects how the enemy is spawned in the screen.
+    /// </summary>
+    public enum SpawnPointType
     {
-        isSpawning = true;
+        Left,
+        Right,
+        Ground,
+        JumpIn
     }
 
-    public void SpawnEnemy()
+    [Tooltip("How the enemy should spawned into the screen")]
+    public SpawnPointType spawnType;
+
+    /// <summary>
+    /// Creates a copy of the provided enemy at this spawner's location and returns it.
+    /// </summary>
+    /// <param name="enemy">Source enemy to copy</param>
+    /// <param name="aura"></param>
+    /// <returns></returns>
+    public Enemy SpawnEnemy(Enemy enemy, AuraType aura)
     {
-
-        GameObject enemy = Instantiate(testEnemy, transform.position, Quaternion.identity);
-
-        spawnsRemaining -= 1;
-        if (spawnsRemaining <= 0)
-        {
-            isSpawning = false;
-        }
-    }
-
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-        timer = spawnRate;
-        spawnsRemaining = enemyCountTotal;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (!isSpawning)
-        {
-            return;
-        }
-
-        if (timer > 0.0f)
-        {
-            timer -= Time.deltaTime;
-        }
-        else
-        {
-            SpawnEnemy();
-
-            timer = spawnRate;
-        }
+        Enemy copy = Instantiate(enemy, transform.position, Quaternion.identity);
+        copy.GetComponent<Health>().vulnerableTypes = aura;
+        return copy;
     }
 
     private void OnDrawGizmos()
