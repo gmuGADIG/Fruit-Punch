@@ -6,14 +6,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class GrabbableItem : MonoBehaviour
 {
-    [SerializeField] float groundDecel;
+    const float groundDecel = 5f;
     Rigidbody rb;
-    LayerMask collidingLayers;
     
     void Start()
     {
         this.GetComponentOrError(out rb);
-        collidingLayers = Utils.GetCollidingLayerMask(LayerMask.NameToLayer("Item"));
     }
 
     void Update()
@@ -32,7 +30,7 @@ public class GrabbableItem : MonoBehaviour
             transform.position, 
             new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
             Quaternion.identity,
-            collidingLayers
+            LayerMask.GetMask("Ground")
         );
 
         return overlaps.Length > 0;

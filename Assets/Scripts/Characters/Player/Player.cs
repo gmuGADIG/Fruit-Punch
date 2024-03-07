@@ -284,6 +284,7 @@ public class Player : MonoBehaviour
     PlayerState GrabbingUpdate()
     {
         Debug.Assert(grabber.IsGrabbing);
+        rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
         ApplyDirectionalMovement(0);
         
         if (playerInput.actions["gameplay/Interact"].triggered)
@@ -297,11 +298,7 @@ public class Player : MonoBehaviour
     void ThrowingEnter()
     {
         var facingLeft = transform.localScale.x < 0;
-        var throwDirection =
-            facingLeft
-                ? new Vector3(-1, .5f, 0)
-                : new Vector3(1, .5f, 0); 
-        grabber.ThrowItem(throwDirection);
+        grabber.ThrowItem(facingLeft);
     }
     
     PlayerState ThrowingUpdate()

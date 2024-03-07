@@ -9,8 +9,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabbable : MonoBehaviour
 {
+    Rigidbody rb;
+    
     void Start()
     {
+        this.GetComponentOrError(out rb);
+        
         var hasTrigger = GetComponentsInChildren<Collider>().Any(c => c.isTrigger);
         if (!hasTrigger) Debug.LogError("Grabbable does not have any trigger! Add a trigger collider to it or a child.");
     }
@@ -22,15 +26,18 @@ public class Grabbable : MonoBehaviour
     public void Grab()
     {
         onGrab?.Invoke();
+        rb.isKinematic = true;
     }
 
     public void Release()
     {
         OnThrow?.Invoke();
+        rb.isKinematic = false;
     }
     
     public void ForceRelease()
     {
         onForceRelease?.Invoke();
+        rb.isKinematic = false;
     }
 }

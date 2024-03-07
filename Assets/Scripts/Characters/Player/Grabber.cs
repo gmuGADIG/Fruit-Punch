@@ -21,16 +21,18 @@ public class Grabber : MonoBehaviour
     Grabbable GetGrabbedItem() => this.transform.GetChild(0).GetComponent<Grabbable>();
 
     /// <summary>
-    /// Throws the currently held grabbable in the direction of throwDir.
+    /// Throws the currently held grabbable left or right (depending on facingLeft).
     /// </summary>
-    /// <param name="throwDir"></param>
-    public void ThrowItem(Vector3 throwDir)
+    /// <param name="facingLeft"></param>
+    public void ThrowItem(bool facingLeft)
     {
+        var throwDir = new Vector3(1, 1f, 0);
+        if (facingLeft) throwDir.x *= -1;
         var item = GetGrabbedItem();
+        item.Release();
         item.transform.SetParent(null);
         item.onForceRelease -= ForceReleaseCallback;
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
-        item.Release();
     }
 
     
@@ -45,10 +47,10 @@ public class Grabber : MonoBehaviour
         if (currentOverlaps.Count == 0) return false;
         
         var item = currentOverlaps[0];
-        item.transform.SetParent(this.transform);
-        item.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        item.onForceRelease += ForceReleaseCallback;
         item.Grab();
+        item.transform.SetParent(this.transform);
+        item.transform.position = this.transform.position;
+        item.onForceRelease += ForceReleaseCallback;
         return true;
     }
 
