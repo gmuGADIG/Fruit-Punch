@@ -75,18 +75,18 @@ public class Enemy : MonoBehaviour
 
         if (Vector3.Distance(transform.position, walkTo) < attackingDistance)
         {
-            Debug.Log("I'm attached to: " + approachingCurrentTarget.name);
-            Component[] c = approachingCurrentTarget.GetComponents<MonoBehaviour>();
-
-            foreach (MonoBehaviour script in c)
-            {
-                Debug.Log(script);
-            }
-
-            Health health = approachingCurrentTarget.GetComponent<Health>();
-
-            // HARDCODED DAMAGE - TODO: make this a variable
-            health.Damage(new DamageInfo(90, Vector2.zero, AuraType.Strike));
+            // Debug.Log("I'm attached to: " + approachingCurrentTarget.name);
+            // Component[] c = approachingCurrentTarget.GetComponents<MonoBehaviour>();
+            //
+            // foreach (MonoBehaviour script in c)
+            // {
+            //     Debug.Log(script);
+            // }
+            //
+            // Health health = approachingCurrentTarget.GetComponent<Health>();
+            //
+            // // HARDCODED DAMAGE - TODO: make this a variable
+            // health.Damage(new DamageInfo(90, Vector2.zero, AuraType.Strike));
             return EnemyState.Attacking;
         }
 

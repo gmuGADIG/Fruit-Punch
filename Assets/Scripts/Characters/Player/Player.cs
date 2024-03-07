@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
 public enum PlayerState
@@ -11,7 +12,8 @@ public enum PlayerState
     Jump,
     Strike1, Strike2, Strike3,
     JumpStrike,
-    Pearry
+    Pearry,
+    Grabbing, Throwing
 }
 
 /// <summary>
@@ -28,7 +30,7 @@ public class Player : MonoBehaviour
     private Animator anim;
     private PlayerInput playerInput;
     private InputBuffer inputBuffer;
-    private HurtBox hurtBox;
+    private Grabber grabber;
     private float halfPlayerSizeX;
 
     [SerializeField] SpriteRenderer playerSprite;
@@ -47,7 +49,7 @@ public class Player : MonoBehaviour
 
     [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
     [SerializeField] float gravity = 9;
-    
+
     LayerMask collidingLayers;
 
     float strike1Length = -1;
@@ -64,9 +66,11 @@ public class Player : MonoBehaviour
         this.GetComponentOrError(out anim);
         this.GetComponentOrError(out playerInput);
         this.GetComponentOrError(out inputBuffer);
-
-        // TODO: handle potentially multiple hurt boxes?
-        this.GetComponentInChildrenOrError(out hurtBox);
+        this.GetComponentInChildrenOrError(out grabber);
+        
+        // subscribe events
+        grabber.onForceRelease += () => stateMachine.SetState(PlayerState.Normal);
+        
 
         // get animation lengths
         foreach (var clip in anim.runtimeAnimatorController.animationClips)
@@ -90,6 +94,8 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
         stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
+        stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
+        stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
         halfPlayerSizeX = playerSprite.bounds.size.x / 2;
     }
@@ -98,6 +104,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         stateMachine.Update();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<Pickup>(out var pickup))
+            pickup.PickUp(this);
     }
 
     /// <summary>
@@ -144,7 +156,6 @@ public class Player : MonoBehaviour
 
     void NormalEnter()
     {
-        hurtBox.aura = 0; // nothing
         anim.Play("Idle");
     }
 
@@ -166,6 +177,11 @@ public class Player : MonoBehaviour
         if (playerInput.actions["gameplay/Pearry"].triggered)
         {
             return PlayerState.Pearry;
+        }
+        
+        if (playerInput.actions["gameplay/Interact"].triggered)
+        {
+            if (grabber.GrabItem()) return PlayerState.Grabbing;
         }
 
         return stateMachine.currentState;
@@ -207,9 +223,7 @@ public class Player : MonoBehaviour
         // avoid reading inputs before we entered this state
         inputBuffer.ClearAction("gameplay/Strike");
         strikeAnimationOver = false;
-
-        hurtBox.aura = AuraType.Strike;
-
+        
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
     }
@@ -236,7 +250,6 @@ public class Player : MonoBehaviour
     }
 
     void JumpStrikeEnter() {
-        hurtBox.aura = AuraType.JumpAtk;
         anim.Play("PlayerJumpStrike");
     }
 
@@ -249,6 +262,40 @@ public class Player : MonoBehaviour
     PlayerState PearryUpdate() {
 
         if (stateMachine.timeInState >= pearryLength)
+        {
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
+    }
+    
+    PlayerState GrabbingUpdate()
+    {
+        Debug.Assert(grabber.IsGrabbing);
+        ApplyDirectionalMovement(0);
+        
+        if (playerInput.actions["gameplay/Interact"].triggered)
+        {
+            return PlayerState.Throwing;
+        }
+        
+        return stateMachine.currentState;
+    }
+
+    void ThrowingEnter()
+    {
+        var facingLeft = transform.localScale.x < 0;
+        var throwDirection =
+            facingLeft
+                ? new Vector3(-1, .5f, 0)
+                : new Vector3(1, .5f, 0); 
+        grabber.ThrowItem(throwDirection);
+    }
+    
+    PlayerState ThrowingUpdate()
+    {
+        // TODO: throwing should be tied better into the animation
+        if (stateMachine.timeInState >= .1f)
         {
             return PlayerState.Normal;
         }
