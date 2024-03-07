@@ -30,7 +30,9 @@ public class Player : MonoBehaviour
     private InputBuffer inputBuffer;
     private HurtBox hurtBox;
     private float halfPlayerSizeX;
-    
+
+    [SerializeField] SpriteRenderer playerSprite;
+
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
     
@@ -89,7 +91,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
         stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
-        halfPlayerSizeX = GetComponent<SpriteRenderer>().bounds.size.x / 2;
+        halfPlayerSizeX = playerSprite.bounds.size.x / 2;
     }
     
 

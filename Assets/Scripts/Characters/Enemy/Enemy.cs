@@ -51,7 +51,7 @@ public class Enemy : MonoBehaviour
 
     void EnterApproaching()
     {
-        // find all player belt characters
+        // find all players
         var players = FindObjectsOfType<Player>();
 
         // start approaching the nearest one

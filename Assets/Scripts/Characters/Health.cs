@@ -68,7 +68,7 @@ public class Health : MonoBehaviour
     /// Doesn't do anything with knockback; that's up the player or enemy script. <br/>
     /// (onHealthChange, onHurt, and onDeath are invoked if applicable)
     /// </summary>
-    private void Damage(DamageInfo info)
+    public void Damage(DamageInfo info)
     {
         if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))

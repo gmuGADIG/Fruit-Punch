@@ -22,6 +22,8 @@ public class HurtBox : MonoBehaviour
 
     [SerializeField] private AuraType _aura;
     public Vector2 knockback;
+
+    List<Collider> previousHits = new();
 	
     public AuraType aura {
         get => _aura;
@@ -33,7 +35,7 @@ public class HurtBox : MonoBehaviour
 
     void Start()
     {
-        Assert(aura != 0);
+        //Assert(aura != 0);
         Assert(parentTransform != null);
         Assert(hitLayers != 0);
     }
@@ -43,5 +45,21 @@ public class HurtBox : MonoBehaviour
         var facingLeft = parentTransform.localScale.x < 0;
         var knockback = facingLeft ? Vector2.left : Vector2.right;
         return new DamageInfo(this.damage, knockback, this.aura);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!previousHits.Contains(other))
+        {
+            if (other.TryGetComponent<Health>(out var thingTakingDamage))
+            {
+                Debug.Log($"Aura: {aura}", gameObject);
+
+                // Makes the thingTakingDamage take damage based on the aura, 
+                // damage and knockback (set in the hurtbox)
+                thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura));
+            }
+            previousHits.Add(other);
+        }
     }
 }
