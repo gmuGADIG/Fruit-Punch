@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Utils;
 
+public struct HurtContext {
+    public Health ThingTakingDamage;
+    public DamageInfo DamageInfo;
+}
+
 /// <summary>
 /// Creates a hurt box, dealing damage to players or enemies when they collide with the attached Collider2D. <br/>
 /// The given <c>beltCharacter</c> is used for z-position checking. It may be attached to the same object or a (grand)parent. 
@@ -25,6 +30,9 @@ public class HurtBox : MonoBehaviour
     }
 
     private List<BeltCharacter> previousHits = new();
+
+    // TODO
+    public event Action<HurtContext> OnHurt;
 
     private void Start()
     {
@@ -51,7 +59,12 @@ public class HurtBox : MonoBehaviour
 
                 // Makes the thingTakingDamage take damage based on the aura, 
                 // damage and knockback (set in the hurtbox)
-                thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura)); 
+                var damageInfo = new DamageInfo(damage, knockback, aura);
+                thingTakingDamage.Damage(damageInfo); 
+                OnHurt?.Invoke(new HurtContext {
+                    ThingTakingDamage = thingTakingDamage,
+                    DamageInfo = damageInfo
+                });
             }
         }   
         previousHits = hits;

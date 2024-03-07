@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
     private const int MaxSimultaneousAttackers = 2;
     
     [Tooltip("How fast the enemy approaches the player, in \"meters\" per second")]
-    [SerializeField] private float walkingSpeed;
+    [SerializeField] protected float walkingSpeed;
 
     [Tooltip("When the enemy is this close to the player, it will start attacking.")]
     [SerializeField] private float attackingDistance;
@@ -27,8 +27,8 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float wanderingTimeMin = 5000;
     [SerializeField] private float wanderingTimeMax = 10000;
     
-    private BeltCharacter beltChar;
-    StateMachine<EnemyState> stateMachine = new();
+    protected BeltCharacter beltChar;
+    protected StateMachine<EnemyState> stateMachine = new();
 
     #region Wandering-State Values
     [SerializeField, ReadOnlyInInspector] private float wanderingTimeTillAttack = 0;
@@ -41,7 +41,7 @@ public class Enemy : MonoBehaviour
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
     /// Otherwise, it's value is meaningless.
     /// </summary>
-    private BeltCharacter aggressiveCurrentTarget = null;
+    protected BeltCharacter aggressiveCurrentTarget = null;
     #endregion
 
     #region Attacking-State Values
@@ -56,8 +56,8 @@ public class Enemy : MonoBehaviour
     {
         this.GetComponentOrError(out beltChar);
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, null);
-        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, null);
-        stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExit);
+        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnterExt, AggressiveUpdate, AggressiveExit);
+        stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExitExt);
         stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, null);
         stateMachine.FinalizeAndSetState(EnemyState.Wandering);
     }
@@ -99,10 +99,8 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    void AggressiveEnter()
+    protected virtual void AggressiveEnter()
     {
-        currentAttackingEnemies += 1;
-        
         // find all player belt characters
         var playerBeltChars =
             FindObjectsOfType<Player>()
@@ -116,8 +114,13 @@ public class Enemy : MonoBehaviour
             .OrderBy(bc => Vector3.Distance(this.beltChar.internalPosition, bc.internalPosition))
             .First();
     }
+
+    void AggressiveEnterExt() {
+        currentAttackingEnemies += 1;
+        AggressiveEnter();
+    }
     
-    EnemyState AggressiveUpdate()
+    protected virtual EnemyState AggressiveUpdate()
     {
         var walkTo = aggressiveCurrentTarget.internalPosition;
         walkTo.y = this.beltChar.internalPosition.y;
@@ -140,29 +143,34 @@ public class Enemy : MonoBehaviour
             Health health = aggressiveCurrentTarget.GetComponent<Health>();
 
             // HARDCODED DAMAGE - TODO: make this a variable
-            health.Damage(new DamageInfo(90, Vector2.zero, AuraType.Strike));
+            //health.Damage(new DamageInfo(90, Vector2.zero, AuraType.Strike));
             return EnemyState.Attacking;
         }
 
         return stateMachine.currentState;
     }
 
-    void AttackingEnter()
+    protected virtual void AggressiveExit() {}
+
+    protected virtual void AttackingEnter()
     {
         attackingTimeLeft = 2;
         // print("Enemy: WHAM!!");
     }
     
-    EnemyState AttackingUpdate()
+    protected virtual EnemyState AttackingUpdate()
     {
         attackingTimeLeft -= Time.deltaTime;
         if (attackingTimeLeft <= 0) return EnemyState.Wandering;
         else return stateMachine.currentState;
     }
 
-    void AttackingExit()
+    protected virtual void AttackingExit() {}
+
+    void AttackingExitExt()
     {
         currentAttackingEnemies -= 1;
+        AttackingExit();
     }
 
     public void Hurt(DamageInfo info)
