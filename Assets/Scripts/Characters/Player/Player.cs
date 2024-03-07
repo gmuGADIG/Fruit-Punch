@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Assertions;
@@ -69,7 +70,7 @@ public class Player : MonoBehaviour
         this.GetComponentInChildrenOrError(out grabber);
         
         // subscribe events
-        grabber.onForceRelease += () => stateMachine.SetState(PlayerState.Normal);
+        grabber.onForceRelease += ForceReleaseCallback;
         
 
         // get animation lengths
@@ -99,7 +100,12 @@ public class Player : MonoBehaviour
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
         halfPlayerSizeX = playerSprite.bounds.size.x / 2;
     }
-    
+
+
+    void OnDestroy()
+    {
+        grabber.onForceRelease -= ForceReleaseCallback;
+    }
 
     void Update()
     {
@@ -267,6 +273,12 @@ public class Player : MonoBehaviour
         }
 
         return stateMachine.currentState;
+    }
+
+    // subscribed to the grabber's onForceRelease event
+    void ForceReleaseCallback()
+    {
+        stateMachine.SetState(PlayerState.Normal);
     }
     
     PlayerState GrabbingUpdate()

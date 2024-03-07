@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+/// <summary>
+/// Lets the play grab any nearby grabbables (items or enemies).
+/// </summary>
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabber : MonoBehaviour
 {
@@ -38,10 +41,12 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
+        // TODO: player can only grab enemies if the aura allows. this is not yet checked.
         if (currentOverlaps.Count == 0) return false;
         
         var item = currentOverlaps[0];
         item.transform.SetParent(this.transform);
+        item.GetComponent<Rigidbody>().velocity = Vector3.zero;
         item.onForceRelease += ForceReleaseCallback;
         item.Grab();
         return true;
