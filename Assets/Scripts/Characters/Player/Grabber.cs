@@ -38,9 +38,7 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        print("trying to grab item..");
         if (currentOverlaps.Count == 0) return false;
-        print("item grabbed!");
         
         var item = currentOverlaps[0];
         item.transform.SetParent(this.transform);
