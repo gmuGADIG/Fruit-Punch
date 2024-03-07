@@ -13,7 +13,15 @@ public class HurtBox : MonoBehaviour
     public LayerMask hitLayers;
     public float damage;
     public Vector2 knockback;
-    [SerializeField] public AuraType aura;
+    [SerializeField] private AuraType _aura;
+
+    public AuraType aura {
+        get => _aura;
+        set {
+            _aura = value;
+            previousHits.Clear();
+        }
+    }
 
     private List<BeltCharacter> previousHits = new();
 
@@ -33,7 +41,11 @@ public class HurtBox : MonoBehaviour
             // todo: handle collision here
             if (hit.TryGetComponent<Health>(out var thingTakingDamage))
             {
-                thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura)); // Makes the thingTakingDamage take damage based on the aura, damage, and knockback (set in the hurtbox)
+                print($"Aura: {aura}");
+
+                // Makes the thingTakingDamage take damage based on the aura, 
+                // damage and knockback (set in the hurtbox)
+                thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura)); 
             }
         }   
         previousHits = hits;
