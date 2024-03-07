@@ -1,12 +1,14 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum Character
 {
-    Apple,
+    None=-1,
+    Apple=0,
     Banana,
-    Orange
+    Carrot
 }
 
 public class TestPlayerSelector : MonoBehaviour
@@ -16,16 +18,19 @@ public class TestPlayerSelector : MonoBehaviour
     [SerializeField]
     public Sprite[] images;
     private Image characterImage;
+    private TextMeshProUGUI text;
     private int numCharacters;
     
     public Character character;
     public bool characterSelected;
+    public bool isPlayerOne;
 
     private void Start()
     {
         manager = GameObject.Find("Manager").GetComponent<CharacterSelectorManager>();
         characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
-        numCharacters = Character.GetNames(typeof(Character)).Length;
+        text = transform.Find("Confirm Text").gameObject.GetComponent<TextMeshProUGUI>();
+        numCharacters = Character.GetNames(typeof(Character)).Length-1;
         if (numCharacters != images.Length)
             Debug.LogWarning("TestPlayerSelector.cs: The player enum and images provided do not have equivilent length.");
         
@@ -33,7 +38,7 @@ public class TestPlayerSelector : MonoBehaviour
         characterImage.sprite = images[0];
     }
 
-    void OnUp()
+    void OnRight()
     {
         if (characterSelected)
             return;
@@ -44,14 +49,14 @@ public class TestPlayerSelector : MonoBehaviour
         characterImage.sprite = images[(int)character];
     }
 
-    void OnDown()
+    void OnLeft()
     {
         if (characterSelected)
             return;
 
         character--;
         if (character < 0)
-            character = (Character)(numCharacters - 1);
+            character = (Character)(numCharacters-1);
         characterImage.sprite = images[(int)character];
     }
 
@@ -59,17 +64,24 @@ public class TestPlayerSelector : MonoBehaviour
     {
         if (characterSelected)
         {
+            
             if (manager.GetPlayersReady())
             {
                 //Start Game
+                SceneManager.LoadScene("PostCharacterSelector");
                 Debug.Log("Characters Selected");
             }
         }
         else
         {
-            int other = manager.GetOtherCharacter();
-            if (other == -1 || (Character)other!=character)
-                characterSelected = true;
+            if (isPlayerOne)
+                GameManager.gameManager.playerOne = character;
+            else
+                GameManager.gameManager.playerTwo = character;
+            //Character other = manager.GetOtherCharacter();
+            //if (other == Character.None || (Character)other!=character)
+            text.text = "Press\r\n\r\n\r\nto start";
+            characterSelected = true;
         }
     }
 
@@ -78,6 +90,11 @@ public class TestPlayerSelector : MonoBehaviour
         if (characterSelected)
         {
             characterSelected = false;
+            text.text = "Press\r\n\r\n\r\nto select";
+            if (isPlayerOne)
+                GameManager.gameManager.playerOne = Character.None;
+            else
+                GameManager.gameManager.playerTwo = Character.None;
         }
         else
         {

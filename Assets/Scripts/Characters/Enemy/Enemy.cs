@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour
 {
     [Tooltip("How fast the enemy approaches the player, in \"meters\" per second")]
     [SerializeField] private float walkingSpeed;
-    
+
     [Tooltip("When the enemy is this close to the player, it will start attacking.")]
     [SerializeField] private float attackingDistance;
     
@@ -29,7 +29,7 @@ public class Enemy : MonoBehaviour
     #region Attacking-State Values
     private float attackingTimeLeft;
     #endregion
-    
+
     #region Hurt-State Values
     private float hurtTimeLeft;
     #endregion
@@ -62,7 +62,7 @@ public class Enemy : MonoBehaviour
             .OrderBy(t => Vector3.Distance(this.transform.position, t.position))
             .First();
     }
-    
+
     EnemyState UpdateApproaching()
     {
         var walkTo = approachingCurrentTarget.transform.position;
@@ -70,11 +70,23 @@ public class Enemy : MonoBehaviour
         transform.position = Vector3.MoveTowards(
             transform.position, 
             walkTo,
-            walkingSpeed *  Time.deltaTime
+            walkingSpeed * Time.deltaTime
         );
 
         if (Vector3.Distance(transform.position, walkTo) < attackingDistance)
         {
+            Debug.Log("I'm attached to: " + approachingCurrentTarget.name);
+            Component[] c = approachingCurrentTarget.GetComponents<MonoBehaviour>();
+
+            foreach (MonoBehaviour script in c)
+            {
+                Debug.Log(script);
+            }
+
+            Health health = approachingCurrentTarget.GetComponent<Health>();
+
+            // HARDCODED DAMAGE - TODO: make this a variable
+            health.Damage(new DamageInfo(90, Vector2.zero, AuraType.Strike));
             return EnemyState.Attacking;
         }
 
@@ -86,7 +98,7 @@ public class Enemy : MonoBehaviour
         attackingTimeLeft = 2;
         // print("Enemy: WHAM!!");
     }
-    
+
     EnemyState UpdateAttacking()
     {
         attackingTimeLeft -= Time.deltaTime;
@@ -99,12 +111,12 @@ public class Enemy : MonoBehaviour
         print($"health down to {100 - damage}");
         stateMachine.SetState(EnemyState.Hurt);
     }
-    
+
     void EnterHurt()
     {
         print("Enemy: Ouch!!");
     }
-    
+
     EnemyState UpdateHurt()
     {
         hurtTimeLeft -= Time.deltaTime;

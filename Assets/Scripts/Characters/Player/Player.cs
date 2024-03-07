@@ -2,13 +2,16 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.InputSystem;
 
 public enum PlayerState
 {
     Normal,
     Jump,
-    Strike1, Strike2, Strike3
+    Strike1, Strike2, Strike3,
+    JumpStrike,
+    Pearry
 }
 
 /// <summary>
@@ -26,6 +29,7 @@ public class Player : MonoBehaviour
     private PlayerInput playerInput;
     private InputBuffer inputBuffer;
     private HurtBox hurtBox;
+    private float halfPlayerSizeX;
     
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
@@ -47,6 +51,7 @@ public class Player : MonoBehaviour
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
+    float pearryLength = 3;
     
     bool strikeAnimationOver = false;
     
@@ -57,6 +62,9 @@ public class Player : MonoBehaviour
         this.GetComponentOrError(out anim);
         this.GetComponentOrError(out playerInput);
         this.GetComponentOrError(out inputBuffer);
+
+        // TODO: handle potentially multiple hurt boxes?
+        this.GetComponentInChildrenOrError(out hurtBox);
 
         // get animation lengths
         foreach (var clip in anim.runtimeAnimatorController.animationClips)
@@ -78,16 +86,25 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike1, () => StrikeEnter(1), () => StrikeUpdate(1), null);
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
+        stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
+        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
+        halfPlayerSizeX = GetComponent<SpriteRenderer>().bounds.size.x / 2;
     }
+    
 
     void Update()
     {
         stateMachine.Update();
     }
 
+    /// <summary>
+    /// Moves the player according to input.
+    /// </summary>
+    /// <param name="controlMult">How much the player can influence their movement (may be less than 1 for in-air movement)</param>
     void ApplyDirectionalMovement(float controlMult = 1)
     {
+        clampPlayerMovement();
         var targetVel = new Vector3(
             playerInput.actions["gameplay/Left/Right"].ReadValue<float>(),
             0,
@@ -125,7 +142,7 @@ public class Player : MonoBehaviour
 
     void NormalEnter()
     {
-        print("returning to normal");
+        hurtBox.aura = 0; // nothing
         anim.Play("Idle");
     }
 
@@ -144,6 +161,11 @@ public class Player : MonoBehaviour
             return PlayerState.Strike1;
         }
 
+        if (playerInput.actions["gameplay/Pearry"].triggered)
+        {
+            return PlayerState.Pearry;
+        }
+
         return stateMachine.currentState;
     }
 
@@ -154,6 +176,7 @@ public class Player : MonoBehaviour
         rb.velocity += Vector3.up * jumpSpeed;
     }
     
+    // NOTE: Is also the update function for jump attack!
     PlayerState JumpUpdate()
     {
         ApplyDirectionalMovement(jumpControlMult);
@@ -167,6 +190,13 @@ public class Player : MonoBehaviour
             return PlayerState.Normal;
         }
 
+
+        if (playerInput.actions["gameplay/Strike"].triggered
+            && stateMachine.currentState != PlayerState.JumpStrike) 
+        {
+            return PlayerState.JumpStrike;
+        }
+
         return stateMachine.currentState;
     }
 
@@ -176,7 +206,8 @@ public class Player : MonoBehaviour
         inputBuffer.ClearAction("gameplay/Strike");
         strikeAnimationOver = false;
 
-        print($"Strike{strikeState}");
+        hurtBox.aura = AuraType.Strike;
+
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
     }
@@ -196,7 +227,27 @@ public class Player : MonoBehaviour
         var thisAnimLength = animLengths[strikeState - 1];
         if (stateMachine.timeInState >= thisAnimLength)
         {
-            print($"{stateMachine.timeInState} >= {thisAnimLength}");
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
+    }
+
+    void JumpStrikeEnter() {
+        hurtBox.aura = AuraType.JumpAtk;
+        anim.Play("PlayerJumpStrike");
+    }
+
+    // new Pearry Script has been moved from 
+    // Pearry.cs to its own PearryEnter and PearryUpdate methods
+    void PearryEnter() {
+        // anim.Play("PlayerPearry");
+    }
+
+    PlayerState PearryUpdate() {
+
+        if (stateMachine.timeInState >= pearryLength)
+        {
             return PlayerState.Normal;
         }
 
@@ -205,5 +256,18 @@ public class Player : MonoBehaviour
 
     public void OnStikeAnimationOver() {
         strikeAnimationOver = true;
+    }
+
+    void clampPlayerMovement()
+    {
+        Vector3 position = transform.position;
+
+        float distance = transform.position.x - Camera.main.transform.position.x;
+
+        float leftBorder = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)).x + halfPlayerSizeX;
+        float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - halfPlayerSizeX;
+
+        position.x = Mathf.Clamp(position.x, leftBorder, rightBorder);
+        transform.position = position;
     }
 }

@@ -19,7 +19,17 @@ public class HurtBox : MonoBehaviour
     public Transform parentTransform;
     
     [Tooltip("This attack only hurts enemies vulnerable to this Aura. For enemy hurtboxes, use the type `Enemy Atk`.")]
-    [SerializeField] public AuraType aura;
+
+    [SerializeField] private AuraType _aura;
+    public Vector2 knockback;
+	
+    public AuraType aura {
+        get => _aura;
+        set {
+            _aura = value;
+            previousHits.Clear();
+        }
+    }
 
     void Start()
     {
