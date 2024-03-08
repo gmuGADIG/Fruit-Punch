@@ -154,7 +154,7 @@ public class ScreenSpawner : MonoBehaviour
             return false;
         }
         EnemySpawnData data = enemySpawnQueue.Peek();
-        if(data.aura != 0 && auraEnemiesOnScreen >= auraOnScreen)
+        if(data.aura.IsSpecial() && auraEnemiesOnScreen >= auraOnScreen)
         {
             return false;
         }     
@@ -167,11 +167,14 @@ public class ScreenSpawner : MonoBehaviour
         Enemy instance = spawnData.spawnpoint.SpawnEnemy(spawnData.enemy, spawnData.aura);
         enemiesOnScreen.Add(instance);
         
+        enemiesLeft--;
+
         Health healthInstance = instance.GetComponent<Health>();
         healthInstance.onDeath += () => OnEnemyDeath(instance);
         if(healthInstance.HasAura())
         {
             auraEnemiesOnScreen++;
+            auraEnemiesLeft--;
         }
 
         if(enemySpawnQueue.Count == 0) {
