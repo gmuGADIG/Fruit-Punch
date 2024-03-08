@@ -124,7 +124,6 @@ public class Player : MonoBehaviour
     /// <param name="controlMult">How much the player can influence their movement (may be less than 1 for in-air movement)</param>
     void ApplyDirectionalMovement(float controlMult = 1)
     {
-        clampPlayerMovement();
         var targetVel = new Vector3(
             playerInput.actions["gameplay/Left/Right"].ReadValue<float>(),
             0,
@@ -220,6 +219,11 @@ public class Player : MonoBehaviour
         {
             return PlayerState.JumpStrike;
         }
+        
+        if (playerInput.actions["gameplay/Interact"].triggered)
+        {
+            if (grabber.GrabItem()) return PlayerState.Grabbing;
+        }
 
         return stateMachine.currentState;
     }
@@ -314,18 +318,5 @@ public class Player : MonoBehaviour
 
     public void OnStikeAnimationOver() {
         strikeAnimationOver = true;
-    }
-
-    void clampPlayerMovement()
-    {
-        Vector3 position = transform.position;
-
-        float distance = transform.position.x - Camera.main.transform.position.x;
-
-        float leftBorder = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)).x + halfPlayerSizeX;
-        float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - halfPlayerSizeX;
-
-        position.x = Mathf.Clamp(position.x, leftBorder, rightBorder);
-        transform.position = position;
     }
 }
