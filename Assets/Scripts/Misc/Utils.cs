@@ -82,4 +82,12 @@ public static class Utils
     {
         return list.ElementAtOrDefault(UnityEngine.Random.Range(0, list.Count()));
     }
+
+    /// <summary>
+    /// Returns true if the set of aura flags is not normal.
+    /// </summary>
+    public static bool IsSpecial(this AuraType aura)
+    {
+        return aura != AuraType.Normal;
+    }
 }

@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Health))]
+[CustomEditor(typeof(Health)), CanEditMultipleObjects]
 public class HealthEditor : Editor
 {
     public override void OnInspectorGUI()
@@ -12,9 +12,12 @@ public class HealthEditor : Editor
         base.OnInspectorGUI();
         if(GUILayout.Button("Kill"))
         {
-            Debug.Log("Killing " + target.name);
-            (target as Health).Damage(new DamageInfo(float.MaxValue, Vector2.zero, (AuraType)(-1)));
-            Debug.LogWarning((target as Health).CurrentHealth + " left.");
+            //make them vulnerable to all types before dealing max damage
+            foreach (var obj in targets)
+            {
+                (obj as Health).vulnerableTypes = (AuraType)(-1);
+                (obj as Health).Damage(new DamageInfo(float.MaxValue, Vector2.zero, (AuraType)(-1)));
+            }
         }
     }
 }

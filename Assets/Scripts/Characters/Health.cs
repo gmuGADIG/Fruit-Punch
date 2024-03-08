@@ -113,7 +113,7 @@ public class Health : MonoBehaviour
 
     public bool HasAura()
     {
-        return vulnerableTypes != 0;
+        return vulnerableTypes.IsSpecial();
     }
 }
 
