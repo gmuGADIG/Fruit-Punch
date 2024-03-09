@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -89,5 +90,60 @@ public static class Utils
             }
         }
         return result;
+    }
+
+    /// <summary>
+    /// Returns a list of all colliders in the given layer which overlap this collider's shape. <br/>
+    /// Note that only the shape is considered; not it's default layer collision, whether it's enabled, etc.
+    /// </summary>
+    public static Collider[] OverlapCollider(this Collider col, LayerMask layerMask)
+    {
+        // chat-gpt helped with getting the relevant parameters from each collider. might regret that later, idk
+        switch (col)
+        {
+            case BoxCollider box:
+            {
+                Vector3 center = box.transform.TransformPoint(box.center);
+                Vector3 halfExtents = Vector3.Scale(box.size, box.transform.lossyScale) * 0.5f;
+                return Physics.OverlapBox(center, halfExtents, box.transform.rotation, layerMask);
+            }
+            case SphereCollider sphere:
+            {
+                Vector3 center = sphere.transform.TransformPoint(sphere.center);
+                float radius = Mathf.Max(sphere.radius * Mathf.Max(sphere.transform.lossyScale.x, Mathf.Max(sphere.transform.lossyScale.y, sphere.transform.lossyScale.z)));
+                return Physics.OverlapSphere(center, radius, layerMask);
+            }
+            case CapsuleCollider capsule:
+            {
+                Vector3 point1 = capsule.transform.TransformPoint(capsule.center + Vector3.up * capsule.height / 2 - Vector3.up * capsule.radius);
+                Vector3 point2 = capsule.transform.TransformPoint(capsule.center - Vector3.up * capsule.height / 2 + Vector3.up * capsule.radius);
+                float radius = capsule.radius * Mathf.Max(capsule.transform.lossyScale.x, Mathf.Max(capsule.transform.lossyScale.y, capsule.transform.lossyScale.z));
+                return Physics.OverlapCapsule(point1, point2, radius, layerMask);
+            }
+            default:
+                Debug.LogError($"OverlapCollider does not support collider of type {col.GetType().Name}!");
+                return new Collider[0];
+        }
+    }
+
+    /// <summary>
+    /// Provides an easy way to run code on collision enter. Only works for boxes, capsules, and spheres. <br/>
+    /// Returns a list of overlapping colliders except any in previousCollisions, and updates previousCollisions to the new overlaps.
+    /// Example:
+    /// <code>
+    /// List&lt;Collider&gt; previousCollisions = new();
+    /// void Update() {
+    ///     var collisions = collider.NewOverlaps(layerMask, ref previousCollisions);
+    ///     foreach (var col in collisions) ...
+    /// }
+    /// </code>
+    /// </summary>
+    /// <returns></returns>
+    public static List<Collider> NewCollisions(this Collider col, LayerMask layerMask, ref List<Collider> previousCollisions)
+    {
+        var overlaps = col.OverlapCollider(layerMask).ToList();
+        var collisions = overlaps.Except(previousCollisions).ToList();
+        previousCollisions = overlaps;
+        return collisions;
     }
 }

@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 4340506222115504097}
   - component: {fileID: 8358055831198858737}
   - component: {fileID: 4711652885617091301}
+  - component: {fileID: 1771982198922200145}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -160,7 +161,7 @@ MonoBehaviour:
   runAccel: 40
   jumpControlMult: 0.3
   jumpSpeed: 6
-  gravity: 7
+  gravity: 16
 --- !u!95 &5087417677774483037
 Animator:
   serializedVersion: 5
@@ -262,7 +263,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -288,6 +289,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.5, z: 0.2}
   m_Center: {x: 0, y: 0.24869111, z: 0}
+--- !u!114 &1771982198922200145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370847992972462549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64fc8f24afae0c647b8fdd6b354ea1cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bounceFactor: 0
 --- !u!1 &7384358105077054236
 GameObject:
   m_ObjectHideFlags: 0
@@ -424,8 +438,8 @@ SpriteRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7444369387174406894}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
   m_DynamicOccludee: 1
   m_StaticShadowCaster: 0
   m_MotionVectors: 1
@@ -492,13 +506,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: Shadow
       objectReference: {fileID: 0}
+    - target: {fileID: 4903578636898687924, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
+      propertyPath: m_CastShadows
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4903578636898687924, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
+      propertyPath: m_ReceiveShadows
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6806586229155832487, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6806586229155832487, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.055
       objectReference: {fileID: 0}
     - target: {fileID: 6806586229155832487, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
       propertyPath: m_LocalPosition.z

@@ -49,7 +49,7 @@ public class Player : MonoBehaviour
     [SerializeField] float jumpSpeed = 3.2f;
 
     [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
-    [SerializeField] float gravity = 9;
+    [SerializeField] float gravity = 16;
 
     LayerMask collidingLayers;
 
@@ -195,7 +195,6 @@ public class Player : MonoBehaviour
     void JumpEnter()
     {
         // anim.Play("Jump");
-        print("Jumping");
         rb.velocity += Vector3.up * jumpSpeed;
     }
     
