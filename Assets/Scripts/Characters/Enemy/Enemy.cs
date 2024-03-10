@@ -105,7 +105,7 @@ public class Enemy : MonoBehaviour
         wanderingTimeTillAttack -= Time.deltaTime;
         if (wanderingTimeTillAttack <= 0)
         {
-            if (currentAttackingEnemies >= MaxSimultaneousAttackers) // TODO: multiply by player count
+            if (currentAttackingEnemies < MaxSimultaneousAttackers) // TODO: multiply by player count
             {
                 return EnemyState.Aggressive;
             }
@@ -158,10 +158,7 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    void AttackingEnter()
-    {
-        // print("Enemy: WHAM!!");
-    }
+    void AttackingEnter() { }
     
     EnemyState AttackingUpdate()
     {
