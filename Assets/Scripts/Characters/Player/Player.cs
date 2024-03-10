@@ -98,7 +98,6 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
-        halfPlayerSizeX = playerSprite.bounds.size.x / 2;
     }
 
 
