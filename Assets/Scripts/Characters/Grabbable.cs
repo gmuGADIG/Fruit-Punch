@@ -16,7 +16,7 @@ public class Grabbable : MonoBehaviour
     }
 
     public event Action onGrab;
-    public event Action OnThrow;
+    public event Action onThrow;
     public event Action onForceRelease;
 
     public void Grab()
@@ -27,7 +27,7 @@ public class Grabbable : MonoBehaviour
 
     public void Release()
     {
-        OnThrow?.Invoke();
+        onThrow?.Invoke();
         rb.isKinematic = false;
     }
     

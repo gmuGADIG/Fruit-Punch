@@ -58,7 +58,8 @@ public class Health : MonoBehaviour
     {
         if (other.TryGetComponent<HurtBox>(out var hurtBox))
         {
-            this.Damage(hurtBox.GetDamageInfo());
+            var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
+            if (hitsThisLayer) this.Damage(hurtBox.GetDamageInfo());
         }
     }
 
@@ -70,11 +71,11 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Damage(DamageInfo info)
     {
-        print("Oww!");
         if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
+            print($"{gameObject.name} was immune to an attack");
             return;
         }
         
@@ -83,6 +84,7 @@ public class Health : MonoBehaviour
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
         
+        print($"{gameObject.name} health down to {currentHealth}");
         if (currentHealth <= 0) Die();
     }
 

@@ -19,20 +19,8 @@ public class HurtBox : MonoBehaviour
     public Transform parentTransform;
     
     [Tooltip("This attack only hurts enemies vulnerable to this Aura. For enemy hurtboxes, use the type `Enemy Atk`.")]
-
-    [SerializeField] private AuraType _aura;
-    public Vector2 knockback;
-
-    List<Collider> previousHits = new();
-	
-    public AuraType aura {
-        get => _aura;
-        set {
-            _aura = value;
-            previousHits.Clear();
-        }
-    }
-
+    [SerializeField] private AuraType aura;
+    
     void Start()
     {
         //Assert(aura != 0);
@@ -45,21 +33,5 @@ public class HurtBox : MonoBehaviour
         var facingLeft = parentTransform.localScale.x < 0;
         var knockback = facingLeft ? Vector2.left : Vector2.right;
         return new DamageInfo(this.damage, knockback, this.aura);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!previousHits.Contains(other))
-        {
-            if (other.TryGetComponent<Health>(out var thingTakingDamage))
-            {
-                Debug.Log($"Aura: {aura}", gameObject);
-
-                // Makes the thingTakingDamage take damage based on the aura, 
-                // damage and knockback (set in the hurtbox)
-                thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura));
-            }
-            previousHits.Add(other);
-        }
     }
 }

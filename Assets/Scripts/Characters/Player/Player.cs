@@ -32,6 +32,7 @@ public class Player : MonoBehaviour
     private PlayerInput playerInput;
     private InputBuffer inputBuffer;
     private Grabber grabber;
+    private GroundCheck groundCheck;
     private float halfPlayerSizeX;
 
     [SerializeField] SpriteRenderer playerSprite;
@@ -68,6 +69,7 @@ public class Player : MonoBehaviour
         this.GetComponentOrError(out playerInput);
         this.GetComponentOrError(out inputBuffer);
         this.GetComponentInChildrenOrError(out grabber);
+        this.GetComponentInChildrenOrError(out groundCheck);
         
         // subscribe events
         grabber.onForceRelease += ForceReleaseCallback;
@@ -109,6 +111,7 @@ public class Player : MonoBehaviour
     void Update()
     {
         stateMachine.Update();
+        rb.velocity += Vector3.down * (gravity * Time.deltaTime);
     }
 
     void OnTriggerEnter(Collider other)
@@ -141,22 +144,22 @@ public class Player : MonoBehaviour
         else if (targetVel.x > 0) transform.localScale = new Vector3(1, 1, 1);
     }
 
-    bool IsGrounded()
-    {
-        // overlap a box below the player to see if it's grounded
-        // uses the hitbox's x and z size, with an arbitrary height
-        var hitBox = GetComponent<BoxCollider>();
-        const float groundBoxHeight = 0.05f;
-        
-        var overlaps = Physics.OverlapBox(
-            transform.position, 
-            new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
-            Quaternion.identity,
-            collidingLayers
-        );
-
-        return overlaps.Length > 0;
-    }
+    // bool IsGrounded()
+    // {
+    //     // overlap a box below the player to see if it's grounded
+    //     // uses the hitbox's x and z size, with an arbitrary height
+    //     var hitBox = GetComponent<BoxCollider>();
+    //     const float groundBoxHeight = 0.05f;
+    //     
+    //     var overlaps = Physics.OverlapBox(
+    //         transform.position, 
+    //         new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
+    //         Quaternion.identity,
+    //         collidingLayers
+    //     );
+    //
+    //     return overlaps.Length > 0;
+    // }
 
     void NormalEnter()
     {
@@ -166,7 +169,6 @@ public class Player : MonoBehaviour
     PlayerState NormalUpdate()
     {
         ApplyDirectionalMovement();
-        rb.velocity += Vector3.down * (gravity * Time.deltaTime); // gravity, just in case it isn't quite grounded
 
         if (playerInput.actions["gameplay/Jump"].triggered)
         {
@@ -201,10 +203,9 @@ public class Player : MonoBehaviour
     PlayerState JumpUpdate()
     {
         ApplyDirectionalMovement(jumpControlMult);
-        rb.velocity += Vector3.down * (gravity * Time.deltaTime);
 
         var isFalling = rb.velocity.y < 0;
-        if (isFalling && IsGrounded())
+        if (isFalling && groundCheck.IsGrounded())
         {
             // transform.position = new Vector3(transform.position.x, 0, transform.position.y);
             // rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
