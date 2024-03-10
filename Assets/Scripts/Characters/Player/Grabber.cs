@@ -5,7 +5,8 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// Lets the play grab any nearby grabbables (items or enemies).
+/// Lets the play grab any nearby grabbables (items or enemies). <br/>
+/// Requires a trigger Collider component.
 /// </summary>
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabber : MonoBehaviour
