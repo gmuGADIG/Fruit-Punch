@@ -17,6 +17,18 @@ public class Destructible : MonoBehaviour
     private Health health;
     private List<BeltCharacter> collisions;
 
+    /// <summary>
+    /// The chance of the object dropping a pickup
+    /// </summary>
+    [SerializeField]
+    private float percentChance = 0.25f;
+
+    /// <summary>
+    /// The pickup that will be dropped
+    /// </summary>
+    [SerializeField]
+    private GameObject pickup;
+
 
     // Start is called before the first frame update
     void Start()
@@ -51,8 +63,15 @@ public class Destructible : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// rolls the chance for the object to drop a pickup before destroying the object
+    /// </summary>
     public void obstacleDestroyed()
     {
+        if (Random.value < percentChance)
+        {
+            Instantiate(pickup, transform.position, Quaternion.identity);
+        }
         Destroy(gameObject);
     }
     
