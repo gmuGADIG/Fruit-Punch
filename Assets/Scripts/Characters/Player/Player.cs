@@ -1,42 +1,79 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
+using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
 public enum PlayerState
 {
     Normal,
-    Strike1, Strike2, Strike3
+    Jump,
+    Strike1, Strike2, Strike3,
+    JumpStrike,
+    Pearry,
+    Grabbing, Throwing
 }
 
 /// <summary>
 /// Playable character script. <br/>
 /// To get a good idea of how everything works, see how the state machine is set up in Start.
 /// </summary>
-[RequireComponent(typeof(BeltCharacter)), RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(InputBuffer))]
 public class Player : MonoBehaviour
 {
     private StateMachine<PlayerState> stateMachine;
-    private BeltCharacter beltChar;
+    private Rigidbody rb;
     private Animator anim;
-    
-    [ReadOnlyInInspector, SerializeField] private Vector3 velocity = Vector3.zero;
+    private PlayerInput playerInput;
+    private InputBuffer inputBuffer;
+    private Grabber grabber;
+    private GroundCheck groundCheck;
+    private float halfPlayerSizeX;
+
+    [SerializeField] SpriteRenderer playerSprite;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
-    [SerializeField] float maxSpeed;
+    [SerializeField] float maxSpeed = 2f;
     
     [Tooltip("How quickly the player accelerates and decelerates (m/s^2).")]
-    [SerializeField] float runAccel;
+    [SerializeField] float runAccel = 40f;
+    
+    [Tooltip("From 0 to 1, how much the player can influence their motion while midair.")]
+    [SerializeField] float jumpControlMult = 0.3f;
+
+    [Tooltip("Initial vertical speed when the player jumps (m/s).")]
+    [SerializeField] float jumpSpeed = 3.2f;
+
+    [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
+    [SerializeField] float gravity = 16;
+
+    LayerMask collidingLayers;
 
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
+    float pearryLength = 3;
+    
+    bool strikeAnimationOver = false;
     
     void Start()
     {
-        // gett components
-        this.GetComponentOrError(out beltChar);
+        // get components
+        this.GetComponentOrError(out rb);
         this.GetComponentOrError(out anim);
+        this.GetComponentOrError(out playerInput);
+        this.GetComponentOrError(out inputBuffer);
+        this.GetComponentInChildrenOrError(out grabber);
+        this.GetComponentInChildrenOrError(out groundCheck);
+        
+        // subscribe events
+        grabber.onForceRelease += ForceReleaseCallback;
+        
 
         // get animation lengths
         foreach (var clip in anim.runtimeAnimatorController.animationClips)
@@ -47,29 +84,57 @@ public class Player : MonoBehaviour
         }
         if (strike1Length < 0 || strike2Length < 0 || strike3Length < 0)
             throw new Exception("Animation clips weren't found!");
+        
+        // set layer
+        collidingLayers = Utils.GetCollidingLayerMask(LayerMask.NameToLayer("Player"));
 
         // set up state machine
         stateMachine = new StateMachine<PlayerState>();
         stateMachine.AddState(PlayerState.Normal, NormalEnter, NormalUpdate, null);
+        stateMachine.AddState(PlayerState.Jump, JumpEnter, JumpUpdate, null);
         stateMachine.AddState(PlayerState.Strike1, () => StrikeEnter(1), () => StrikeUpdate(1), null);
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
+        stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
+        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
+        stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
+        stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
+    }
+
+
+    void OnDestroy()
+    {
+        grabber.onForceRelease -= ForceReleaseCallback;
     }
 
     void Update()
     {
         stateMachine.Update();
-        
-        beltChar.internalPosition += velocity * Time.deltaTime;
+        rb.velocity += Vector3.down * (gravity * Time.deltaTime);
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<Pickup>(out var pickup))
+            pickup.PickUp(this);
+    }
+
+    /// <summary>
+    /// Moves the player according to input.
+    /// </summary>
+    /// <param name="controlMult">How much the player can influence their movement (may be less than 1 for in-air movement)</param>
     void ApplyDirectionalMovement(float controlMult = 1)
     {
-        var targetVel = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical")).normalized * maxSpeed;
-        targetVel.y = velocity.y;
-        velocity = Vector3.MoveTowards(
-            velocity,
+        var targetVel = new Vector3(
+            playerInput.actions["gameplay/Left/Right"].ReadValue<float>(),
+            0,
+            playerInput.actions["gameplay/Up/Down"].ReadValue<float>()
+        ).normalized * maxSpeed;
+
+        targetVel.y = rb.velocity.y;
+        rb.velocity = Vector3.MoveTowards(
+            rb.velocity,
             targetVel,
             runAccel * Time.deltaTime * controlMult
         );
@@ -79,36 +144,105 @@ public class Player : MonoBehaviour
         else if (targetVel.x > 0) transform.localScale = new Vector3(1, 1, 1);
     }
 
+    // bool IsGrounded()
+    // {
+    //     // overlap a box below the player to see if it's grounded
+    //     // uses the hitbox's x and z size, with an arbitrary height
+    //     var hitBox = GetComponent<BoxCollider>();
+    //     const float groundBoxHeight = 0.05f;
+    //     
+    //     var overlaps = Physics.OverlapBox(
+    //         transform.position, 
+    //         new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
+    //         Quaternion.identity,
+    //         collidingLayers
+    //     );
+    //
+    //     return overlaps.Length > 0;
+    // }
+
     void NormalEnter()
     {
-        print("returning to normal");
         anim.Play("Idle");
     }
 
     PlayerState NormalUpdate()
     {
         ApplyDirectionalMovement();
+
+        if (playerInput.actions["gameplay/Jump"].triggered)
+        {
+            return PlayerState.Jump;
+        }
         
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (playerInput.actions["gameplay/Strike"].triggered)
+        {
             return PlayerState.Strike1;
+        }
+
+        if (playerInput.actions["gameplay/Pearry"].triggered)
+        {
+            return PlayerState.Pearry;
+        }
+        
+        if (playerInput.actions["gameplay/Interact"].triggered)
+        {
+            if (grabber.GrabItem()) return PlayerState.Grabbing;
+        }
 
         return stateMachine.currentState;
     }
+
+    void JumpEnter()
+    {
+        // anim.Play("Jump");
+        rb.velocity += Vector3.up * jumpSpeed;
+    }
     
+    // NOTE: Is also the update function for jump attack!
+    PlayerState JumpUpdate()
+    {
+        ApplyDirectionalMovement(jumpControlMult);
+
+        var isFalling = rb.velocity.y < 0;
+        if (isFalling && groundCheck.IsGrounded())
+        {
+            // transform.position = new Vector3(transform.position.x, 0, transform.position.y);
+            // rb.velocity = new Vector3(rb.velocity.x, 0, rb.velocity.z);
+            return PlayerState.Normal;
+        }
+
+
+        if (playerInput.actions["gameplay/Strike"].triggered
+            && stateMachine.currentState != PlayerState.JumpStrike) 
+        {
+            return PlayerState.JumpStrike;
+        }
+        
+        if (playerInput.actions["gameplay/Interact"].triggered)
+        {
+            if (grabber.GrabItem()) return PlayerState.Grabbing;
+        }
+
+        return stateMachine.currentState;
+    }
 
     void StrikeEnter(int strikeState)
     {
-        print($"Strike{strikeState}");
+        // avoid reading inputs before we entered this state
+        inputBuffer.ClearAction("gameplay/Strike");
+        strikeAnimationOver = false;
+        
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
     }
 
     PlayerState StrikeUpdate(int strikeState)
     {
-        velocity = Vector3.MoveTowards(velocity, Vector3.zero, runAccel * Time.deltaTime);
+        rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
 
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (strikeAnimationOver && inputBuffer.CheckAction("gameplay/Strike"))
         {
             if (strikeState == 1) return PlayerState.Strike2;
             if (strikeState == 2) return PlayerState.Strike3;
@@ -118,10 +252,70 @@ public class Player : MonoBehaviour
         var thisAnimLength = animLengths[strikeState - 1];
         if (stateMachine.timeInState >= thisAnimLength)
         {
-            print($"{stateMachine.timeInState} >= {thisAnimLength}");
             return PlayerState.Normal;
         }
 
         return stateMachine.currentState;
+    }
+
+    void JumpStrikeEnter() {
+        anim.Play("PlayerJumpStrike");
+    }
+
+    // new Pearry Script has been moved from 
+    // Pearry.cs to its own PearryEnter and PearryUpdate methods
+    void PearryEnter() {
+        // anim.Play("PlayerPearry");
+    }
+
+    PlayerState PearryUpdate() {
+
+        if (stateMachine.timeInState >= pearryLength)
+        {
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
+    }
+
+    // subscribed to the grabber's onForceRelease event
+    void ForceReleaseCallback()
+    {
+        stateMachine.SetState(PlayerState.Normal);
+    }
+    
+    PlayerState GrabbingUpdate()
+    {
+        Debug.Assert(grabber.IsGrabbing);
+        rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
+        ApplyDirectionalMovement(0);
+        
+        if (playerInput.actions["gameplay/Interact"].triggered)
+        {
+            return PlayerState.Throwing;
+        }
+        
+        return stateMachine.currentState;
+    }
+
+    void ThrowingEnter()
+    {
+        var facingLeft = transform.localScale.x < 0;
+        grabber.ThrowItem(facingLeft);
+    }
+    
+    PlayerState ThrowingUpdate()
+    {
+        // TODO: throwing should be tied better into the animation
+        if (stateMachine.timeInState >= .1f)
+        {
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
+    }
+
+    public void OnStikeAnimationOver() {
+        strikeAnimationOver = true;
     }
 }
