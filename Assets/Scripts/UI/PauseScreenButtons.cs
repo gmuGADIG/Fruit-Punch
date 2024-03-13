@@ -1,21 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.Windows;
 
 public class PauseScreenButtons : MonoBehaviour
 {
+
     public string mainMenuScene;
     // Start is called before the first frame update
     void Start()
     {
+
         Time.timeScale = 0.0f;
+        
+        
     }
 
-    private void Update()
+    /// <summary>
+    /// Pause key hit, Resume game
+    /// </summary>
+    public void OnPause()
     {
-        if(Input.GetKeyUp(KeyCode.Escape)) //Replace when input system commpleted
-        { Resume(); }
+        Resume();
     }
 
     /// <summary>

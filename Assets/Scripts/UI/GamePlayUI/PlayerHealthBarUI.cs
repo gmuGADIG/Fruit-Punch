@@ -1,28 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 
 public class PlayerHealthBarUI : MonoBehaviour
 {
-    public PlayerHealth playerHealth;
+    //public PlayerHealth playerHealth;
     public TMP_Text healthUI;
     public Image maxHealthBar;
     public Image currentHealthBar;
 
+    private Health playerHealth;
+
     // Start is called before the first frame update
     void Start()
     {
-       
+        playerHealth = FindObjectOfType<Player>().GetComponent<Health>();
+        playerHealth.onHealthChange += UIUpdate;
     }
 
-    // Update is called once per frame
-    void Update()
+    void UIUpdate(HealthChange currentHealth)
     {
-        int health = playerHealth.Health;
-        int maxHealth = playerHealth.MaxHealth;
-        healthUI.text = health.ToString() + "/" + maxHealth;
-        currentHealthBar.fillAmount = (float) health / maxHealth;
+        healthUI.text = currentHealth.newHealthValue + "/" + playerHealth.MaxHealth;
+        currentHealthBar.fillAmount = currentHealth.newHealthValue / playerHealth.MaxHealth;
     }
 }
