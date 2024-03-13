@@ -10,7 +10,8 @@ public enum PlayerState
     Normal,
     Jump,
     Strike1, Strike2, Strike3,
-    JumpStrike
+    JumpStrike,
+    Pearry
 }
 
 /// <summary>
@@ -51,6 +52,7 @@ public class Player : MonoBehaviour
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
+    float pearryLength = 3;
     
     bool strikeAnimationOver = false;
     
@@ -83,6 +85,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
+        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
         halfPlayerSizeX = GetComponent<SpriteRenderer>().bounds.size.x / 2;
     }
@@ -138,6 +141,11 @@ public class Player : MonoBehaviour
         if (playerInput.actions["gameplay/Strike"].triggered)
         {
             return PlayerState.Strike1;
+        }
+
+        if (playerInput.actions["gameplay/Pearry"].triggered)
+        {
+            return PlayerState.Pearry;
         }
 
         return stateMachine.currentState;
@@ -209,7 +217,23 @@ public class Player : MonoBehaviour
         hurtBox.aura = AuraType.JumpAtk;
         anim.Play("PlayerJumpStrike");
     }
-    
+
+    // new Pearry Script has been moved from 
+    // Pearry.cs to its own PearryEnter and PearryUpdate methods
+    void PearryEnter() {
+        // anim.Play("PlayerPearry");
+    }
+
+    PlayerState PearryUpdate() {
+
+        if (stateMachine.timeInState >= pearryLength)
+        {
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
+    }
+
     public void OnStikeAnimationOver() {
         strikeAnimationOver = true;
     }

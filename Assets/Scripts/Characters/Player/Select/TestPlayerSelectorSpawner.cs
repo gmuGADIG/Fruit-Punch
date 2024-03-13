@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class TestPlayerSelectorSpawner : MonoBehaviour
@@ -8,8 +9,13 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
     public GameObject prefab;
     public GameObject blankPOneSelector;
     public GameObject blankPTwoSelector;
+    /// <summary>
+    /// game obejct in scene that has <see cref="CharacterSelectorManager"/>.
+    /// </summary>
+    public GameObject manager;
     public void ConnectPlayer(JoinContext context)
     {
+
         PlayerInput p = PlayerInput.Instantiate(
             prefab,
             controlScheme: context.ControlScheme,
@@ -17,19 +23,33 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
         );
 
         
+
+        if(GameManager.gameManager == null)
+            GameManager.gameManager = new GameManager();
+
+        p.gameObject.transform.Find("Button Image").GetComponent<ButtonConfirm>().SetButton(context.ControlScheme);
+
         if (blankPOneSelector != null)
         {
+            //Debug.Log(context.ControlScheme);
             p.gameObject.transform.parent = GameObject.Find("Canvas").transform;
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -100, 0);
             Destroy(blankPOneSelector);
-            GameObject.Find("Manager").GetComponent<CharacterSelectorManager>().playerOneSelector = p.gameObject;
+            manager.GetComponent<CharacterSelectorManager>().playerOneSelector = p.gameObject;
+            p.GetComponent<TestPlayerSelector>().isPlayerOne = true;
+            GameManager.gameManager.playerOneInputDevice = context.InputDevice; //p.devices[0]
+            GameManager.gameManager.playerOneControlScheme = context.ControlScheme; // p.currentControlScheme
         }
         else if (blankPTwoSelector != null)
         {
             p.gameObject.transform.parent = GameObject.Find("Canvas").transform;
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(250, -100, 0);
             Destroy(blankPTwoSelector);
-            GameObject.Find("Manager").GetComponent<CharacterSelectorManager>().playerTwoSelector = p.gameObject;
+            manager.GetComponent<CharacterSelectorManager>().playerTwoSelector = p.gameObject;
+            p.GetComponent<TestPlayerSelector>().isPlayerOne = false;
+            GameManager.gameManager.playerTwoInputDevice = context.InputDevice;
+            GameManager.gameManager.playerTwoControlScheme = context.ControlScheme;
         }
+        
     }
 }
