@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static Utils;
@@ -8,46 +9,29 @@ using static Utils;
 /// </summary>
 public class HurtBox : MonoBehaviour
 {
-    private new Collider2D collider;
-    public BeltCharacter beltCharacter;
+    [Tooltip("Only these layers will be considered when dealing damage. Generally, player hurtboxes will hit the `Enemy` layer and enemies will hit `Player` layer.")]
     public LayerMask hitLayers;
+    
+    [Tooltip("How much damage is dealt when an enemy is hit (assuming vulnerable aura)")]
     public float damage;
-    public Vector2 knockback;
-    [SerializeField] private AuraType _aura;
-
-    public AuraType aura {
-        get => _aura;
-        set {
-            _aura = value;
-            previousHits.Clear();
-        }
+    
+    [Tooltip("For dealing knockback, the hurtbox checks if the parent is flipped in the x-axis (negative scale).")]
+    public Transform parentTransform;
+    
+    [Tooltip("This attack only hurts enemies vulnerable to this Aura. For enemy hurtboxes, use the type `Enemy Atk`.")]
+    [SerializeField] private AuraType aura;
+    
+    void Start()
+    {
+        //Assert(aura != 0);
+        Assert(parentTransform != null);
+        Assert(hitLayers != 0);
     }
 
-    private List<BeltCharacter> previousHits = new();
-
-    private void Start()
+    public DamageInfo GetDamageInfo()
     {
-        this.GetComponentOrError(out collider);
-        Assert(beltCharacter != null);
-    }
-
-    private void Update()
-    {
-        // handle collisions
-        var hits = beltCharacter.GetOverlappingBeltCharacters(collider, hitLayers);
-        foreach (var hit in hits)
-        {
-            if (previousHits.Contains(hit)) continue;
-            // todo: handle collision here
-            if (hit.TryGetComponent<Health>(out var thingTakingDamage))
-            {
-                print($"Aura: {aura}");
-
-                // Makes the thingTakingDamage take damage based on the aura, 
-                // damage and knockback (set in the hurtbox)
-                thingTakingDamage.Damage(new DamageInfo(damage, knockback, aura)); 
-            }
-        }   
-        previousHits = hits;
+        var facingLeft = parentTransform.localScale.x < 0;
+        var knockback = facingLeft ? Vector2.left : Vector2.right;
+        return new DamageInfo(this.damage, knockback, this.aura);
     }
 }

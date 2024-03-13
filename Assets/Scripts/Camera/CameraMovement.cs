@@ -25,7 +25,7 @@ public class CameraMovement : MonoBehaviour
     void Start()
     {
         transform.position = startPosition;
-        currentState = CameraState.frozen;
+        currentState = CameraState.follow;
         players = FindObjectsOfType<Player>().ToList();
     }
     public void FreeezeCamera(Vector3 pos)
@@ -45,8 +45,6 @@ public class CameraMovement : MonoBehaviour
             areEnemiesPresent = true;
         }
 
-
-
         // Move the camera to follow the player if conditions are met
         if (currentState == CameraState.follow)
         {
@@ -59,6 +57,7 @@ public class CameraMovement : MonoBehaviour
             averagePos += offset;
             averagePos.z = transform.position.z;
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, averagePos, smoothSpeed);
+            smoothedPosition.y = offset.y;
             transform.position = smoothedPosition;
         }
         else if (currentState == CameraState.frozen)

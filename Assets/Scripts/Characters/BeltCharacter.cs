@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -10,6 +11,7 @@ using UnityEngine;
 /// Currently does not provide wall collision; may be added later if needed. <br/>
 /// </summary>
 [ExecuteAlways]
+[Obsolete("With the move to 3d, this class is no longer necessary. Instead, directly change the transform's position, and use 3d rigidbodies for collision and  trigger.")]
 public class BeltCharacter : MonoBehaviour
 {
     /// <summary>
