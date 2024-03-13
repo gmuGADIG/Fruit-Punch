@@ -73,4 +73,21 @@ public static class Utils
         float cameraWidth = cameraHeight * screenAspect;
         return new Rect(cam.transform.position.x - cameraWidth / 2, cam.transform.position.y - cameraHeight / 2, cameraWidth, cameraHeight);
     }
+
+    /// <summary>
+    /// Picks a random element from a list.
+    /// Returns a random element or null if the list is empty.
+    /// </summary>
+    public static T RandomElement<T>(this IEnumerable<T> list)
+    {
+        return list.ElementAtOrDefault(UnityEngine.Random.Range(0, list.Count()));
+    }
+
+    /// <summary>
+    /// Returns true if the set of aura flags is not normal.
+    /// </summary>
+    public static bool IsSpecial(this AuraType aura)
+    {
+        return aura != AuraType.Normal;
+    }
 }

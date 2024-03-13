@@ -28,7 +28,7 @@ public class Health : MonoBehaviour
     
     [ReadOnlyInInspector, SerializeField]
     private float currentHealth;
-    
+    public float CurrentHealth => currentHealth;
     /// <summary>
     /// Invoked when this character's health reaches zero. <br/>
     /// (run after onHealthChange and onHurt)
@@ -105,6 +105,10 @@ public class Health : MonoBehaviour
         onDeath?.Invoke();
     }
 
+    public bool HasAura()
+    {
+        return vulnerableTypes.IsSpecial();
+    }
 }
 
 public struct HealthChange
