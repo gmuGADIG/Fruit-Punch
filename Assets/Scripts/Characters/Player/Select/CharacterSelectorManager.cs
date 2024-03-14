@@ -4,35 +4,43 @@ using UnityEngine;
 
 public class CharacterSelectorManager : MonoBehaviour
 {
-    public GameObject playerOneSelector;
-    public GameObject playerTwoSelector;
+    public CharacterSelector playerOneSelector;
+    public CharacterSelector playerTwoSelector;
 
+    /// <summary>
+    /// checks if all players joined have selected a character.
+    /// </summary>
+    /// <returns>true if all player have selected a charcter.</returns>
     public bool GetPlayersReady()
     {
         if (playerOneSelector != null)
         {
             if (playerTwoSelector != null) //two players
             {
-                return playerOneSelector.GetComponent<CharacterSelector>().characterSelected && playerTwoSelector.GetComponent<CharacterSelector>().characterSelected; //return true if both have selected characters
+                return playerOneSelector.characterSelected && playerTwoSelector.characterSelected; //return true if both have selected characters
             }
             else //one player
             {
-                return playerOneSelector.GetComponent<CharacterSelector>().characterSelected; //return true if player has selected
+                return playerOneSelector.characterSelected; //return true if player has selected
             }
         }
         else
             return false;
     }
 
+    /// <summary>
+    /// used to ensure a player cannnot select a character that has already been selected.
+    /// </summary>
+    /// <returns>the <see cref="Character"/> of the other player. returns <see cref="Character.None"/> if no players have selectecd a character</returns>
     public Character GetOtherCharacter()
     {
-        if (playerOneSelector.GetComponent<CharacterSelector>().characterSelected)
+        if (playerOneSelector.characterSelected)
         {
-            return playerOneSelector.GetComponent<CharacterSelector>().character;
+            return playerOneSelector.character;
         }
-        else if (playerTwoSelector.GetComponent<CharacterSelector>().characterSelected)
+        else if (playerTwoSelector.characterSelected)
         {
-            return playerTwoSelector.GetComponent<CharacterSelector>().character;
+            return playerTwoSelector.character;
         }
         return Character.None;
     }

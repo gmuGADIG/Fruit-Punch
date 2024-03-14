@@ -99,14 +99,18 @@ public class CharacterSelector : MonoBehaviour
         }
         else //if a character hadn't been chosen, store the selected character
         {
-            if (isPlayerOne)
-                GameManager.gameManager.playerOne = character;
-            else
-                GameManager.gameManager.playerTwo = character;
+            Character other = manager.GetOtherCharacter();
+            if (other == Character.None || other != character) //checks if no character has been selected or if the character that has been slected isnt the one this player is trying to select.
+            {
+                if (isPlayerOne)
+                    GameManager.gameManager.playerOne = character;
+                else
+                    GameManager.gameManager.playerTwo = character;
 
-            //updates text for selector
-            text.text = "Press\r\n\r\n\r\nto start";
-            characterSelected = true;
+                //updates text for selector
+                text.text = "Press\r\n\r\n\r\nto start";
+                characterSelected = true;
+            }
         }
     }
 
