@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class MainMenuButtons : MonoBehaviour
 {
     public string OptionsScene;
-    public GameObject LastSceneNameSaver;
+
     /// <summary>
     /// Start Game -> Goes to Character Select Screen
     /// </summary>
@@ -20,8 +20,7 @@ public class MainMenuButtons : MonoBehaviour
     /// </summary>
     public void Options()
     {
-        Instantiate(LastSceneNameSaver);
-        SceneManager.LoadScene(OptionsScene);
+        SceneManager.LoadSceneAsync(OptionsScene, LoadSceneMode.Additive);
         Debug.Log("Options menu");
     }
     /// <summary>

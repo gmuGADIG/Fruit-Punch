@@ -6,10 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class OptionsBackButton : MonoBehaviour
 {
+    /// <summary>
+    /// Unloads the Options Screen
+    /// </summary>
     public void backButton()
     {
-        string lastScene = FindObjectOfType<SaveOpenSceneNames>().getLastSceneName();
-        Destroy(FindObjectOfType<SaveOpenSceneNames>().gameObject);
-        SceneManager.LoadScene(lastScene);  
+        SceneManager.UnloadSceneAsync("OptionsMenu");
+
     }
 }

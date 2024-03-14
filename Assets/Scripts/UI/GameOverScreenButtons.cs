@@ -26,6 +26,7 @@ public class GameOverScreenButtons : MonoBehaviour
     /// </summary>
     public void MainMenu()
     {
+        Time.timeScale = 1.0f;
         SceneManager.LoadScene(0);
         Debug.Log("Return to Main");
     }

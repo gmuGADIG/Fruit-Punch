@@ -10,6 +10,7 @@ public class PauseScreenButtons : MonoBehaviour
 {
 
     public string OptionsScene;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -51,6 +52,7 @@ public class PauseScreenButtons : MonoBehaviour
     /// </summary>
     public void MainMenu()
     {
+        Time.timeScale = 1.0f;
         SceneManager.LoadScene(0);
         Debug.Log("Return to Main");
     }
@@ -67,9 +69,9 @@ public class PauseScreenButtons : MonoBehaviour
     /// <summary>
     /// Opens Option menu (Options menu currently doesn't exist)
     /// </summary>
-    public void OptionsMenu() //Change when options menu get created
+    public void OptionsMenu() 
     {
-        SceneManager.LoadScene(OptionsScene);
+        SceneManager.LoadSceneAsync(OptionsScene, LoadSceneMode.Additive);
         Debug.Log("Open Options Menu");
     }
 }
