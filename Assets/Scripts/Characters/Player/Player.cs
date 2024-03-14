@@ -60,7 +60,9 @@ public class Player : MonoBehaviour
     float pearryLength = 3;
     
     bool strikeAnimationOver = false;
-    
+
+    private bool FacingLeft => transform.localEulerAngles.y > 90;
+
     void Start()
     {
         // get components
@@ -300,8 +302,7 @@ public class Player : MonoBehaviour
 
     void ThrowingEnter()
     {
-        var facingLeft = transform.localScale.x < 0;
-        grabber.ThrowItem(facingLeft);
+        grabber.ThrowItem(FacingLeft);
     }
     
     PlayerState ThrowingUpdate()
