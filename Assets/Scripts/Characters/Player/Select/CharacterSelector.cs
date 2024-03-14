@@ -11,14 +11,16 @@ public enum Character
     Carrot
 }
 
-public class TestPlayerSelector : MonoBehaviour
+public class CharacterSelector : MonoBehaviour
 {
     public static CharacterSelectorManager manager;
 
     //images used for each character that the player can select, index = (int)Character
     [SerializeField]
     public Sprite[] images;
+    [SerializeField]
     private Image characterImage;
+    [SerializeField]
     private TextMeshProUGUI text;
     private int numCharacters;
     

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
-public class TestPlayerSelectorSpawner : MonoBehaviour
+public class PlayerSelectorSpawner : MonoBehaviour
 {
     public GameObject prefab;
     public GameObject blankPOneSelector;
@@ -36,7 +36,7 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -100, 0);
             Destroy(blankPOneSelector);
             manager.GetComponent<CharacterSelectorManager>().playerOneSelector = p.gameObject;
-            p.GetComponent<TestPlayerSelector>().isPlayerOne = true;
+            p.GetComponent<CharacterSelector>().isPlayerOne = true;
             GameManager.gameManager.playerOneInputDevice = context.InputDevice; //p.devices[0]
             GameManager.gameManager.playerOneControlScheme = context.ControlScheme; // p.currentControlScheme
         }
@@ -46,7 +46,7 @@ public class TestPlayerSelectorSpawner : MonoBehaviour
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(250, -100, 0);
             Destroy(blankPTwoSelector);
             manager.GetComponent<CharacterSelectorManager>().playerTwoSelector = p.gameObject;
-            p.GetComponent<TestPlayerSelector>().isPlayerOne = false;
+            p.GetComponent<CharacterSelector>().isPlayerOne = false;
             GameManager.gameManager.playerTwoInputDevice = context.InputDevice;
             GameManager.gameManager.playerTwoControlScheme = context.ControlScheme;
         }

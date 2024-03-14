@@ -13,11 +13,11 @@ public class CharacterSelectorManager : MonoBehaviour
         {
             if (playerTwoSelector != null) //two players
             {
-                return playerOneSelector.GetComponent<TestPlayerSelector>().characterSelected && playerTwoSelector.GetComponent<TestPlayerSelector>().characterSelected; //return true if both have selected characters
+                return playerOneSelector.GetComponent<CharacterSelector>().characterSelected && playerTwoSelector.GetComponent<CharacterSelector>().characterSelected; //return true if both have selected characters
             }
             else //one player
             {
-                return playerOneSelector.GetComponent<TestPlayerSelector>().characterSelected; //return true if player has selected
+                return playerOneSelector.GetComponent<CharacterSelector>().characterSelected; //return true if player has selected
             }
         }
         else
@@ -26,13 +26,13 @@ public class CharacterSelectorManager : MonoBehaviour
 
     public Character GetOtherCharacter()
     {
-        if (playerOneSelector.GetComponent<TestPlayerSelector>().characterSelected)
+        if (playerOneSelector.GetComponent<CharacterSelector>().characterSelected)
         {
-            return playerOneSelector.GetComponent<TestPlayerSelector>().character;
+            return playerOneSelector.GetComponent<CharacterSelector>().character;
         }
-        else if (playerTwoSelector.GetComponent<TestPlayerSelector>().characterSelected)
+        else if (playerTwoSelector.GetComponent<CharacterSelector>().characterSelected)
         {
-            return playerTwoSelector.GetComponent<TestPlayerSelector>().character;
+            return playerTwoSelector.GetComponent<CharacterSelector>().character;
         }
         return Character.None;
     }
