@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class BasicCutsceneCamera : MonoBehaviour
 {
@@ -20,9 +21,15 @@ public class BasicCutsceneCamera : MonoBehaviour
 
     public bool cameraMoving = false;
 
+    public bool panelSkipped = false;
+
+
+    [SerializeField] InputActionAsset actions;
+
 
 /// <summary>
-/// individual panel resolution: 448x252
+/// 
+/// 
 ///     PanelData class tells us:
 ///             - approachTime: Time (seconds) camera spends tweening towards this panel
 ///             - panelPosition: Vector2 position of each panel
@@ -36,6 +43,11 @@ public class BasicCutsceneCamera : MonoBehaviour
 /// 
 ///     To make your own comic, simply make a new PanelData[] array and edit the values in the inspector! Watch the camera zip around! Wow!
 /// 
+///     The game window is 448x252 pixels, so panels ideally should be at least that much, but can go as high 
+///     resolution as the artist wants (within reason) because the camera can zoom as far out as we want.
+/// 
+/// 
+/// 
 /// </summary>
 
 
@@ -43,6 +55,7 @@ public class BasicCutsceneCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        actions["gameplay/Strike"].performed += Skip;
         comicCamera=this.GetComponent<Camera>();
         StartCoroutine(testComicRoutine());
     }
@@ -50,8 +63,9 @@ public class BasicCutsceneCamera : MonoBehaviour
 
     IEnumerator testComicRoutine()
     {
-        // The first panel is handled separately because we do not arrive there from any prior position. It is the beginning. Let there be light.
-        
+        // The main loop of the comic system is to go somewhere from a prior position. There is no prior position to the first panel, and so
+        // the first panel gets special treatment and is handled before entering the main loop.
+
         // Start camera in first position.
         this.transform.position = testComic[0].panelPosition;
         // Set camera size for first panel.
@@ -63,20 +77,18 @@ public class BasicCutsceneCamera : MonoBehaviour
 
 
         // For each item in the array, i.e., for each panel in your comic, AFTER THE FIRST:
-        /// <summary>
-        
         for(int i = 1; i < testComic.Length; i++)
         {
             float elapsedTime = 0.0f;
 
-            // Lerp loop! That's not an alien language, it's a technical term! But would make a funny alien language.
+            // We lerp on a loop until the lerps are done. i.e., we move the camera.
             while (elapsedTime < testComic[i].approachTime)
             {
                 // Lerp POSITION with approachtime to target panel destination
                 transform.position = Vector3.Lerp(transform.position, testComic[i].panelPosition, (elapsedTime / testComic[i].approachTime));
                 // Lerp CAMERA SCALE with approachtime to target camerascale
                 comicCamera.orthographicSize = Mathf.Lerp(comicCamera.orthographicSize, testComic[i].cameraScale, (elapsedTime / testComic[i].approachTime));
-                // deltaTime shenanigans for framerate independence.
+                // Keeping track of the change in time for framerate independence.
                 elapsedTime += Time.deltaTime;
 
                 // I don't remember why I put this in here but I'm not touching it because it's late and I'm scared.
@@ -85,6 +97,21 @@ public class BasicCutsceneCamera : MonoBehaviour
 
             // yield for hangtime before running again
             yield return new WaitForSeconds(testComic[i].hangTime);
+            
+            //float elapsedHangTime = 0.0f;
+            //panelSkipped=false;
+            //while(elapsedHangTime<=testComic[i].hangTime&&panelSkipped==false)
+            //{
+            //    elapsedHangTime+=Time.deltaTime;
+            //}
+
+            // PLAN FOR REPLACING THE YIELD (THIS COULD GET UGLY):
+            // panelSkipped=false
+            // while [variable we add deltatime to] <= hangTime && skipped==false:
+            //              [that variable]+=deltatime
+
+
+            // If there are any panels left, we return to the top of the foor loop on the next panel.
         }
         // I do remember why I put this in here and it's because IEnumerator wants it apparently.
         yield return null;
@@ -94,5 +121,11 @@ public class BasicCutsceneCamera : MonoBehaviour
     void Update()
     {
 
+    }
+
+    void Skip(InputAction.CallbackContext _context)
+    {
+        Debug.Log("aaaaaa");
+        panelSkipped=true;
     }
 }
