@@ -24,9 +24,6 @@ public class BasicCutsceneCamera : MonoBehaviour
     public bool panelSkipped = false;
 
 
-    [SerializeField] InputActionAsset actions;
-
-
 /// <summary>
 /// 
 /// 
@@ -37,15 +34,17 @@ public class BasicCutsceneCamera : MonoBehaviour
 ///             - cameraScale: Scale (float) of camera (amount of camera zoom per panel, def. 5) for panel
 ///     
 ///     We have an Array of PanelData. We make an array for every comic (at least 4)
-///     We use a for loop to iterate through this array and use the PanelData within to animate the camera
+///     We use a for loop to iterate through this array and use the PanelData within to animate the camera.
 ///     
-///     TODO: The player should have the option of skipping the hang time by using their primary strike input, immediately going to the next panel.
 /// 
 ///     To make your own comic, simply make a new PanelData[] array and edit the values in the inspector! Watch the camera zip around! Wow!
 /// 
 ///     The game window is 448x252 pixels, so panels ideally should be at least that much, but can go as high 
 ///     resolution as the artist wants (within reason) because the camera can zoom as far out as we want.
 /// 
+///     
+///     TODO: The player should have the option of skipping the hang time by using their primary strike input, immediately going to the next panel
+///     TODO: The player should have a way to skip to the final panel in the array.
 /// 
 /// 
 /// </summary>
@@ -55,7 +54,7 @@ public class BasicCutsceneCamera : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        actions["gameplay/Strike"].performed += Skip;
+        GetComponent<AnyInput>().performed += Skip;
         comicCamera=this.GetComponent<Camera>();
         StartCoroutine(testComicRoutine());
     }
@@ -70,8 +69,23 @@ public class BasicCutsceneCamera : MonoBehaviour
         this.transform.position = testComic[0].panelPosition;
         // Set camera size for first panel.
         comicCamera.orthographicSize = testComic[0].cameraScale;
+        
+        
+        
         // Hang on first panel for set time.        
-        yield return new WaitForSeconds(testComic[0].hangTime);
+        //OLD METHOD: yield return new WaitForSeconds(testComic[0].hangTime);
+        //NEW MORE COMPLICATED METHOD THAT LETS YOU SKIP:
+        float elapsedHangTime = 0.0f;
+        panelSkipped=false;
+
+
+        while ( elapsedHangTime <= testComic[0].hangTime && panelSkipped==false )
+        {
+            elapsedHangTime+=Time.deltaTime;
+            // Wait for the next frame to keep counting.
+            yield return null;
+        }
+
 
         //this.transform.position=Vector3.Lerp(transform.position, testComic[1].panelPosition, testComic[1].approachSpeed*Time.deltaTime);
 
@@ -91,25 +105,21 @@ public class BasicCutsceneCamera : MonoBehaviour
                 // Keeping track of the change in time for framerate independence.
                 elapsedTime += Time.deltaTime;
 
-                // I don't remember why I put this in here but I'm not touching it because it's late and I'm scared.
+                // Wait for the next frame to continue lerping.
                 yield return null;
             }
 
             // yield for hangtime before running again
-            yield return new WaitForSeconds(testComic[i].hangTime);
-            
-            //float elapsedHangTime = 0.0f;
-            //panelSkipped=false;
-            //while(elapsedHangTime<=testComic[i].hangTime&&panelSkipped==false)
-            //{
-            //    elapsedHangTime+=Time.deltaTime;
-            //}
-
-            // PLAN FOR REPLACING THE YIELD (THIS COULD GET UGLY):
-            // panelSkipped=false
-            // while [variable we add deltatime to] <= hangTime && skipped==false:
-            //              [that variable]+=deltatime
-
+            //OLD: yield return new WaitForSeconds(testComic[i].hangTime);
+            //NEW:
+            elapsedHangTime = 0.0f;
+            panelSkipped=false;
+            while ( elapsedHangTime <= testComic[i].hangTime && panelSkipped==false )
+            {
+                elapsedHangTime+=Time.deltaTime;
+                // Wait for the next frame to keep counting.
+                yield return null;
+            }
 
             // If there are any panels left, we return to the top of the foor loop on the next panel.
         }
@@ -125,7 +135,6 @@ public class BasicCutsceneCamera : MonoBehaviour
 
     void Skip(InputAction.CallbackContext _context)
     {
-        Debug.Log("aaaaaa");
         panelSkipped=true;
     }
 }
