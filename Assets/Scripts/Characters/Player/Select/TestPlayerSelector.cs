@@ -68,7 +68,7 @@ public class TestPlayerSelector : MonoBehaviour
             if (manager.GetPlayersReady())
             {
                 //Start Game
-                SceneManager.LoadScene("PostCharacterSelector");
+                SceneManager.LoadScene(GameManager.gameManager.postCharacterSelectorScene);
                 Debug.Log("Characters Selected");
             }
         }

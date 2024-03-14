@@ -5,20 +5,36 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    //singlton instance
     public static GameManager gameManager;
+
+    //player's character
     public Character playerOne = Character.None;
     public Character playerTwo = Character.None;
+
+    //player's Input Devices
     public InputDevice playerOneInputDevice;
     public InputDevice playerTwoInputDevice;
+
+    //player's Control Schemes
     public string playerOneControlScheme;
     public string playerTwoControlScheme;
+
+    /// <summary>
+    /// used in the <see cref="TestPlayerSelector.OnConfirm"/> function to change the scene after the player(s) select their character.
+    /// </summary>
+    public string postCharacterSelectorScene;
 
 
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
+
+        //singlton check
         if (gameManager == null)
             gameManager = this;
+        else
+            Destroy(this);
     }
 
     /// <summary>
