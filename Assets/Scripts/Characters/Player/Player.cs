@@ -140,8 +140,8 @@ public class Player : MonoBehaviour
         );
 
         // flip according to direction
-        if (targetVel.x < 0) transform.localScale = new Vector3(-1, 1, 1);
-        else if (targetVel.x > 0) transform.localScale = new Vector3(1, 1, 1);
+        if (targetVel.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
+        else if (targetVel.x > 0) transform.localRotation = Quaternion.identity;
     }
 
     // bool IsGrounded()
