@@ -9,7 +9,7 @@ using UnityEngine.Windows;
 public class PauseScreenButtons : MonoBehaviour
 {
 
-    public string mainMenuScene;
+    public string OptionsScene;
     // Start is called before the first frame update
     void Start()
     {
@@ -51,7 +51,7 @@ public class PauseScreenButtons : MonoBehaviour
     /// </summary>
     public void MainMenu()
     {
-        SceneManager.LoadScene(mainMenuScene);
+        SceneManager.LoadScene(0);
         Debug.Log("Return to Main");
     }
     /// <summary>
@@ -69,6 +69,7 @@ public class PauseScreenButtons : MonoBehaviour
     /// </summary>
     public void OptionsMenu() //Change when options menu get created
     {
+        SceneManager.LoadScene(OptionsScene);
         Debug.Log("Open Options Menu");
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class GameOverScreenButtons : MonoBehaviour
 {
-    public string mainMenuScene;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,7 +26,7 @@ public class GameOverScreenButtons : MonoBehaviour
     /// </summary>
     public void MainMenu()
     {
-        SceneManager.LoadScene(mainMenuScene);
+        SceneManager.LoadScene(0);
         Debug.Log("Return to Main");
     }
 }
