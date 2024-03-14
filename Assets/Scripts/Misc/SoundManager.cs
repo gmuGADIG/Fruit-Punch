@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(PlayerInput))]
 public class SoundManager : MonoBehaviour
 {
-    [RequireComponent(typeof(PlayerInput))]
+    private PlayerInput playerInput;
+    private Grabber grabber;
 
     // Start is called before the first frame update
     void Start()
