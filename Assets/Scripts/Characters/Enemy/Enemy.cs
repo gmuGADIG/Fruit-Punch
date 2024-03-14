@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public enum EnemyState
@@ -45,6 +46,11 @@ public class Enemy : MonoBehaviour
     private float wanderingTimeTillAttack = 0;
     private Vector3 wanderingToPosition;
     private float wanderingTimeTillWander;
+
+    [Tooltip("The NavMeshAgent attached to the gameObject for this script. ")]
+    private NavMeshAgent NMA;
+
+
     
     /// <summary>
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
@@ -71,7 +77,8 @@ public class Enemy : MonoBehaviour
         this.GetComponentOrError(out grabbable);
         this.GetComponentOrError(out health);
         this.GetComponentInChildrenOrError(out groundCheck);
-  
+        NMA = GetComponent<NavMeshAgent>();
+
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, null);
         stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, null);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExit);
@@ -144,11 +151,16 @@ public class Enemy : MonoBehaviour
     EnemyState AggressiveUpdate()
     {
         if (groundCheck.IsGrounded() == false) return EnemyState.InAir;
-        
-        // print($"enemy status ({gameObject.name}): aggressive, targeting {aggressiveCurrentTarget.name}");
-        var vecToTarget = (aggressiveCurrentTarget.position - this.transform.position);
-        vecToTarget.y = 0;
-        rb.velocity = vecToTarget.normalized * walkingSpeed;
+
+
+        NMA.SetDestination(aggressiveCurrentTarget.position);
+
+        // print($"enemy status ({gameObject.name}): aggressive, targeting {aggressiveCurrentTarget.name}"); 
+         var vecToTarget = (aggressiveCurrentTarget.position - this.transform.position);
+         vecToTarget.y = 0;
+         //rb.velocity = vecToTarget.normalized * walkingSpeed;
+
+
 
         if (vecToTarget.magnitude < attackingDistance)
         {
