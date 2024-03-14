@@ -47,10 +47,8 @@ public class Enemy : MonoBehaviour
     private Vector3 wanderingToPosition;
     private float wanderingTimeTillWander;
 
-    [Tooltip("The NavMeshAgent attached to the gameObject for this script. ")]
+    [Tooltip("The NavMeshAgent attached to the gameObject for this script.")]
     private NavMeshAgent NMA;
-
-
     
     /// <summary>
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
@@ -77,7 +75,7 @@ public class Enemy : MonoBehaviour
         this.GetComponentOrError(out grabbable);
         this.GetComponentOrError(out health);
         this.GetComponentInChildrenOrError(out groundCheck);
-        NMA = GetComponent<NavMeshAgent>();
+        NMA = GetComponent<NavMeshAgent>(); 
 
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, null);
         stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, null);
@@ -89,6 +87,9 @@ public class Enemy : MonoBehaviour
 
         grabbable.onGrab += OnGrabCallback;
         grabbable.onThrow += OnThrowCallback;
+
+        NMA.speed = walkingSpeed;
+
     }
 
     private void Update()
@@ -158,8 +159,6 @@ public class Enemy : MonoBehaviour
         // print($"enemy status ({gameObject.name}): aggressive, targeting {aggressiveCurrentTarget.name}"); 
          var vecToTarget = (aggressiveCurrentTarget.position - this.transform.position);
          vecToTarget.y = 0;
-         //rb.velocity = vecToTarget.normalized * walkingSpeed;
-
 
 
         if (vecToTarget.magnitude < attackingDistance)
