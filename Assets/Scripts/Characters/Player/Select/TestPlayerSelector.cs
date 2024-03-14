@@ -15,6 +15,7 @@ public class TestPlayerSelector : MonoBehaviour
 {
     public static CharacterSelectorManager manager;
 
+    //images used for each character that the player can select, index = (int)Character
     [SerializeField]
     public Sprite[] images;
     private Image characterImage;
@@ -27,9 +28,19 @@ public class TestPlayerSelector : MonoBehaviour
 
     private void Start()
     {
-        manager = GameObject.Find("Manager").GetComponent<CharacterSelectorManager>();
-        characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
-        text = transform.Find("Confirm Text").gameObject.GetComponent<TextMeshProUGUI>();
+        //trys to finds manager if manager isnt assigned
+        if (manager == null)
+            manager = GameObject.Find("Manager").GetComponent<CharacterSelectorManager>();
+
+        //trys to finds characterImage if characterImage isnt assigned
+        if (characterImage == null)
+            characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
+        
+        //trys to finds text if text isnt assigned
+        if(text == null)
+            text = transform.Find("Confirm Text").gameObject.GetComponent<TextMeshProUGUI>();
+
+        //
         numCharacters = Character.GetNames(typeof(Character)).Length-1;
         if (numCharacters != images.Length)
             Debug.LogWarning("TestPlayerSelector.cs: The player enum and images provided do not have equivilent length.");
@@ -38,53 +49,69 @@ public class TestPlayerSelector : MonoBehaviour
         characterImage.sprite = images[0];
     }
 
+    /// <summary>
+    /// changes the character that would be selected
+    /// </summary>
     void OnRight()
     {
         if (characterSelected)
             return;
 
         character++;
+
+        //loops back if character index would be out of bounds 
         if ((int)character >= numCharacters)
             character = (Character)0;
         characterImage.sprite = images[(int)character];
     }
 
+    /// <summary>
+    /// changes the character that would be selected
+    /// </summary>
     void OnLeft()
     {
         if (characterSelected)
             return;
 
         character--;
+        //loops back if character index would be out of bounds 
         if (character < 0)
             character = (Character)(numCharacters-1);
         characterImage.sprite = images[(int)character];
     }
 
+    /// <summary>
+    /// on first press it locks in the character selected, on second press, if all players are ready it loads the next scene.
+    /// </summary>
     void OnConfirm()
     {
-        if (characterSelected)
+        if (characterSelected) //if a character has been chosen
         {
-            
+            //check if players have selected thier characters
             if (manager.GetPlayersReady())
             {
                 //Start Game
-                SceneManager.LoadScene(GameManager.gameManager.postCharacterSelectorScene);
+                SceneManager.LoadScene(GameManager.gameManager.postCharacterSelectorScene); 
                 Debug.Log("Characters Selected");
             }
         }
-        else
+        else //if a character hadn't been chosen, store the selected character
         {
             if (isPlayerOne)
                 GameManager.gameManager.playerOne = character;
             else
                 GameManager.gameManager.playerTwo = character;
-            //Character other = manager.GetOtherCharacter();
-            //if (other == Character.None || (Character)other!=character)
+
+            //updates text for selector
             text.text = "Press\r\n\r\n\r\nto start";
             characterSelected = true;
         }
     }
 
+    /// <summary>
+    /// unselects the character a player had preiously selected. if no characters had been selected it goes to the previous scene. 
+    /// IMPORANT: previous scene may not be the right scene. 
+    /// </summary>
     void OnBack()
     {
         if (characterSelected)
