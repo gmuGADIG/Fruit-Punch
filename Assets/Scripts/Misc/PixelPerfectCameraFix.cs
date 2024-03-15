@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -10,6 +11,11 @@ using UnityEngine.U2D;
 [ExecuteAlways]
 public class PixelPerfectCameraFix : MonoBehaviour
 {
+    void OnValidate()
+    {
+        GetComponent<PixelPerfectCamera>().runInEditMode = true;
+    }
+
     void OnPostRender()
     {
         Camera.main.activeTexture.filterMode = FilterMode.Point;
