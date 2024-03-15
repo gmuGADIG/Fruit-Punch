@@ -1,24 +1,52 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 [ExecuteAlways]
 public class InnerBillboard : MonoBehaviour
 {
     [SerializeField] Vector2Int pixelOffset;
-    [SerializeField] Vector2 spriteRes;
+    [SerializeField] Texture texture;
+    readonly Vector2 referenceRes = new Vector2(448, 252); // would be better to fetch this from the main camera but.. eh
 
+    Material _mat;
+    Material Mat
+    {
+        get
+        {
+            if (_mat == null)
+            {
+                _mat = new Material(Shader.Find("Custom/InnerBillboard"));
+                GetComponent<Renderer>().material = _mat;
+            }
+
+            return _mat;
+        }
+        set => _mat = value;
+    }
+    
     void Update()
     {
+        // TODO: this needs to use reference pixels, not final screen pixels
         var cam = Camera.main;
-        var camOffsetPx = (Vector2)cam.WorldToScreenPoint(transform.position) - new Vector2(cam.pixelWidth, cam.pixelHeight)/2;
-        var netOffsetPx = pixelOffset + camOffsetPx;
+        // get the screen-distance from the center of the camera to the transform's anchor. this uses final screen pixels, NOT reference pixels
+        var camOffsetScreenPx = (Vector2)cam.WorldToScreenPoint(transform.position) - new Vector2(cam.pixelWidth, cam.pixelHeight)/2;
+        // convert to reference pixels
+        var camOffsetRefPx = camOffsetScreenPx * new Vector2(referenceRes.x / cam.pixelWidth, referenceRes.y / cam.pixelHeight);
+        // apply serialized offset
+        var netOffsetPx = pixelOffset + camOffsetRefPx;
         
-        var netOffsetUv = -new Vector2(netOffsetPx.x / spriteRes.x, netOffsetPx.y / spriteRes.y);
+        
+        // convert to the uv coordinates of the texture
+        var netOffsetUv = -new Vector2(netOffsetPx.x / texture.width, netOffsetPx.y / texture.height);
         var netOffset4 = new Vector4(netOffsetUv.x, netOffsetUv.y, 0, 0);
 
-        var mat = GetComponent<Renderer>().material; 
-        mat.SetVector("_UvOffset", netOffset4);
-        mat.SetVector("_CamToTexScale", new Vector4(spriteRes.x / cam.pixelWidth,spriteRes.y / cam.pixelHeight,0,0));
+        // apply to material
+        Mat.SetVector("_UvOffset", netOffset4);
+        Mat.SetVector("_CamToTexScale", new Vector4(texture.width / referenceRes.x,texture.height / referenceRes.y,0,0));
+    }
+
+    void OnValidate()
+    {
+        Mat.SetTexture("_MainTex", texture);
     }
 }
