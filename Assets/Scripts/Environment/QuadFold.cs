@@ -2,9 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteAlways]
+[ExecuteInEditMode]
 public class QuadFold : MonoBehaviour
 {
+    [SerializeField] SpriteRenderer topSprite;
+    [SerializeField] SpriteRenderer sideSprite;
+    [SerializeField] BoxCollider box;
+
     void Start()
     {
         AdjustCollider();
@@ -12,20 +16,15 @@ public class QuadFold : MonoBehaviour
 
     void Update()
     {
-        if (Application.isPlaying) return;
-        else AdjustCollider();
+        AdjustCollider();
     }
     
     void AdjustCollider()
     {
-        // get box component
-        var box = transform.GetChild(2).GetComponent<BoxCollider>();
-        if (box == null || box.enabled == false) return;
-        
-        // get sprite components
-        var topSprite = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        var sideSprite = transform.GetChild(1).GetComponent<SpriteRenderer>();
-
+        if (!topSprite || !sideSprite || !box || !box.enabled)
+        {
+            return;
+        }
         // get extents and correction factor
         var topExtents = topSprite.bounds.extents;
         var sideExtents = sideSprite.bounds.extents;
