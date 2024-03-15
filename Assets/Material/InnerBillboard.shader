@@ -44,8 +44,6 @@ Shader "Custom/InnerBillboard"
             
             fixed4 frag (v2f i) : SV_Target
             {
-                // const float2 camera_to_texture_scale = float2(655.0 / 448.0, 252.0 / 252.0); // texture size / camera size (in pixels)
-                
                 // Calculate texture coordinates based on screen position
                 float2 uv = i.screenPos.xy;
                 uv.xy /= _CamToTexScale.xy;

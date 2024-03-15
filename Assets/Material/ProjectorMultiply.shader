@@ -18,7 +18,6 @@ Shader "Projector/Multiply" {
 			
 			struct v2f {
 				float4 uvShadow : TEXCOORD0;
-				float4 uvProj : float4;
 				float4 pos : SV_POSITION;
 			};
 			
@@ -30,7 +29,6 @@ Shader "Projector/Multiply" {
 				v2f o;
 				o.pos = UnityObjectToClipPos(vertex);
 				o.uvShadow = mul (unity_Projector, vertex);
-				o.uvProj = mul(unity_Projector, vertex);
 				UNITY_TRANSFER_FOG(o,o.pos);
 				return o;
 			}
