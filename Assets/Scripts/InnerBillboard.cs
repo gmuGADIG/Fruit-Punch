@@ -8,9 +8,7 @@ using UnityEngine;
  */
 [ExecuteAlways]
 public class InnerBillboard : MonoBehaviour
-{
-    public Vector2 tempOffset;
-    
+{    
     [Tooltip("Texture to billboard. Generally, this will be the sprite of the entire level. Texture must be its own image, not part of an atlas. Transparency not supported.")]
     [SerializeField] Texture texture;
     
@@ -41,7 +39,7 @@ public class InnerBillboard : MonoBehaviour
     {
         var cam = Camera.main;
         // get the anchor screen position (screen-space uv) then convert to texture uv
-        var camOffsetScreenUv = (Vector2)cam.WorldToViewportPoint(anchor.position) + tempOffset;
+        var camOffsetScreenUv = (Vector2)cam.WorldToViewportPoint(anchor.position);
         var camOffsetTexUv = -camOffsetScreenUv * new Vector2(referenceRes.x / texture.width, referenceRes.y / texture.height);
 
         // convert serialized offset to texture uv
