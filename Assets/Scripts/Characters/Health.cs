@@ -25,8 +25,11 @@ public class Health : MonoBehaviour
     private float maxHealth = 100;
 
     public float MaxHealth => maxHealth;
-    
-    [ReadOnlyInInspector, SerializeField]
+
+#if UNITY_EDITOR
+    [ReadOnlyInInspector]
+#endif
+    [SerializeField]
     private float currentHealth;
     public float CurrentHealth => currentHealth;
     /// <summary>
