@@ -6,7 +6,7 @@ using UnityEngine;
 /// <summary>
 /// A script that extends the Pickup script. It makes a healing pickup that disappears on touch.
 /// </summary>
-public class HealthPickup: Pickup
+public class HealthPickup : Pickup
 {
     /// <summary>
     /// The amount of health to be healed.
@@ -18,7 +18,7 @@ public class HealthPickup: Pickup
     /// Accesses player's Health script and heals them
     /// </summary>
     /// <param name="player"></param>
-    public override void Effect(GameObject player)
+    protected override void ApplyEffect(Player player)
     {
         player.GetComponent<Health>().Heal(healthRestore);
     }

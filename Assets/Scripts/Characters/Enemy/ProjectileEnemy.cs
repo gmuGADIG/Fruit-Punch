@@ -25,33 +25,33 @@ class ProjectileEnemy : Enemy {
 
     protected override EnemyState AggressiveUpdate()
     {
-        var deltaX = Mathf.Abs(beltChar.internalPosition.x - aggressiveCurrentTarget.internalPosition.x);
-        var deltaZ = Mathf.Abs(beltChar.internalPosition.z - aggressiveCurrentTarget.internalPosition.z);
+        var deltaX = Mathf.Abs(transform.position.x - aggressiveCurrentTarget.position.x);
+        var deltaZ = Mathf.Abs(transform.position.z - aggressiveCurrentTarget.position.z);
         if (minX <= deltaX && deltaX <= maxX && deltaZ <= fuzzyZ) {
             return EnemyState.Attacking; // we can shoot them!
         }
 
         Vector3 goalPos = new();
 
-        var signX = beltChar.internalPosition.x - aggressiveCurrentTarget.internalPosition.x / deltaX;
-        var signZ = beltChar.internalPosition.x - aggressiveCurrentTarget.internalPosition.x / deltaZ;
+        var signX = transform.position.x - aggressiveCurrentTarget.position.x / deltaX;
+        var signZ = transform.position.x - aggressiveCurrentTarget.position.x / deltaZ;
     
         if (deltaX < minX) {
-            goalPos.x = minX * signX + aggressiveCurrentTarget.internalPosition.x;
+            goalPos.x = minX * signX + aggressiveCurrentTarget.position.x;
         } else {
-            goalPos.x = maxX * signX + aggressiveCurrentTarget.internalPosition.x;
+            goalPos.x = maxX * signX + aggressiveCurrentTarget.position.x;
         }
 
         if (deltaZ < -fuzzyZ) {
-            goalPos.z = -fuzzyZ * signZ + aggressiveCurrentTarget.internalPosition.z;
+            goalPos.z = -fuzzyZ * signZ + aggressiveCurrentTarget.position.z;
         } else {
-            goalPos.z = fuzzyZ * signZ + aggressiveCurrentTarget.internalPosition.z;
+            goalPos.z = fuzzyZ * signZ + aggressiveCurrentTarget.position.z;
         }
 
-        goalPos.y = beltChar.internalPosition.y;
+        goalPos.y = transform.position.y;
 
-        beltChar.internalPosition = Vector3.MoveTowards(
-            beltChar.internalPosition,
+        transform.position = Vector3.MoveTowards(
+            transform.position,
             goalPos,
             walkingSpeed * Time.deltaTime
         );
@@ -63,8 +63,8 @@ class ProjectileEnemy : Enemy {
     {
         currentAttackDuration = attackDuration;
 
-        var deltaX = Mathf.Abs(beltChar.internalPosition.x - aggressiveCurrentTarget.internalPosition.x);
-        var signX = beltChar.internalPosition.x - aggressiveCurrentTarget.internalPosition.x / deltaX;
+        var deltaX = Mathf.Abs(transform.position.x - aggressiveCurrentTarget.position.x);
+        var signX = transform.position.x - aggressiveCurrentTarget.position.x / deltaX;
 
         Instantiate(
             bulletPrefab,

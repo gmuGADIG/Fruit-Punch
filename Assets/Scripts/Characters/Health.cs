@@ -16,7 +16,7 @@ Max Health, Current Health, Decrease and Increase health functions.
 Magic of Events Implemented by Justin from designed code. 
 
 */
-
+[RequireComponent(typeof(Rigidbody))]
 public class Health : MonoBehaviour
 {
     public AuraType vulnerableTypes;
@@ -25,10 +25,13 @@ public class Health : MonoBehaviour
     private float maxHealth = 100;
 
     public float MaxHealth => maxHealth;
-    
-    [ReadOnlyInInspector, SerializeField]
+
+#if UNITY_EDITOR
+    [ReadOnlyInInspector]
+#endif
+    [SerializeField]
     private float currentHealth;
-    
+    public float CurrentHealth => currentHealth;
     /// <summary>
     /// Invoked when this character's health reaches zero. <br/>
     /// (run after onHealthChange and onHurt)
@@ -53,7 +56,16 @@ public class Health : MonoBehaviour
     {
         currentHealth = maxHealth;
     }
-    
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.TryGetComponent<HurtBox>(out var hurtBox))
+        {
+            var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
+            if (hitsThisLayer) this.Damage(hurtBox.GetDamageInfo());
+        }
+    }
+
     /// <summary>
     /// Attempts to damage the character, decreasing its health towards zero (no lower). <br/>
     /// Factors in the aura of the attack, and ignoring it's damage if this character isn't vulnerable. <br/>
@@ -62,11 +74,11 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Damage(DamageInfo info)
     {
-        print("Oww!");
         if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
+            print($"{gameObject.name} was immune to an attack");
             return;
         }
         
@@ -75,6 +87,7 @@ public class Health : MonoBehaviour
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
         
+        print($"{gameObject.name} health down to {currentHealth}");
         if (currentHealth <= 0) Die();
     }
 
@@ -106,6 +119,10 @@ public class Health : MonoBehaviour
         onDeath?.Invoke();
     }
 
+    public bool HasAura()
+    {
+        return vulnerableTypes.IsSpecial();
+    }
 }
 
 public struct HealthChange
