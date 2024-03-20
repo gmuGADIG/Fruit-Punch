@@ -32,7 +32,9 @@ public class Shadow3D : MonoBehaviour
             var highestPoint = hits.OrderBy(h => h.distance).First();
             dist = highestPoint.distance;
         }
-
-        proj.farClipPlane = dist + 0.5f;
+        if (proj != null)
+        {
+            proj.farClipPlane = dist + 0.5f;
+        }
     }
 }
