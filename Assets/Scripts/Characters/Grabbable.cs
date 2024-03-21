@@ -1,13 +1,14 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 /// <summary>
 /// This component allows an item or an enemy to be grabbed by a player. See also: <c>Grabber.cs</c> <br/>
 /// </summary>
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabbable : MonoBehaviour
-{
+{ 
     Rigidbody rb;
     
     void Start()
@@ -15,9 +16,9 @@ public class Grabbable : MonoBehaviour
         this.GetComponentOrError(out rb);
     }
 
-    public event Action onGrab;
-    public event Action onThrow;
-    public event Action onForceRelease;
+    public UnityEvent onGrab;
+    public UnityEvent onThrow;
+    public UnityEvent onForceRelease;
 
     public void Grab()
     {

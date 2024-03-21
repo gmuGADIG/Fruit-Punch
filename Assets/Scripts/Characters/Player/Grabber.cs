@@ -32,7 +32,7 @@ public class Grabber : MonoBehaviour
         var item = GetGrabbedItem();
         item.Release();
         item.transform.SetParent(null);
-        item.onForceRelease -= ForceReleaseCallback;
+        item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
     }
 
@@ -51,7 +51,7 @@ public class Grabber : MonoBehaviour
         item.Grab();
         item.transform.SetParent(this.transform);
         item.transform.position = this.transform.position;
-        item.onForceRelease += ForceReleaseCallback;
+        item.onForceRelease.AddListener(ForceReleaseCallback);
         return true;
     }
 
