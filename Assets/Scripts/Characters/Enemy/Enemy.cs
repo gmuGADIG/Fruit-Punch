@@ -83,7 +83,7 @@ public class Enemy : MonoBehaviour
         NMA = GetComponent<NavMeshAgent>(); 
 
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, WanderingExit);
-        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnterExt, AggressiveUpdate, AggressiveExit);
+        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnterExt, AggressiveUpdate, AggressiveExitExt);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExitExt);
         stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, null);
         stateMachine.AddState(EnemyState.Grabbed, null, GrabbedUpdate, null);
@@ -150,7 +150,7 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    void WanderingExit() {
+    void WanderingExit(EnemyState _newState) {
         Destroy(wanderingMarker);
     }
 
@@ -188,7 +188,13 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    protected virtual void AggressiveExit() { }
+    void AggressiveExitExt(EnemyState newState) {
+        if (newState != EnemyState.Attacking) {
+            currentAttackingEnemies -= 1;
+        } AggressiveExit(newState);
+    }
+
+    protected virtual void AggressiveExit(EnemyState newState) { }
 
     protected virtual void AttackingEnter() { }
     
@@ -200,12 +206,12 @@ public class Enemy : MonoBehaviour
         else return stateMachine.currentState;
     }
 
-    protected virtual void AttackingExit() {}
+    protected virtual void AttackingExit(EnemyState newState) {}
 
-    void AttackingExitExt()
+    void AttackingExitExt(EnemyState newState)
     {
         currentAttackingEnemies -= 1;
-        AttackingExit();
+        AttackingExit(newState);
     }
 
     void HurtEnter()
@@ -238,7 +244,7 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    void InAirExit()
+    void InAirExit(EnemyState _newState)
     {
         if (thrownDamageQueue)
         {

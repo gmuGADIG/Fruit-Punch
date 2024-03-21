@@ -75,7 +75,7 @@ class ProjectileEnemy : Enemy {
         return stateMachine.currentState;
     }
 
-    protected override void AggressiveExit()
+    protected override void AggressiveExit(EnemyState _newState)
     {
         Destroy(aggressiveMarker);
     }

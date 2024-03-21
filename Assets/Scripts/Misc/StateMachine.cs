@@ -33,9 +33,9 @@ where TState : struct, Enum
     {
         [CanBeNull] public Action enter;
         [CanBeNull] public Func<T> update;
-        [CanBeNull] public Action exit;
+        [CanBeNull] public Action<T> exit;
 
-        public StateCallbacks(Action enter, Func<T> update, Action exit)
+        public StateCallbacks(Action enter, Func<T> update, Action<T> exit)
         {
             this.enter = enter;
             this.update = update;
@@ -47,7 +47,7 @@ where TState : struct, Enum
     /// Adds a new state to the state machine, and sets up it's enter, update, and exit callbacks. <br/>
     /// The update callback should return the resulting state.
     /// </summary>
-    public void AddState(TState state, [CanBeNull] Action enterCallback, [CanBeNull] Func<TState> updateCallback, [CanBeNull] Action exitCallback)
+    public void AddState(TState state, [CanBeNull] Action enterCallback, [CanBeNull] Func<TState> updateCallback, [CanBeNull] Action<TState> exitCallback)
     {
         callbacks.Add(state, new StateCallbacks<TState>(enterCallback, updateCallback, exitCallback));
     }
@@ -74,7 +74,7 @@ where TState : struct, Enum
 
         Debug.Log($"Entering state {newState}.");
 
-        callbacks[currentState].exit?.Invoke();
+        callbacks[currentState].exit?.Invoke(newState);
         timeInState = 0;
         currentState = newState;
         callbacks[currentState].enter?.Invoke();
