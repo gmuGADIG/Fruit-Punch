@@ -126,8 +126,8 @@ public class Enemy : MonoBehaviour
         
         // approach randomly set wander point (unless already right next to it)
         var vecToTarget = wanderingToPosition - transform.position;
-        if (vecToTarget.magnitude > 0.1f) rb.velocity = vecToTarget.normalized * walkingSpeed;
-        else rb.velocity = Vector3.zero;
+        if (vecToTarget.magnitude > 0.1f) NMA.SetDestination(wanderingToPosition);
+        else NMA.ResetPath();
         if (wanderingTimeTillWander < 0)
         {
             wanderingToPosition = new Vector3(
@@ -166,7 +166,8 @@ public class Enemy : MonoBehaviour
     }
 
     // The "ext" pattern here ensures a programmer doesn't accidentally override this code
-    // and break the currentAttackingEnemies invariant
+    // and break the currentAttackingEnemies invariant.
+    // non-ext code should contain behavior-specific code.
     void AggressiveEnterExt() {
         currentAttackingEnemies += 1;
         AggressiveEnter();
@@ -195,7 +196,9 @@ public class Enemy : MonoBehaviour
     void AggressiveExitExt(EnemyState newState) {
         if (newState != EnemyState.Attacking) {
             currentAttackingEnemies -= 1;
-        } AggressiveExit(newState);
+        } 
+        NMA.ResetPath();
+        AggressiveExit(newState);
     }
 
     protected virtual void AggressiveExit(EnemyState newState) { }
