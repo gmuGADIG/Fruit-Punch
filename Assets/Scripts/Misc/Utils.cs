@@ -26,10 +26,32 @@ public static class Utils
     }
 
     /// <summary>
+    /// Similar to TryGetComponent, except an error will be thrown if no such component exists.
+    /// </summary>
+    public static void GetComponentOrError<T>(this GameObject obj, out T result)
+    {
+        if (obj.TryGetComponent(out result)) return;
+        else throw new Exception($"`{obj.name}` is missing component of type `{typeof(T).Name}`!");
+    }
+
+    /// <summary>
     /// Similar to GetComponentInChildren, except an error will be thrown if no such component exists.
     /// </summary>
     public static void GetComponentInChildrenOrError<T>(
         this MonoBehaviour obj, 
+        out T result
+    ) {
+        result = obj.GetComponentInChildren<T>();
+        if (result == null) {
+            throw new Exception($"`{obj.name}`'s children are missing component of type `{typeof(T).Name}`!");
+        }
+    }
+
+    /// <summary>
+    /// Similar to GetComponentInChildren, except an error will be thrown if no such component exists.
+    /// </summary>
+    public static void GetComponentInChildrenOrError<T>(
+        this GameObject obj, 
         out T result
     ) {
         result = obj.GetComponentInChildren<T>();

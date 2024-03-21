@@ -23,7 +23,7 @@ class ProjectileEnemy : Enemy {
     const float attackDuration = 2f;
     float currentAttackDuration;
 
-    GameObject aggressiveMarker;
+    DebugMarker aggressiveMarker;
 
     protected override EnemyState AggressiveUpdate()
     {
@@ -66,7 +66,7 @@ class ProjectileEnemy : Enemy {
 
         if (Application.isEditor) {
             if (aggressiveMarker == null) {
-                aggressiveMarker = Instantiate(debugMarkerPrefab, goalPos, Quaternion.identity);
+                aggressiveMarker = DebugMarker.Instantiate(debugMarkerPrefab, goalPos, Color.red);
             } else {
                 aggressiveMarker.transform.position = goalPos;
             }
@@ -77,7 +77,9 @@ class ProjectileEnemy : Enemy {
 
     protected override void AggressiveExit(EnemyState _newState)
     {
-        Destroy(aggressiveMarker);
+        if (aggressiveMarker != null) {
+            Destroy(aggressiveMarker.gameObject);
+        }
     }
 
     protected override void AttackingEnter()

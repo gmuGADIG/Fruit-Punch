@@ -72,7 +72,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] protected GameObject debugMarkerPrefab;
 
-    protected GameObject wanderingMarker;
+    protected DebugMarker wanderingMarker;
 
     private void Start()
     {
@@ -121,9 +121,7 @@ public class Enemy : MonoBehaviour
             if (currentAttackingEnemies < MaxSimultaneousAttackers) // TODO: multiply by player count
             {
                 return EnemyState.Aggressive;
-            } else {
-                var no_op = 0;
-            }
+            } 
         }
         
         // approach randomly set wander point (unless already right next to it)
@@ -140,8 +138,10 @@ public class Enemy : MonoBehaviour
             wanderingTimeTillWander = wanderTimeBetweenSteps;
 
             if (Application.isEditor) {
-                Destroy(wanderingMarker);
-                wanderingMarker = Instantiate(debugMarkerPrefab, wanderingToPosition, Quaternion.identity);
+                if (wanderingMarker != null) {
+                    Destroy(wanderingMarker.gameObject);
+                }
+                wanderingMarker = DebugMarker.Instantiate(debugMarkerPrefab, wanderingToPosition, Color.blue);
             }
         }
 
@@ -151,7 +151,9 @@ public class Enemy : MonoBehaviour
     }
 
     void WanderingExit(EnemyState _newState) {
-        Destroy(wanderingMarker);
+        if (wanderingMarker != null) {
+            Destroy(wanderingMarker.gameObject);
+        }
     }
 
     protected virtual void AggressiveEnter()
@@ -163,6 +165,8 @@ public class Enemy : MonoBehaviour
             .First().transform;
     }
 
+    // The "ext" pattern here ensures a programmer doesn't accidentally override this code
+    // and break the currentAttackingEnemies invariant
     void AggressiveEnterExt() {
         currentAttackingEnemies += 1;
         AggressiveEnter();
