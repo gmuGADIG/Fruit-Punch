@@ -14,7 +14,7 @@ public class Grabber : MonoBehaviour
     public event Action onForceRelease;
     
     [Tooltip("The force (not speed) applied to thrown objects. Heavier objects will be slower.")]
-    [SerializeField] float throwForce;
+    [SerializeField] public float throwForce;
     
     List<Grabbable> currentOverlaps = new();
     

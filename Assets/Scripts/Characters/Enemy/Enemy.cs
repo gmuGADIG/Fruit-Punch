@@ -218,7 +218,8 @@ public class Enemy : MonoBehaviour
     {
         if (thrownDamageQueue)
         {
-            var dmg = throwBaseDamage * rb.mass;
+            // damage to enemy = BaseDamage * (enemyWeight * throwForce)
+            var dmg = throwBaseDamage * (grabbable.weight * GetComponentInParent<Grabber>().throwForce);
             health.Damage(new DamageInfo(dmg, Vector2.zero, AuraType.Throw));
             thrownDamageQueue = false;
         }

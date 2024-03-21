@@ -8,6 +8,9 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabbable : MonoBehaviour
 {
+    [Tooltip("This the weight of the gameObject. --Do you even lift enough to grab this?--")]
+    public float weight;
+
     Rigidbody rb;
     
     void Start()
