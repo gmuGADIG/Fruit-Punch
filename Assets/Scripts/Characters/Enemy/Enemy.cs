@@ -121,6 +121,8 @@ public class Enemy : MonoBehaviour
             if (currentAttackingEnemies < MaxSimultaneousAttackers) // TODO: multiply by player count
             {
                 return EnemyState.Aggressive;
+            } else {
+                var no_op = 0;
             }
         }
         
@@ -154,8 +156,6 @@ public class Enemy : MonoBehaviour
 
     protected virtual void AggressiveEnter()
     {
-        currentAttackingEnemies += 1;
-        
         // start approaching the nearest player
         aggressiveCurrentTarget =
             FindObjectsOfType<Player>()
