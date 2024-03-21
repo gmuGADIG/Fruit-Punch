@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using UnityEditor.EditorTools;
 using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
@@ -38,7 +39,7 @@ public class Enemy : MonoBehaviour
     const float attackingDuration = 2; // how long the enemy stays in attacking state. might be worth reading its animation for this value eventually
 
     const float wanderXDistance = 1f; // each time the enemy chooses to wander, it can go this far in the x-direction
-    const float wanderZMin = -0.5f, wanderZMax = 0.5f; // each time the enemy chooses to wander, it's new z position must be within these bounds
+    const float wanderZMin = -0.15f, wanderZMax = 0.15f; // each time the enemy chooses to wander, it's new z position must be within these bounds
     const float wanderTimeBetweenSteps = 3f; // when wandering, the enemy takes a few steps with this period
 
     const float grabTimeToEscape = 5f; // enemy will break out of a grab after this long
@@ -69,6 +70,10 @@ public class Enemy : MonoBehaviour
     private Health health;
     protected StateMachine<EnemyState> stateMachine = new();
 
+    [SerializeField] protected GameObject debugMarkerPrefab;
+
+    protected GameObject wanderingMarker;
+
     private void Start()
     {
         this.GetComponentOrError(out rb);
@@ -77,7 +82,7 @@ public class Enemy : MonoBehaviour
         this.GetComponentInChildrenOrError(out groundCheck);
         NMA = GetComponent<NavMeshAgent>(); 
 
-        stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, null);
+        stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, WanderingExit);
         stateMachine.AddState(EnemyState.Aggressive, AggressiveEnterExt, AggressiveUpdate, AggressiveExit);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExitExt);
         stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, null);
@@ -127,15 +132,24 @@ public class Enemy : MonoBehaviour
         {
             wanderingToPosition = new Vector3(
                 transform.position.x + Random.Range(-wanderXDistance, +wanderXDistance),
-                Random.Range(wanderZMin, wanderZMax),
-                transform.position.z
+                transform.position.y,
+                Random.Range(wanderZMin, wanderZMax)
             );
             wanderingTimeTillWander = wanderTimeBetweenSteps;
+
+            if (Application.isEditor) {
+                Destroy(wanderingMarker);
+                wanderingMarker = Instantiate(debugMarkerPrefab, wanderingToPosition, Quaternion.identity);
+            }
         }
 
         wanderingTimeTillWander -= Time.deltaTime;
         
         return stateMachine.currentState;
+    }
+
+    void WanderingExit() {
+        Destroy(wanderingMarker);
     }
 
     protected virtual void AggressiveEnter()

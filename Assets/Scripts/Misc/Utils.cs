@@ -107,4 +107,12 @@ public static class Utils
         }
         return result;
     }
+
+    public static Vector3 Abs(this Vector3 v) {
+        return new(
+            Mathf.Abs(v.x),
+            Mathf.Abs(v.y),
+            Mathf.Abs(v.z)
+        );
+    }
 }

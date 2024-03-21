@@ -26,6 +26,11 @@ public class HurtBox : MonoBehaviour
     [Tooltip("This attack only hurts enemies vulnerable to this Aura. For enemy hurtboxes, use the type `Enemy Atk`.")]
     [SerializeField] private AuraType aura;
     
+    /// <summary>
+    /// Invoked when this hurt box hurts something.
+    /// </summary>
+    public Action<DamageInfo> onHurt;
+    
     void Start()
     {
         //Assert(aura != 0);

@@ -71,6 +71,9 @@ where TState : struct, Enum
     {
         if (callbacks.ContainsKey(newState) == false) Debug.LogError($"Attempting to set state `{newState}`, but no callbacks exist! Make sure it's set up with `stateManager.AddState`");
         if (newState.Equals(currentState)) return;
+
+        Debug.Log($"Entering state {newState}.");
+
         callbacks[currentState].exit?.Invoke();
         timeInState = 0;
         currentState = newState;

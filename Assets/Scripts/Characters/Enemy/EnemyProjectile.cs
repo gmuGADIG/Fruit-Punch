@@ -4,17 +4,22 @@ using UnityEngine;
 [RequireComponent(typeof(HurtBox))]
 class EnemyProjectile : MonoBehaviour {
     bool setupCalled = false;
-
     Vector2 velocity;
 
     public void Setup(float damage, Vector2 velocity) {
-        GetComponent<HurtBox>().damage = damage;
+        var hurtBox = GetComponent<HurtBox>();
+        hurtBox.damage = damage;
+        hurtBox.onHurt += (_d) => Destroy(gameObject);
+
         this.velocity = velocity;
+    
+        setupCalled = true;
     }
 
     void Start() {
+        //yield return null;
         if (!setupCalled) {
-            Debug.LogError("EnemyProjectile not called!");
+            Debug.LogError("EnemyProjectile.Setup not called!");
         }
     }
 

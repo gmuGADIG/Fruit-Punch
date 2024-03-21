@@ -23,31 +23,39 @@ class ProjectileEnemy : Enemy {
     const float attackDuration = 2f;
     float currentAttackDuration;
 
+    GameObject aggressiveMarker;
+
     protected override EnemyState AggressiveUpdate()
     {
+        var pos = transform.position - aggressiveCurrentTarget.position;
+        var absPos = pos.Abs();
+
         var deltaX = Mathf.Abs(transform.position.x - aggressiveCurrentTarget.position.x);
         var deltaZ = Mathf.Abs(transform.position.z - aggressiveCurrentTarget.position.z);
-        if (minX <= deltaX && deltaX <= maxX && deltaZ <= fuzzyZ) {
+        if (minX <= absPos.x && absPos.x <= maxX && absPos.z <= fuzzyZ) {
             return EnemyState.Attacking; // we can shoot them!
         }
 
         Vector3 goalPos = new();
+        var signs = new Vector3(
+            pos.x / absPos.x,
+            pos.y / absPos.y,
+            pos.z / absPos.z
+        );
 
-        var signX = transform.position.x - aggressiveCurrentTarget.position.x / deltaX;
-        var signZ = transform.position.x - aggressiveCurrentTarget.position.x / deltaZ;
-    
-        if (deltaX < minX) {
-            goalPos.x = minX * signX + aggressiveCurrentTarget.position.x;
-        } else {
-            goalPos.x = maxX * signX + aggressiveCurrentTarget.position.x;
+        if (minX > absPos.x) { // too close!
+            goalPos.x = minX * signs.x;
+        } else if (maxX < absPos.x) { // too far!
+            goalPos.x = maxX * signs.x;
         }
 
-        if (deltaZ < -fuzzyZ) {
-            goalPos.z = -fuzzyZ * signZ + aggressiveCurrentTarget.position.z;
-        } else {
-            goalPos.z = fuzzyZ * signZ + aggressiveCurrentTarget.position.z;
+        // not lined up!
+        if (absPos.z > fuzzyZ) {
+            goalPos.z = fuzzyZ * signs.z;
         }
 
+        // goalPos is relative to target until this point
+        goalPos += aggressiveCurrentTarget.position;
         goalPos.y = transform.position.y;
 
         transform.position = Vector3.MoveTowards(
@@ -56,7 +64,20 @@ class ProjectileEnemy : Enemy {
             walkingSpeed * Time.deltaTime
         );
 
+        if (Application.isEditor) {
+            if (aggressiveMarker == null) {
+                aggressiveMarker = Instantiate(debugMarkerPrefab, goalPos, Quaternion.identity);
+            } else {
+                aggressiveMarker.transform.position = goalPos;
+            }
+        }
+
         return stateMachine.currentState;
+    }
+
+    protected override void AggressiveExit()
+    {
+        Destroy(aggressiveMarker);
     }
 
     protected override void AttackingEnter()
@@ -68,10 +89,10 @@ class ProjectileEnemy : Enemy {
 
         Instantiate(
             bulletPrefab,
-            transform.position,
+            transform.position + Vector3.up * .5f,
             Quaternion.identity
         ).GetComponent<EnemyProjectile>()
-        .Setup(projectileDamage, signX * projectileSpeed * Vector2.right);
+        .Setup(projectileDamage, signX * projectileSpeed * Vector2.left);
     }
 
     protected override EnemyState AttackingUpdate()
