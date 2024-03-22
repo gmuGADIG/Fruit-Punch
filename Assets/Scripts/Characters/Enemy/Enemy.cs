@@ -48,8 +48,10 @@ public class Enemy : MonoBehaviour
     private Vector3 wanderingToPosition;
     private float wanderingTimeTillWander;
 
-    [Tooltip("The NavMeshAgent attached to the gameObject for this script.")]
-    private NavMeshAgent NMA;
+    /// <summary> 
+    /// The NavMeshAgent attached to the gameObject for this script.
+    /// </summary>
+    protected NavMeshAgent NMA;
     
     /// <summary>
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
@@ -72,7 +74,7 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] protected GameObject debugMarkerPrefab;
 
-    protected DebugMarker wanderingMarker;
+    private DebugMarker wanderingMarker;
 
     private void Start()
     {
@@ -85,9 +87,9 @@ public class Enemy : MonoBehaviour
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, WanderingExit);
         stateMachine.AddState(EnemyState.Aggressive, AggressiveEnterExt, AggressiveUpdate, AggressiveExitExt);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExitExt);
-        stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, null);
-        stateMachine.AddState(EnemyState.Grabbed, null, GrabbedUpdate, null);
-        stateMachine.AddState(EnemyState.InAir, null, InAirUpdate, InAirExit);
+        stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, HurtExit);
+        stateMachine.AddState(EnemyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
+        stateMachine.AddState(EnemyState.InAir, InAirEnter, InAirUpdate, InAirExit);
         stateMachine.FinalizeAndSetState(EnemyState.Wandering);
 
         grabbable.onGrab += OnGrabCallback;
@@ -103,13 +105,13 @@ public class Enemy : MonoBehaviour
         if (rb.isKinematic == false) rb.velocity += Vector3.down * gravity * Time.deltaTime;
     }
 
-    void WanderingEnter()
+    protected virtual void WanderingEnter()
     {
         wanderingTimeTillAttack = Random.Range(wanderingTimeMin, wanderingTimeMax);
         wanderingToPosition = transform.position;
     }
     
-    EnemyState WanderingUpdate()
+    protected virtual EnemyState WanderingUpdate()
     {
         if (groundCheck.IsGrounded() == false) return EnemyState.InAir;
         
@@ -150,7 +152,7 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    void WanderingExit(EnemyState _newState) {
+    protected virtual void WanderingExit(EnemyState _newState) {
         if (wanderingMarker != null) {
             Destroy(wanderingMarker.gameObject);
         }
@@ -221,20 +223,23 @@ public class Enemy : MonoBehaviour
         AttackingExit(newState);
     }
 
-    void HurtEnter()
+    protected virtual void HurtEnter()
     {
         print("Enemy: Ouch!!");
-        currentAttackingEnemies -= 1;
     }
     
-    EnemyState HurtUpdate()
+    protected virtual EnemyState HurtUpdate()
     {
         hurtTimeLeft -= Time.deltaTime;
         if (hurtTimeLeft <= 0) return EnemyState.Aggressive;
         else return stateMachine.currentState;
     }
 
-    EnemyState GrabbedUpdate()
+    protected virtual void HurtExit(EnemyState newState) {}
+
+    protected virtual void GrabbedEnter() {}
+
+    protected virtual EnemyState GrabbedUpdate()
     {
         if (stateMachine.timeInState >= grabTimeToEscape)
         {
@@ -245,13 +250,17 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    EnemyState InAirUpdate()
+    protected virtual void GrabbedExit(EnemyState newState) {}
+
+    protected virtual void InAirEnter() {}
+
+    protected virtual EnemyState InAirUpdate()
     {
         if (groundCheck.IsGrounded()) return EnemyState.Wandering;
         return stateMachine.currentState;
     }
 
-    void InAirExit(EnemyState _newState)
+    protected virtual void InAirExit(EnemyState _newState)
     {
         if (thrownDamageQueue)
         {

@@ -58,11 +58,12 @@ class ProjectileEnemy : Enemy {
         goalPos += aggressiveCurrentTarget.position;
         goalPos.y = transform.position.y;
 
-        transform.position = Vector3.MoveTowards(
-            transform.position,
-            goalPos,
-            walkingSpeed * Time.deltaTime
-        );
+        NMA.SetDestination(goalPos);
+        // transform.position = Vector3.MoveTowards(
+        //     transform.position,
+        //     goalPos,
+        //     walkingSpeed * Time.deltaTime
+        // );
 
         if (Application.isEditor) {
             if (aggressiveMarker == null) {
