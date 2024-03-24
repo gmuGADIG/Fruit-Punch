@@ -12,17 +12,20 @@ public class Floater : MonoBehaviour
     [SerializeField] float floatDistance = .1f;
     [Tooltip("How fast it floats up and down, in cycles per second.")]
     [SerializeField] float rate = 1f;
-    float defaultY;
+    [SerializeField] FloatDirection direction = FloatDirection.UpAndDown;
+    Vector3 defaultPos;
+    
+    enum FloatDirection {UpAndDown, SideToSide}
 
     void Start()
     {
-        defaultY = transform.localPosition.y;
+        defaultPos = transform.localPosition;
     }
 
     void Update()
     {
-        var pos = transform.localPosition;
-        pos.y = defaultY + Mathf.Sin(Time.time * 2 * Mathf.PI * rate) * floatDistance;
-        transform.localPosition = pos;
+        var vec = direction == FloatDirection.UpAndDown ? Vector3.up : Vector3.right;
+        vec *= floatDistance;
+        transform.localPosition = defaultPos + vec * Mathf.Sin(Time.time * 2 * Mathf.PI * rate);
     }
 }
