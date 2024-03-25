@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
 public enum EnemyState
@@ -45,6 +46,9 @@ public class Enemy : MonoBehaviour
     private float wanderingTimeTillAttack = 0;
     private Vector3 wanderingToPosition;
     private float wanderingTimeTillWander;
+
+    [Tooltip("The NavMeshAgent attached to the gameObject for this script.")]
+    private NavMeshAgent NMA;
     
     /// <summary>
     /// If the enemy is in the approaching state, this value will be the object it's going towards.
@@ -71,9 +75,10 @@ public class Enemy : MonoBehaviour
         this.GetComponentOrError(out grabbable);
         this.GetComponentOrError(out health);
         this.GetComponentInChildrenOrError(out groundCheck);
-  
+        NMA = GetComponent<NavMeshAgent>(); 
+
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, null);
-        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, null);
+        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, AggressiveExit);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExit);
         stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, null);
         stateMachine.AddState(EnemyState.Grabbed, null, GrabbedUpdate, null);
@@ -82,6 +87,9 @@ public class Enemy : MonoBehaviour
 
         grabbable.onGrab += OnGrabCallback;
         grabbable.onThrow += OnThrowCallback;
+
+        NMA.speed = walkingSpeed;
+
     }
 
     private void Update()
@@ -113,8 +121,8 @@ public class Enemy : MonoBehaviour
         
         // approach randomly set wander point (unless already right next to it)
         var vecToTarget = wanderingToPosition - transform.position;
-        if (vecToTarget.magnitude > 0.1f) rb.velocity = vecToTarget.normalized * walkingSpeed;
-        else rb.velocity = Vector3.zero;
+        if (vecToTarget.magnitude > 0.1f) NMA.SetDestination(wanderingToPosition);
+        else NMA.ResetPath();
         if (wanderingTimeTillWander < 0)
         {
             wanderingToPosition = new Vector3(
@@ -144,11 +152,14 @@ public class Enemy : MonoBehaviour
     EnemyState AggressiveUpdate()
     {
         if (groundCheck.IsGrounded() == false) return EnemyState.InAir;
-        
-        // print($"enemy status ({gameObject.name}): aggressive, targeting {aggressiveCurrentTarget.name}");
-        var vecToTarget = (aggressiveCurrentTarget.position - this.transform.position);
-        vecToTarget.y = 0;
-        rb.velocity = vecToTarget.normalized * walkingSpeed;
+
+
+        NMA.SetDestination(aggressiveCurrentTarget.position);
+
+        // print($"enemy status ({gameObject.name}): aggressive, targeting {aggressiveCurrentTarget.name}"); 
+         var vecToTarget = (aggressiveCurrentTarget.position - this.transform.position);
+         vecToTarget.y = 0;
+
 
         if (vecToTarget.magnitude < attackingDistance)
         {
@@ -157,6 +168,8 @@ public class Enemy : MonoBehaviour
 
         return stateMachine.currentState;
     }
+
+    void AggressiveExit() => NMA.ResetPath();
 
     void AttackingEnter() { }
     
