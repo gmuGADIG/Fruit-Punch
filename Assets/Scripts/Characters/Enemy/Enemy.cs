@@ -188,7 +188,6 @@ public class Enemy : MonoBehaviour
 
     void HurtEnter()
     {
-        print("Enemy: Ouch!!");
         currentAttackingEnemies -= 1;
     }
     
