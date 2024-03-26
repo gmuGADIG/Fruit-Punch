@@ -38,9 +38,12 @@ public class CharacterSelectorManager : MonoBehaviour
         {
             return playerOneSelector.character;
         }
-        else if (playerTwoSelector.characterSelected)
-        {
-            return playerTwoSelector.character;
+        else if (playerTwoSelector != null)
+        { 
+            if (playerTwoSelector.characterSelected)
+            {
+                return playerTwoSelector.character;
+            }
         }
         return Character.None;
     }

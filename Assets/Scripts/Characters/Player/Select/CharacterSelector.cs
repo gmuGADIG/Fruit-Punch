@@ -8,7 +8,8 @@ public enum Character
     None=-1,
     Apple=0,
     Banana,
-    Carrot
+    Watermelon,
+    Grapes
 }
 
 public class CharacterSelector : MonoBehaviour
@@ -19,11 +20,27 @@ public class CharacterSelector : MonoBehaviour
     [SerializeField]
     public Sprite[] images;
     [SerializeField]
+    public StatsInfo[] stats;
+
+    [SerializeField]
+    public Sprite starFull;
+    [SerializeField]
+    public Sprite starEmpty;
+
+    [SerializeField]
     private Image characterImage;
     [SerializeField]
     private TextMeshProUGUI text;
     private int numCharacters;
     
+    [SerializeField]
+    public Transform healthStars;
+    [SerializeField]
+    public Transform damageStars;
+    [SerializeField]
+    public Transform speedStars;
+
+
     public Character character;
     public bool characterSelected;
     public bool isPlayerOne;
@@ -49,6 +66,7 @@ public class CharacterSelector : MonoBehaviour
         
         character = Character.Apple;
         characterImage.sprite = images[0];
+        SetStars();
     }
 
     /// <summary>
@@ -65,7 +83,77 @@ public class CharacterSelector : MonoBehaviour
         if ((int)character >= numCharacters)
             character = (Character)0;
         characterImage.sprite = images[(int)character];
+        SetStars();
+
     }
+
+    public void SetStars()
+    {
+        switch (stats[(int)character].health)
+        {
+            case StatValue.Low:
+                healthStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                healthStars.transform.GetChild(1).GetComponent<Image>().sprite = starEmpty;
+                healthStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
+                break;
+            case StatValue.Mid:
+                healthStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                healthStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
+                healthStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
+                break;
+            case StatValue.High:
+                healthStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                healthStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
+                healthStars.transform.GetChild(2).GetComponent<Image>().sprite = starFull;
+                break;
+            default:
+                break;
+        }
+
+        switch (stats[(int)character].damage)
+        {
+            case StatValue.Low:
+                damageStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                damageStars.transform.GetChild(1).GetComponent<Image>().sprite = starEmpty;
+                damageStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
+                break;
+            case StatValue.Mid:
+                damageStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                damageStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
+                damageStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
+                break;
+            case StatValue.High:
+                damageStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                damageStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
+                damageStars.transform.GetChild(2).GetComponent<Image>().sprite = starFull;
+                break;
+            default:
+                break;
+        }
+
+        switch (stats[(int)character].speed)
+        {
+            case StatValue.Low:
+                speedStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                speedStars.transform.GetChild(1).GetComponent<Image>().sprite = starEmpty;
+                speedStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
+                break;
+            case StatValue.Mid:
+                speedStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                speedStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
+                speedStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
+                break;
+            case StatValue.High:
+                speedStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
+                speedStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
+                speedStars.transform.GetChild(2).GetComponent<Image>().sprite = starFull;
+                break;
+            default:
+                break;
+        }
+
+    }
+
 
     /// <summary>
     /// changes the character that would be selected
@@ -80,6 +168,7 @@ public class CharacterSelector : MonoBehaviour
         if (character < 0)
             character = (Character)(numCharacters-1);
         characterImage.sprite = images[(int)character];
+        SetStars();
     }
 
     /// <summary>
