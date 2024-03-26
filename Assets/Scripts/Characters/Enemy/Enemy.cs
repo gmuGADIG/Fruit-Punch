@@ -92,8 +92,8 @@ public class Enemy : MonoBehaviour
         stateMachine.AddState(EnemyState.InAir, InAirEnter, InAirUpdate, InAirExit);
         stateMachine.FinalizeAndSetState(EnemyState.Wandering);
 
-        grabbable.onGrab += OnGrabCallback;
-        grabbable.onThrow += OnThrowCallback;
+        grabbable.onGrab.AddListener(OnGrabCallback);
+        grabbable.onThrow.AddListener(OnThrowCallback);
 
         NMA.speed = walkingSpeed;
 

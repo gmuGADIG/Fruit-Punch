@@ -8,7 +8,7 @@ Shader "Custom/InnerBillboard"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
         LOD 200
         
         Pass
@@ -53,12 +53,12 @@ Shader "Custom/InnerBillboard"
                 
                 // Sample the texture
                 fixed4 col = tex2D(_MainTex, uv);
+                clip(col.a - .5);
 
                 // debug
                 // col *= .8;
 
                 return col;
-                // return float4(i.screenPos.x, i.screenPos.y, 0, 1);
             }
             ENDCG
         }
