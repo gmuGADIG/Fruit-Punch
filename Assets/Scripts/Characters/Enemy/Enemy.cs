@@ -78,7 +78,7 @@ public class Enemy : MonoBehaviour
         NMA = GetComponent<NavMeshAgent>(); 
 
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, null);
-        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, null);
+        stateMachine.AddState(EnemyState.Aggressive, AggressiveEnter, AggressiveUpdate, AggressiveExit);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExit);
         stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, null);
         stateMachine.AddState(EnemyState.Grabbed, null, GrabbedUpdate, null);
@@ -121,8 +121,8 @@ public class Enemy : MonoBehaviour
         
         // approach randomly set wander point (unless already right next to it)
         var vecToTarget = wanderingToPosition - transform.position;
-        if (vecToTarget.magnitude > 0.1f) rb.velocity = vecToTarget.normalized * walkingSpeed;
-        else rb.velocity = Vector3.zero;
+        if (vecToTarget.magnitude > 0.1f) NMA.SetDestination(wanderingToPosition);
+        else NMA.ResetPath();
         if (wanderingTimeTillWander < 0)
         {
             wanderingToPosition = new Vector3(
@@ -168,6 +168,8 @@ public class Enemy : MonoBehaviour
 
         return stateMachine.currentState;
     }
+
+    void AggressiveExit() => NMA.ResetPath();
 
     void AttackingEnter() { }
     

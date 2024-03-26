@@ -18,7 +18,9 @@ public class GrabbableItem : MonoBehaviour
 
     void Update()
     {
-        if (groundCheck.IsGrounded())
+        if (groundCheck.IsGrounded() && !rb.isKinematic)
+        {
             rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, groundDecel * Time.deltaTime);
+        }
     }
 }
