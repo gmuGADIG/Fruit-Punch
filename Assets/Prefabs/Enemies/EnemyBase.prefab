@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7169455098568493955}
   - component: {fileID: 5528883301703829071}
   - component: {fileID: 2723358761222827117}
+  - component: {fileID: 5016492621456270024}
   - component: {fileID: 620075631160467642}
   - component: {fileID: 7430155917620359961}
   - component: {fileID: 7635130076662420740}
@@ -72,6 +73,22 @@ MonoBehaviour:
   vulnerableTypes: 15
   maxHealth: 100
   currentHealth: 0
+--- !u!114 &5016492621456270024
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2217596612548616759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 38e3e51e9dff9ab418281d869ddc6fa7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  knockBackAngle: {x: 1, y: 0, z: 0.5}
+  knockBackForce: 2
+  knockBackTime: 0.3
+  timeToDeath: 0.8
 --- !u!65 &620075631160467642
 BoxCollider:
   m_ObjectHideFlags: 0

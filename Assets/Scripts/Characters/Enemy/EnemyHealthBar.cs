@@ -22,7 +22,7 @@ public class EnemyHealthBar : MonoBehaviour
         healthBar.value = change.newHealthValue / enemyHealth.MaxHealth * healthBar.maxValue;
         if (healthBar.value <= 0)
         {
-            Destroy(enemyHealth.gameObject);
+            //Destroy(enemyHealth.gameObject);
         }
     }
 }
