@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 299217231}
   - component: {fileID: 299217230}
   - component: {fileID: 299217233}
+  - component: {fileID: 299217234}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -185,7 +186,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 3.4676113
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -210,7 +211,7 @@ Transform:
   m_GameObject: {fileID: 299217229}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.08, y: -1.14, z: -10}
+  m_LocalPosition: {x: -4.06, y: 2.57, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -231,18 +232,37 @@ MonoBehaviour:
   testComic:
   - approachTime: 0
     panelPosition: {x: -4.78, y: 2.67, z: -10}
-    hangTime: 2
-    cameraScale: 5
-  - approachTime: 2
+    hangTime: 5
+    cameraScale: 4
+  - approachTime: 3
     panelPosition: {x: 0.85, y: 2.24, z: -10}
-    hangTime: 2
-    cameraScale: 100
+    hangTime: 5
+    cameraScale: 2.8
   - approachTime: 2
     panelPosition: {x: -3.67, y: -1.71, z: -10}
-    hangTime: 0
+    hangTime: 5
     cameraScale: 1
+  - approachTime: 2
+    panelPosition: {x: 3.38, y: -2.5, z: -10}
+    hangTime: 5
+    cameraScale: 1.8
   comicCamera: {fileID: 0}
   cameraMoving: 0
+  panelSkipped: 0
+--- !u!114 &299217234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 299217229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ba941d9531f10c69ba64fdf030a3cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: {fileID: 9150581822233749636, guid: 6aa772acffd2362d7805b4f9f399b0de, type: 3}
+  inputSensorPrefab: {fileID: 7926348053947604145, guid: 41afc4beee3d6bb5286094451d67b7ae, type: 3}
 --- !u!1 &882170041
 GameObject:
   m_ObjectHideFlags: 0
