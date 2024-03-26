@@ -60,9 +60,15 @@ public class Health : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<HurtBox>(out var hurtBox))
-        {
+        { // TODO: should we be handle hurting in the hurtbox?
             var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
-            if (hitsThisLayer) this.Damage(hurtBox.GetDamageInfo());
+            if (hitsThisLayer) {
+                var info = hurtBox.GetDamageInfo();
+                this.Damage(info);
+                if (IsVulnerableTo(info.aura)) {
+                    hurtBox.onHurt?.Invoke(info);
+                }
+            }
         }
     }
 
