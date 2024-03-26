@@ -225,7 +225,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void HurtEnter()
     {
-        print("Enemy: Ouch!!");
+        currentAttackingEnemies -= 1;
     }
     
     protected virtual EnemyState HurtUpdate()

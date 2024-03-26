@@ -84,7 +84,6 @@ public class Health : MonoBehaviour
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
-            print($"{gameObject.name} was immune to an attack");
             return;
         }
         
@@ -93,7 +92,7 @@ public class Health : MonoBehaviour
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
         
-        print($"{gameObject.name} health down to {currentHealth}");
+        
         if (currentHealth <= 0) Die();
     }
 
