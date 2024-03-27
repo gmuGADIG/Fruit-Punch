@@ -1,5 +1,3 @@
-using UnityEditor;
-using UnityEditor.EditorTools;
 using UnityEngine;
 
 class ProjectileEnemy : Enemy {
