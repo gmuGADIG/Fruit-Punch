@@ -366,11 +366,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: scenes.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: cameraFreezeThreshold
-      value: 0.25
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: testScenes.Array.size
@@ -391,6 +391,34 @@ PrefabInstance:
     - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: scenes.Array.data[0].transitionLocation.z
       value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
+      propertyPath: scenes.Array.data[1].transitionLocation.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
+      propertyPath: scenes.Array.data[1].transitionLocation.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
+      propertyPath: scenes.Array.data[1].transitionLocation.z
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
+      propertyPath: scenes.Array.data[2].transitionLocation.x
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
+      propertyPath: scenes.Array.data[2].transitionLocation.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
+      propertyPath: scenes.Array.data[2].transitionLocation.z
+      value: -2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1184208079969171601, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
+      propertyPath: scenes.Array.data[0].enemySpawns.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2041914266722745632, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: m_ForceIntoRT
