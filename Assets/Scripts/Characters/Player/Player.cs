@@ -174,6 +174,8 @@ public class Player : MonoBehaviour
 
         if (playerInput.actions["gameplay/Jump"].triggered)
         {
+            //Placeholder test for sound manager
+            SoundManager.playSound("ArcadeTest");
             return PlayerState.Jump;
         }
         
