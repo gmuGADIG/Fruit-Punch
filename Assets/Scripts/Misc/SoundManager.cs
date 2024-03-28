@@ -34,7 +34,7 @@ public class SoundManager : MonoBehaviour
     public void Update()
     {
 
-        playSound(sound);
+        //playSound(sound);
     }
     public static void playSound(string sound)
     {
