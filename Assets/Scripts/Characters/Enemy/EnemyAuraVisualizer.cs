@@ -5,28 +5,41 @@ using UnityEngine;
 
 public class EnemyAuraVisualizer : MonoBehaviour
 {
-    public AuraType currentAura;
+/// <summary>
+///  Take the aura types from health script and makes the sprite a color
+/// </summary>
+  
 
     [Header ("Colors")]
     public Color strikeColor;
     public Color throwColor;
     public Color jumpColor;
     public Color peariesColor;
-    public Color invincibleColor;
 
-    Color noAuraColor = Color.gray;
+    Color noAuraColor;
     SpriteRenderer auraSprite;
+    Health parentHealth;
 
+    public static event Action auraChange; //Not sure if aura changes but this should allow another script to change it if needed
+    
+    private void OnEnable()
+    {
+        auraChange += setAuraColor;
+    }
     // Start is called before the first frame update
     void Start()
     {
+         
+        parentHealth = GetComponentInParent<Health>();
         auraSprite = GetComponent<SpriteRenderer>();
-        //code to get current Aura from whatever script decides it.
-        setAuraColor(currentAura);
+        noAuraColor = auraSprite.color;
+
+        setAuraColor();
     }
 
-    public void setAuraColor( AuraType newAura)
+    void setAuraColor()
     {
+        AuraType newAura = parentHealth.vulnerableTypes;
         switch (newAura)
         {
             case AuraType.Strike:
