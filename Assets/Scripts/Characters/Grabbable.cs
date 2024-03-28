@@ -6,7 +6,7 @@ using UnityEngine.Events;
 /// <summary>
 /// This component allows an item or an enemy to be grabbed by a player. See also: <c>Grabber.cs</c> <br/>
 /// </summary>
-[RequireComponent(typeof(Rigidbody), typeof(Collider))]
+[RequireComponent(typeof(Rigidbody))]
 public class Grabbable : MonoBehaviour
 {
     [Tooltip("May be null. Otherwise, this item is enabled when a player is in grabbing range, and disabled when walking away.")]

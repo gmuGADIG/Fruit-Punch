@@ -11,6 +11,5 @@ public class OptionsBackButton : MonoBehaviour
     public void backButton()
     {
         SceneManager.UnloadSceneAsync("OptionsMenu");
-
     }
 }
