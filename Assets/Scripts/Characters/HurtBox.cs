@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using static Utils;
 
+public struct HurtContext {
+    public Health ThingTakingDamage;
+    public DamageInfo DamageInfo;
+}
+
 /// <summary>
 /// Creates a hurt box, dealing damage to players or enemies when they collide with the attached Collider2D. <br/>
 /// The given <c>beltCharacter</c> is used for z-position checking. It may be attached to the same object or a (grand)parent. 
@@ -20,6 +25,11 @@ public class HurtBox : MonoBehaviour
     
     [Tooltip("This attack only hurts enemies vulnerable to this Aura. For enemy hurtboxes, use the type `Enemy Atk`.")]
     [SerializeField] private AuraType aura;
+    
+    /// <summary>
+    /// Invoked when this hurt box hurts something.
+    /// </summary>
+    public Action<DamageInfo> onHurt;
     
     void Start()
     {

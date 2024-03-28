@@ -40,7 +40,6 @@ public class PlayerSelectorSpawner : MonoBehaviour
             //use blanks positions for the new selector
             p.gameObject.transform.parent = GameObject.Find("Canvas").transform;
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -100, 0);
-
             //destroy blank
             Destroy(blankPOneSelector);
 
