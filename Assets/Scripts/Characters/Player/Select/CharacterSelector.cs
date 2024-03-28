@@ -39,7 +39,8 @@ public class CharacterSelector : MonoBehaviour
     public Transform damageStars;
     [SerializeField]
     public Transform speedStars;
-
+    [SerializeField]
+    public GameObject buttonImage;
 
     public Character character;
     public bool characterSelected;
