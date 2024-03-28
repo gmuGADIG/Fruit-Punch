@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEditor;
 
 /// <summary>
 /// Important script for all objects with motion or hitboxes/hurtboxes. <br/>
@@ -35,8 +36,11 @@ public class BeltCharacter : MonoBehaviour
     /// <summary>
     /// The internal position storing left, right, and forward coordinates, separate from the 2d position at which the object appears.
     /// </summary>
-    [ReadOnlyInInspector] public Vector3 internalPosition;
-    
+    #if UNITY_EDITOR
+    [ReadOnlyInInspector]
+    #endif
+    public Vector3 internalPosition;
+
     private void Start()
     {
         // pos.xy = (internal.x + zTrans.x * internal.z, internal.y + zTrans.y * internal.z)

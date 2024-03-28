@@ -9,7 +9,8 @@ using UnityEngine.Windows;
 public class PauseScreenButtons : MonoBehaviour
 {
 
-    public string mainMenuScene;
+    public string OptionsScene;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -34,7 +35,6 @@ public class PauseScreenButtons : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         SceneManager.UnloadSceneAsync("PauseScreen");
-        Debug.Log("PauseScreen unloaded");
     }
 
     /// <summary>
@@ -51,8 +51,8 @@ public class PauseScreenButtons : MonoBehaviour
     /// </summary>
     public void MainMenu()
     {
-        SceneManager.LoadScene(mainMenuScene);
-        Debug.Log("Return to Main");
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene(0);
     }
     /// <summary>
     /// Quits the Game
@@ -61,14 +61,13 @@ public class PauseScreenButtons : MonoBehaviour
     {
         //add script to save game
         Application.Quit();
-        Debug.Log("Quit Game");
     }
 
     /// <summary>
     /// Opens Option menu (Options menu currently doesn't exist)
     /// </summary>
-    public void OptionsMenu() //Change when options menu get created
+    public void OptionsMenu() 
     {
-        Debug.Log("Open Options Menu");
+        SceneManager.LoadSceneAsync(OptionsScene, LoadSceneMode.Additive);
     }
 }

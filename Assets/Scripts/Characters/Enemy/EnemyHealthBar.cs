@@ -20,5 +20,9 @@ public class EnemyHealthBar : MonoBehaviour
     void UpdateHealthbar(HealthChange change)
     {
         healthBar.value = change.newHealthValue / enemyHealth.MaxHealth * healthBar.maxValue;
+        if (healthBar.value <= 0)
+        {
+            //Destroy(enemyHealth.gameObject);
+        }
     }
 }

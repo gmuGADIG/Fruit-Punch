@@ -60,7 +60,9 @@ public class Player : MonoBehaviour
     float pearryLength = 3;
     
     bool strikeAnimationOver = false;
-    
+
+    private bool FacingLeft => transform.localEulerAngles.y > 90;
+
     void Start()
     {
         // get components
@@ -140,8 +142,8 @@ public class Player : MonoBehaviour
         );
 
         // flip according to direction
-        if (targetVel.x < 0) transform.localScale = new Vector3(-1, 1, 1);
-        else if (targetVel.x > 0) transform.localScale = new Vector3(1, 1, 1);
+        if (targetVel.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
+        else if (targetVel.x > 0) transform.localRotation = Quaternion.identity;
     }
 
     // bool IsGrounded()
@@ -302,8 +304,7 @@ public class Player : MonoBehaviour
 
     void ThrowingEnter()
     {
-        var facingLeft = transform.localScale.x < 0;
-        grabber.ThrowItem(facingLeft);
+        grabber.ThrowItem(FacingLeft);
     }
     
     PlayerState ThrowingUpdate()

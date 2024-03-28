@@ -25,8 +25,11 @@ public class Health : MonoBehaviour
     private float maxHealth = 100;
 
     public float MaxHealth => maxHealth;
-    
-    [ReadOnlyInInspector, SerializeField]
+
+#if UNITY_EDITOR
+    [ReadOnlyInInspector]
+#endif
+    [SerializeField]
     private float currentHealth;
     public float CurrentHealth => currentHealth;
     /// <summary>
@@ -57,9 +60,15 @@ public class Health : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<HurtBox>(out var hurtBox))
-        {
+        { // TODO: should we be handle hurting in the hurtbox?
             var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
-            if (hitsThisLayer) this.Damage(hurtBox.GetDamageInfo());
+            if (hitsThisLayer) {
+                var info = hurtBox.GetDamageInfo();
+                this.Damage(info);
+                if (IsVulnerableTo(info.aura)) {
+                    hurtBox.onHurt?.Invoke(info);
+                }
+            }
         }
     }
 
@@ -75,7 +84,6 @@ public class Health : MonoBehaviour
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
-            print($"{gameObject.name} was immune to an attack");
             return;
         }
         
@@ -84,7 +92,7 @@ public class Health : MonoBehaviour
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
         
-        print($"{gameObject.name} health down to {currentHealth}");
+        
         if (currentHealth <= 0) Die();
     }
 
