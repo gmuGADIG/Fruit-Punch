@@ -44,12 +44,6 @@ public class Grabbable : MonoBehaviour
         rb.isKinematic = false;
     }
 
-    void Update()
-    {
-        // keep rotation fixed
-        transform.eulerAngles = new Vector3(0, 0, 0);
-    }
-
     public void ForceRelease()
     {
         currentlyGrabbed = false;

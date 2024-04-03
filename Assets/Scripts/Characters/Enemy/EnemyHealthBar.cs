@@ -17,6 +17,10 @@ public class EnemyHealthBar : MonoBehaviour
         //healthBar.minValue = 0;
     }
 
+    void Update() {
+        transform.rotation = Quaternion.identity;
+    }
+
     void UpdateHealthbar(HealthChange change)
     {
         healthBar.value = change.newHealthValue / enemyHealth.MaxHealth * healthBar.maxValue;
