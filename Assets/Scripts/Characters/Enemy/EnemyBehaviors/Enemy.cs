@@ -75,7 +75,10 @@ public class Enemy : MonoBehaviour
 
     private DebugMarker wanderingMarker;
 
-    [SerializeField] [ReadOnlyInInspector] private EnemyState state;
+#if UNITY_EDITOR
+    [ReadOnlyInInspector]
+#endif
+    [SerializeField] private EnemyState state;
 
     protected virtual void Start()
     {
