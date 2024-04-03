@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -20,6 +21,13 @@ public class Grabber : MonoBehaviour
     
     public bool IsGrabbing => this.transform.childCount > 0;
     Grabbable GetGrabbedItem() => this.transform.GetChild(0).GetComponent<Grabbable>();
+
+    void Update()
+    {
+        // keep rotation fixed
+        transform.eulerAngles = new Vector3(0, 0, 0);
+    }
+
 
     /// <summary>
     /// Throws the currently held grabbable left or right (depending on facingLeft).

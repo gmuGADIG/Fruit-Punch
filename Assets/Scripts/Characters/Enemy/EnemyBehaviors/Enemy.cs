@@ -65,7 +65,7 @@ public class Enemy : MonoBehaviour
     /// </summary>
     private bool thrownDamageQueue = false;
     
-    private GroundCheck groundCheck;
+    protected GroundCheck groundCheck;
     private Grabbable grabbable;
     private Rigidbody rb;
     private Health health;
@@ -75,7 +75,9 @@ public class Enemy : MonoBehaviour
 
     private DebugMarker wanderingMarker;
 
-    private void Start()
+    [SerializeField] [ReadOnlyInInspector] private EnemyState state;
+
+    protected virtual void Start()
     {
         this.GetComponentOrError(out rb);
         this.GetComponentOrError(out grabbable);
@@ -102,6 +104,11 @@ public class Enemy : MonoBehaviour
     {
         stateMachine.Update();
         if (rb.isKinematic == false) rb.velocity += Vector3.down * gravity * Time.deltaTime;
+
+        if (NMA.velocity.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
+        else if (NMA.velocity.x > 0) transform.localRotation = Quaternion.identity;
+
+        state = stateMachine.currentState;
     }
 
     protected virtual void WanderingEnter()
@@ -206,13 +213,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void AttackingEnter() { }
     
-    protected virtual EnemyState AttackingUpdate()
-    {
-        if (groundCheck.IsGrounded() == false) return EnemyState.InAir;
-        
-        if (stateMachine.timeInState >= attackingDuration) return EnemyState.Wandering;
-        else return stateMachine.currentState;
-    }
+    protected virtual EnemyState AttackingUpdate() { return stateMachine.currentState; }
 
     protected virtual void AttackingExit(EnemyState newState) {}
 
