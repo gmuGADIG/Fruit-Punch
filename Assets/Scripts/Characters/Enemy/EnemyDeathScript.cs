@@ -12,6 +12,12 @@ public class EnemyDeathScript : MonoBehaviour
     [Tooltip("How long till Enemy destroy after knock back ends")]
     public float timeToDeath = 0.8f;
 
+    [Tooltip("Is this enemy a splitter? If not leave false.")]
+    public bool isSplitter = false;
+    [Tooltip("What kind of enemies can spawn out of a this enemy if it is a splitter?")]
+    public List<GameObject> enemyTypes;
+
+
     Health myHealth;
     Enemy enemyAI;
     Rigidbody rb;
@@ -43,6 +49,7 @@ public class EnemyDeathScript : MonoBehaviour
     }
     private void DeathPart2()
     {
+        SplitterDeath();
         rb.velocity = Vector3.zero;
         Destroy(gameObject, timeToDeath);
     }
@@ -51,4 +58,23 @@ public class EnemyDeathScript : MonoBehaviour
     {
         myHealth.onDeath += DeathSequence;
     }
+
+
+    /// <summary>
+    /// If an enemy is seen as a splitter, it will spawn 2 more enemies on death, which are picked randomly from a list of enemies that can be spawned.
+    /// </summary>
+    private void SplitterDeath()
+    {
+        if(isSplitter == true)
+        {
+            for(int i = 0; i < 2; i++)
+            {
+                int ranEnemy = Random.Range(0, enemyTypes.Count);
+                GameObject newEnemy = Instantiate(enemyTypes[ranEnemy], gameObject.transform);
+                newEnemy.transform.parent = null;
+            }
+
+        }
+    }
+
 }
