@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,6 +23,41 @@ public static class Utils
     {
         if (obj.TryGetComponent(out result)) return;
         else throw new Exception($"`{obj.name}` is missing component of type `{typeof(T).Name}`!");
+    }
+
+    /// <summary>
+    /// Similar to TryGetComponent, except an error will be thrown if no such component exists.
+    /// </summary>
+    public static void GetComponentOrError<T>(this GameObject obj, out T result)
+    {
+        if (obj.TryGetComponent(out result)) return;
+        else throw new Exception($"`{obj.name}` is missing component of type `{typeof(T).Name}`!");
+    }
+
+    /// <summary>
+    /// Similar to GetComponentInChildren, except an error will be thrown if no such component exists.
+    /// </summary>
+    public static void GetComponentInChildrenOrError<T>(
+        this MonoBehaviour obj, 
+        out T result
+    ) {
+        result = obj.GetComponentInChildren<T>();
+        if (result == null) {
+            throw new Exception($"`{obj.name}`'s children are missing component of type `{typeof(T).Name}`!");
+        }
+    }
+
+    /// <summary>
+    /// Similar to GetComponentInChildren, except an error will be thrown if no such component exists.
+    /// </summary>
+    public static void GetComponentInChildrenOrError<T>(
+        this GameObject obj, 
+        out T result
+    ) {
+        result = obj.GetComponentInChildren<T>();
+        if (result == null) {
+            throw new Exception($"`{obj.name}`'s children are missing component of type `{typeof(T).Name}`!");
+        }
     }
 
     /// <summary>
@@ -59,5 +95,46 @@ public static class Utils
         float cameraHeight = cam.orthographicSize * 2;
         float cameraWidth = cameraHeight * screenAspect;
         return new Rect(cam.transform.position.x - cameraWidth / 2, cam.transform.position.y - cameraHeight / 2, cameraWidth, cameraHeight);
+    }
+
+    /// <summary>
+    /// Picks a random element from a list.
+    /// Returns a random element or null if the list is empty.
+    /// </summary>
+    public static T RandomElement<T>(this IEnumerable<T> list)
+    {
+        return list.ElementAtOrDefault(UnityEngine.Random.Range(0, list.Count()));
+    }
+
+    /// <summary>
+    /// Returns true if the set of aura flags is not normal.
+    /// </summary>
+    public static bool IsSpecial(this AuraType aura)
+    {
+        return aura != AuraType.Normal;
+    }
+
+    /// For a given layer (0 to 31), returns the mask of all layers which it collides with, according to the physics collision matrix. <br/>
+    /// Note that this function loops through 32 layers each call, so you might want to avoid calling it in Update.
+    /// </summary>
+    /// <param name="layerNumber"></param>
+    /// <returns></returns>
+    public static LayerMask GetCollidingLayerMask(int layerNumber)
+    {
+        LayerMask result = 0;
+        for (int i = 0; i < 32; i++) {
+            if(!Physics.GetIgnoreLayerCollision(layerNumber, i))  {
+                result |= 1 << i;
+            }
+        }
+        return result;
+    }
+
+    public static Vector3 Abs(this Vector3 v) {
+        return new(
+            Mathf.Abs(v.x),
+            Mathf.Abs(v.y),
+            Mathf.Abs(v.z)
+        );
     }
 }
