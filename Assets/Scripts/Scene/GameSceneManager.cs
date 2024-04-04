@@ -60,7 +60,10 @@ public class GameSceneManager : MonoBehaviour
     {
         if (camera == null)
             Debug.LogError("GameSceneManager: Main Camera not set, please set in inspector.");
-
+        if (scenes.Length <= 0)
+        {
+            Debug.LogError("Invalid number of scenes");
+        }
         currentSceneNumber = 0;
         currentScene = scenes[0];
         camera.transform.position = startPosition;
