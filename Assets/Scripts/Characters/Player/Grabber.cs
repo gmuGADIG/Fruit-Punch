@@ -52,10 +52,17 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        // TODO: player can only grab enemies if the aura allows. this is not yet checked.
         if (currentOverlaps.Count == 0) return false;
-        
+
         var item = currentOverlaps[0];
+
+        //Checks for Health component
+        if (item.GetComponent<Health>())
+        {
+            //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
+            if (!item.gameObject.GetComponent<Health>().IsVulnerableTo((AuraType) 2)) return false;
+        }
+
         item.Grab();
         item.transform.SetParent(this.transform);
         item.transform.position = this.transform.position;

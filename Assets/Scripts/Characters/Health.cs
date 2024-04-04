@@ -88,6 +88,7 @@ public class Health : MonoBehaviour
         }
         
         currentHealth = Mathf.MoveTowards(currentHealth, 0, info.damage);
+        AuraBreak();
         
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
@@ -99,7 +100,7 @@ public class Health : MonoBehaviour
     /// <summary>
     /// Returns true if this character is vulnerable to an attack's aura.
     /// </summary>
-    bool IsVulnerableTo(AuraType attackingAura)
+    public bool IsVulnerableTo(AuraType attackingAura)
     {
         // vuln = 0010, atk = 1111 --> effective = 0010; return true
         // vuln = 1111, atk = 0001 --> effective = 0001; return true
@@ -127,6 +128,14 @@ public class Health : MonoBehaviour
     public bool HasAura()
     {
         return vulnerableTypes.IsSpecial();
+    }
+
+    /// <summary>
+    /// When hit by an effective aura, the enemy becomes vulnerable to all damage types.
+    /// </summary>
+    public void AuraBreak()
+    {
+        this.vulnerableTypes = (AuraType) 0111;
     }
 }
 
