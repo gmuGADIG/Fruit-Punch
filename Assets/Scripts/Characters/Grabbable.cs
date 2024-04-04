@@ -15,6 +15,11 @@ public class Grabbable : MonoBehaviour
     /// Amount of Grabbers currently in grabbing range. grabIndicator should be visible when this != 0.
     /// </summary>
     int grabRangeCount = 0;
+
+    // New field: weight
+    [Tooltip("Enemy will have less velocity/distance and more damage with this many kilograms.")]
+    [SerializeField]
+    public float weight = 1f;
     
     Rigidbody rb;
 
