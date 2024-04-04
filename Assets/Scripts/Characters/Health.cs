@@ -135,7 +135,7 @@ public class Health : MonoBehaviour
     /// </summary>
     public void AuraBreak()
     {
-        this.vulnerableTypes = (AuraType) 0111;
+        this.vulnerableTypes = AuraType.Normal;
     }
 }
 
