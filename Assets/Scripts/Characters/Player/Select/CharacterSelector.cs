@@ -183,7 +183,7 @@ public class CharacterSelector : MonoBehaviour
             if (manager.GetPlayersReady())
             {
                 //Start Game
-                SceneManager.LoadScene(GameManager.gameManager.postCharacterSelectorScene); 
+                SceneManager.LoadScene(SwitchScene.switchScene.PostCharSelect); 
                 Debug.Log("Characters Selected");
             }
         }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class BasicCutsceneCamera : MonoBehaviour
 {
@@ -128,6 +129,7 @@ public class BasicCutsceneCamera : MonoBehaviour
         }
         // Wait a frame, though, because IEnumerator said so.
         yield return null;
+        SceneManager.LoadScene(SwitchScene.switchScene.Demo);
     }
 
     void Skip(InputAction.CallbackContext _context)
