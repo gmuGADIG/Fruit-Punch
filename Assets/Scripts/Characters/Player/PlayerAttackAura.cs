@@ -1,17 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class PlayerAttackAura : MonoBehaviour
 {
-    public enum PlayerAura
-    {
-        Strike,
-        Throw,
-        JumpAttack,
-        Peary,
-        None
-    }
+    
 
     [Header("Colors")]
     public Color strikeColor;
@@ -21,43 +15,55 @@ public class PlayerAttackAura : MonoBehaviour
     public Color noAuraColor;
 
 
-    public PlayerAura pAura;
     SpriteRenderer auraSprite;
     
     Player player;
+    //PlayerState currState;
     // Start is called before the first frame update
     void Start()
     {
         auraSprite = GetComponent<SpriteRenderer>();
-        setAuraColor(pAura);
+        player = GetComponentInParent<Player>();
+        setAuraColor(player.CurrentState);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        setAuraColor(player.CurrentState);
     }
 
-    void setAuraColor(PlayerAura pAura)
+    /// <summary>
+    /// Switches sprite color base on PlayerState
+    /// </summary>
+    /// <param name="pAura"></param>
+    void setAuraColor(PlayerState pAura)
     {
         Color newColor = noAuraColor;
         switch (pAura)
         {
-            case PlayerAura.Strike:
+            case PlayerState.Strike1:
                 newColor = strikeColor;
                 break;
-            case PlayerAura.Throw:
+            case PlayerState.Strike2:
+                newColor = strikeColor;
+                break;
+            case PlayerState.Strike3:
+                newColor = strikeColor;
+                break;
+            case PlayerState.Grabbing:
                 newColor = throwColor;  
                 break;
-            case PlayerAura.JumpAttack:
+            case PlayerState.JumpStrike:
                 newColor = jumpColor;
                 break;
-            case PlayerAura.Peary:
+            case PlayerState.Pearry:
                 newColor = peariesColor;
                 break;
-            case PlayerAura.None:
+            case PlayerState.Normal:
                 newColor = noAuraColor;
                 break;
+            
         }
 
         auraSprite.color = newColor;

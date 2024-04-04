@@ -26,6 +26,8 @@ public enum PlayerState
 [RequireComponent(typeof(InputBuffer))]
 public class Player : MonoBehaviour
 {
+    public PlayerState CurrentState => stateMachine.currentState;
+
     private StateMachine<PlayerState> stateMachine;
     private Rigidbody rb;
     private Animator anim;
