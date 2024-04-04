@@ -8,6 +8,7 @@ public class TestInputPlayerSpawner : MonoBehaviour
 {
     public GameObject prefab;
 
+
     public void SpawnPlayer(JoinContext context) {
         PlayerInput.Instantiate(
             prefab,
