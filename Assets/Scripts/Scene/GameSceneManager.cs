@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using static BasicCutsceneCamera;
 
 public class GameSceneManager : MonoBehaviour
 {   
@@ -22,9 +21,7 @@ public class GameSceneManager : MonoBehaviour
 
     }
 
-
-    [SerializeField]
-    public GameObject camera;
+    public GameObject mainCamera;
     [SerializeField]
     float cameraFreezeThreshold = 1.0f; //The distance from the freeze location before it triggers the start.
     [SerializeField]
@@ -37,16 +34,12 @@ public class GameSceneManager : MonoBehaviour
     [SerializeField]
     public Scene[] scenes;
 
-
     private int currentSceneNumber;
     private Scene currentScene;
-
-    
     
     private bool areEnemiesPresent = false; // Boolean to track if enemies are present
     private Vector3 frozenPos;
 
-   
     public enum CameraState
     {
         follow, frozen
@@ -58,15 +51,19 @@ public class GameSceneManager : MonoBehaviour
     // Start is called before the first frame updae
     void Start()
     {
-        if (camera == null)
-            Debug.LogError("GameSceneManager: Main Camera not set, please set in inspector.");
+        mainCamera = Camera.main.gameObject;
+        if (mainCamera == null)
+            Debug.LogError("GameSceneManager: Main Camera not set, please set in inspector.", gameObject);
         if (scenes.Length <= 0)
         {
-            Debug.LogError("Invalid number of scenes");
+            Debug.LogWarning("Invalid number of scenes");
         }
-        currentSceneNumber = 0;
-        currentScene = scenes[0];
-        camera.transform.position = startPosition;
+        else
+        {
+            currentSceneNumber = 0;
+            currentScene = scenes[0];
+        }
+        mainCamera.transform.position = startPosition;
         currentState = CameraState.follow;
         players = FindObjectsOfType<Player>().ToList();
     }
@@ -105,13 +102,13 @@ public class GameSceneManager : MonoBehaviour
 
     public void HardTransition()
     {
-        Vector3 oldCameraLocation = camera.transform.position;
+        Vector3 oldCameraLocation = mainCamera.transform.position;
         foreach (Player p in players)
         {
             Vector3 playerOffset = p.transform.position - (oldCameraLocation-cameraOffset);
             p.transform.position = currentScene.transitionLocation+ playerOffset;
         }
-        camera.transform.position = currentScene.transitionLocation+cameraOffset;
+        mainCamera.transform.position = currentScene.transitionLocation+cameraOffset;
         UnfreezeCamera();
     }
 
@@ -128,21 +125,21 @@ public class GameSceneManager : MonoBehaviour
             }
             averagePos /= players.Count;
             averagePos += cameraOffset;
-            averagePos.z = camera.transform.position.z;
-            Vector3 smoothedPosition = Vector3.Lerp(camera.transform.position, averagePos, cameraSmoothSpeed);
+            averagePos.z = mainCamera.transform.position.z;
+            Vector3 smoothedPosition = Vector3.Lerp(mainCamera.transform.position, averagePos, cameraSmoothSpeed);
             smoothedPosition.y = cameraOffset.y;
-            camera.transform.position = smoothedPosition;
+            mainCamera.transform.position = smoothedPosition;
 
             //Detects if the player is close enough to the next scene
-            if (Vector3.Distance(camera.transform.position-cameraOffset,currentScene.transitionLocation)<cameraFreezeThreshold)
+            if (Vector3.Distance(mainCamera.transform.position-cameraOffset,currentScene.transitionLocation)<cameraFreezeThreshold)
             {
                 FreezeCamera(currentScene.transitionLocation+cameraOffset);
             }
         }
         else if (currentState == CameraState.frozen)
         {
-            if (Vector3.Distance(camera.transform.position,frozenPos)>0.001) {
-                camera.transform.position = Vector3.Lerp(camera.transform.position, frozenPos, cameraSmoothSpeed);
+            if (Vector3.Distance(mainCamera.transform.position,frozenPos)>0.001) {
+                mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, frozenPos, cameraSmoothSpeed);
             }
             if (Input.GetKey("space"))
             {
