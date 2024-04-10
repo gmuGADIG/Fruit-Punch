@@ -20,11 +20,6 @@ public class GameManager : MonoBehaviour
     public string playerOneControlScheme;
     public string playerTwoControlScheme;
 
-    /// <summary>
-    /// used in the <see cref="CharacterSelector.OnConfirm"/> function to change the scene after the player(s) select their character.
-    /// </summary>
-    public string postCharacterSelectorScene;
-
 
     void Awake()
     {
