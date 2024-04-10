@@ -111,7 +111,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floatDistance: 0.04
-  speedMult: 4
+  rate: 1
+  direction: 0
 --- !u!1 &3762246727506277820
 GameObject:
   m_ObjectHideFlags: 0
@@ -311,6 +312,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabIndicator: {fileID: 2680212675313349019}
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onThrow:
+    m_PersistentCalls:
+      m_Calls: []
+  onForceRelease:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4548904193750581385
 MonoBehaviour:
   m_ObjectHideFlags: 0
