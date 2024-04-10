@@ -27,6 +27,7 @@ public enum PlayerState
 public class Player : MonoBehaviour
 {
     public PlayerState CurrentState => stateMachine.currentState;
+    public event Action<PlayerState> OnPlayerStateChange;
 
     private StateMachine<PlayerState> stateMachine;
     private Rigidbody rb;
@@ -104,6 +105,8 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
+
+        stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
     }
 
 

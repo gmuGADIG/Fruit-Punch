@@ -5,8 +5,6 @@ using UnityEngine.InputSystem.XR.Haptics;
 
 public class PlayerAttackAura : MonoBehaviour
 {
-    
-
     [Header("Colors")]
     public Color strikeColor;
     public Color throwColor;
@@ -24,20 +22,14 @@ public class PlayerAttackAura : MonoBehaviour
     {
         auraSprite = GetComponent<SpriteRenderer>();
         player = GetComponentInParent<Player>();
-        setAuraColor(player.CurrentState);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        setAuraColor(player.CurrentState);
+        player.OnPlayerStateChange += SetAuraColor;
     }
 
     /// <summary>
     /// Switches sprite color base on PlayerState
     /// </summary>
     /// <param name="pAura"></param>
-    void setAuraColor(PlayerState pAura)
+    void SetAuraColor(PlayerState pAura)
     {
         Color newColor = noAuraColor;
         switch (pAura)
