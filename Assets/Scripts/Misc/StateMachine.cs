@@ -20,6 +20,7 @@ using UnityEngine;
 public class StateMachine<TState>
 where TState : struct, Enum
 {
+    public event Action<TState> OnStateChange;
     public TState currentState { get; private set; }
     public float timeInState { get; private set; }
     private bool setupDone;
@@ -78,6 +79,7 @@ where TState : struct, Enum
         timeInState = 0;
         currentState = newState;
         callbacks[currentState].enter?.Invoke();
+        OnStateChange?.Invoke(newState);
     }
 
     /// <summary>
