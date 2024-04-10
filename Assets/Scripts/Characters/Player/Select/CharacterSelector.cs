@@ -39,7 +39,8 @@ public class CharacterSelector : MonoBehaviour
     public Transform damageStars;
     [SerializeField]
     public Transform speedStars;
-
+    [SerializeField]
+    public GameObject buttonImage;
 
     public Character character;
     public bool characterSelected;
@@ -182,7 +183,7 @@ public class CharacterSelector : MonoBehaviour
             if (manager.GetPlayersReady())
             {
                 //Start Game
-                SceneManager.LoadScene(GameManager.gameManager.postCharacterSelectorScene); 
+                SceneManager.LoadScene(SwitchScene.switchScene.PostCharSelect); 
                 Debug.Log("Characters Selected");
             }
         }

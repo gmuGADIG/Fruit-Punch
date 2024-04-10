@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Events;
 
 /// <summary>
@@ -18,11 +19,21 @@ public class Grabbable : MonoBehaviour
     
     Rigidbody rb;
 
+    NavMeshAgent agent;
+
     public bool currentlyGrabbed { get; private set; } = false;
 
     void Start()
     {
         this.GetComponentOrError(out rb);
+        if (GetComponent<NavMeshAgent>() != null)
+        {
+            agent = GetComponent<NavMeshAgent>();
+        }
+        else
+        {
+            return;
+        }
     }
 
     public UnityEvent onGrab;
@@ -35,6 +46,8 @@ public class Grabbable : MonoBehaviour
         currentlyGrabbed = true;
         onGrab?.Invoke();
         rb.isKinematic = true;
+        if (agent != null)
+            agent.enabled = false;
     }
 
     public void Release()
@@ -42,12 +55,8 @@ public class Grabbable : MonoBehaviour
         currentlyGrabbed = false;
         onThrow?.Invoke();
         rb.isKinematic = false;
-    }
-
-    void Update()
-    {
-        // keep rotation fixed
-        transform.eulerAngles = new Vector3(0, 0, 0);
+        if(agent != null)
+            agent.enabled = true;
     }
 
     public void ForceRelease()
@@ -55,6 +64,8 @@ public class Grabbable : MonoBehaviour
         currentlyGrabbed = false;
         onForceRelease?.Invoke();
         rb.isKinematic = false;
+        if(agent != null)
+            agent.enabled = true;
     }
 
     public void InGrabbingRange()

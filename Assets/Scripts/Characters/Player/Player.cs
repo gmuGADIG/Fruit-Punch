@@ -26,6 +26,9 @@ public enum PlayerState
 [RequireComponent(typeof(InputBuffer))]
 public class Player : MonoBehaviour
 {
+    public PlayerState CurrentState => stateMachine.currentState;
+    public event Action<PlayerState> OnPlayerStateChange;
+
     private StateMachine<PlayerState> stateMachine;
     private Rigidbody rb;
     private Animator anim;
@@ -102,6 +105,8 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
+
+        stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
     }
 
 
@@ -174,6 +179,8 @@ public class Player : MonoBehaviour
 
         if (playerInput.actions["gameplay/Jump"].triggered)
         {
+            //Placeholder test for sound manager
+            SoundManager.playSound("ArcadeTest");
             return PlayerState.Jump;
         }
         

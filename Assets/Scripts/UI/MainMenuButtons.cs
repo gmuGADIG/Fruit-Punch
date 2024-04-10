@@ -5,6 +5,9 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuButtons : MonoBehaviour
 {
+    [SerializeField]
+    public string SelectScene;
+    [SerializeField]
     public string OptionsScene;
 
     /// <summary>
@@ -12,14 +15,14 @@ public class MainMenuButtons : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(SwitchScene.switchScene.CharacterSelect);
     }
     /// <summary>
     /// Goes to Options Menu
     /// </summary>
     public void Options()
     {
-        SceneManager.LoadSceneAsync(OptionsScene, LoadSceneMode.Additive);
+        SceneManager.LoadSceneAsync(SwitchScene.switchScene.Options, LoadSceneMode.Additive);
     }
     /// <summary>
     /// Quits the game

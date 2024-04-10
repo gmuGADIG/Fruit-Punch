@@ -8,6 +8,11 @@ public class CharacterSelectorManager : MonoBehaviour
     public CharacterSelector playerTwoSelector;
 
     /// <summary>
+    /// used in the <see cref="CharacterSelector.OnConfirm"/> function to change the scene after the player(s) select their character.
+    /// </summary>
+    public string nextScene;
+
+    /// <summary>
     /// checks if all players joined have selected a character.
     /// </summary>
     /// <returns>true if all player have selected a charcter.</returns>

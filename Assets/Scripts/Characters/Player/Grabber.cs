@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -20,6 +21,13 @@ public class Grabber : MonoBehaviour
     
     public bool IsGrabbing => this.transform.childCount > 0;
     Grabbable GetGrabbedItem() => this.transform.GetChild(0).GetComponent<Grabbable>();
+
+    void Update()
+    {
+        // keep rotation fixed
+        transform.eulerAngles = new Vector3(0, 0, 0);
+    }
+
 
     /// <summary>
     /// Throws the currently held grabbable left or right (depending on facingLeft).
@@ -44,10 +52,17 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        // TODO: player can only grab enemies if the aura allows. this is not yet checked.
         if (currentOverlaps.Count == 0) return false;
-        
+
         var item = currentOverlaps[0];
+
+        //Checks for Health component
+        if (item.GetComponent<Health>())
+        {
+            //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
+            if (!item.gameObject.GetComponent<Health>().IsVulnerableTo(AuraType.Throw)) return false;
+        }
+
         item.Grab();
         item.transform.SetParent(this.transform);
         item.transform.position = this.transform.position;
