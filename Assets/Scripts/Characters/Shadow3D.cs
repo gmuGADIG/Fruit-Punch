@@ -14,8 +14,13 @@ public class Shadow3D : MonoBehaviour
 {
     Projector proj;
 
+    LayerMask groundLayer;
+
+    RaycastHit[] hits = new RaycastHit[10];
+
     void Start()
     {
+        groundLayer = LayerMask.GetMask("Ground");
         this.GetComponentOrError(out proj);
     }
 
@@ -24,9 +29,9 @@ public class Shadow3D : MonoBehaviour
         var dist = float.NegativeInfinity;
         
         var startPoint = transform.position;
-        var hits = Physics.RaycastAll(startPoint, Vector3.down, 100f, LayerMask.GetMask("Ground"));
+        int hitCount = Physics.RaycastNonAlloc(new Ray(startPoint, Vector3.down), hits, 100f, groundLayer);
         
-        if (hits.Length == 0) dist = 100f;
+        if (hitCount== 0) dist = 100f;
         else
         {
             var highestPoint = hits.OrderBy(h => h.distance).First();

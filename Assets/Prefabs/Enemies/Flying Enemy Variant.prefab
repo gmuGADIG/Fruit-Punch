@@ -370,6 +370,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 11
       objectReference: {fileID: 0}
+    - target: {fileID: 2723358761222827117, guid: 6b4c546f363b85948a083d8aa28d6311, type: 3}
+      propertyPath: vulnerableTypes
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 3779074901699453107, guid: 6b4c546f363b85948a083d8aa28d6311, type: 3}
+      propertyPath: m_Height
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3779074901699453107, guid: 6b4c546f363b85948a083d8aa28d6311, type: 3}
+      propertyPath: m_Radius
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 5528883301703829071, guid: 6b4c546f363b85948a083d8aa28d6311, type: 3}
       propertyPath: wanderingTimeMax
       value: 10
@@ -475,7 +487,7 @@ MonoBehaviour:
   throwBaseDamage: 20
   debugMarkerPrefab: {fileID: 6433994731368077273, guid: 6f12ea03f13e78315b95893e2f4dda2b, type: 3}
   hoveringObjects: {fileID: 6638263912630609955}
-  hoverHeight: 2
+  hoverHeight: 1
 --- !u!114 &3261125690188078953
 MonoBehaviour:
   m_ObjectHideFlags: 0

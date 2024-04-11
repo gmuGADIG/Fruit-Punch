@@ -142,7 +142,7 @@ public class Enemy : MonoBehaviour
                 if (wanderingMarker != null) {
                     Destroy(wanderingMarker.gameObject);
                 }
-                wanderingMarker = DebugMarker.Instantiate(debugMarkerPrefab, wanderingToPosition, Color.blue);
+                //wanderingMarker = DebugMarker.Instantiate(debugMarkerPrefab, wanderingToPosition, Color.blue);
             }
         }
 
