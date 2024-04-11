@@ -19,6 +19,7 @@ public class PlayerScore : MonoBehaviour
     }
     [Tooltip("Top rank at index 0, descending Order")]
     public rankLevels[] rankList;
+
     public void addScore(int points)
     {
         playerScore += points;
@@ -37,6 +38,10 @@ public class PlayerScore : MonoBehaviour
         return playerScore;
     }
 
+    /// <summary>
+    /// returns rank (string) based on current score
+    /// </summary>
+    /// <returns></returns>
     public string getRank()
     {
         string tempRank = null;
@@ -51,11 +56,5 @@ public class PlayerScore : MonoBehaviour
     void Start()
     {
         updateScoreAndRank();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

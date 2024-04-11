@@ -4,16 +4,11 @@ using UnityEngine;
 
 public class AddScoreOnClick : MonoBehaviour
 {
-    PlayerScore playerScore;
+    public PlayerScore playerScore;
     public int points = 5;
     private void OnMouseDown()
     {
         playerScore.addScore(points);
+        Debug.Log("Added");
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        playerScore = FindObjectOfType<PlayerScore>();
-    }
-
 }

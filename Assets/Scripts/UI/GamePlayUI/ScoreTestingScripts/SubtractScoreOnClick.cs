@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class SubtractScoreOnClick : MonoBehaviour
 {
-    PlayerScore playerScore;
+    public PlayerScore playerScore;
     public int points = 5;
     private void OnMouseDown()
     {
         playerScore.subtractScore(points);
+        Debug.Log("Subtracted");
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        playerScore = FindObjectOfType<PlayerScore>();
-    }
+
 }

@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class UpdateScoreRank : MonoBehaviour
 {
-    
-
     public TextMeshProUGUI scoreText;
     public TextMeshProUGUI rankText;
 
@@ -20,22 +18,12 @@ public class UpdateScoreRank : MonoBehaviour
 
     void updateScore()
     {
-        scoreText.text = FindObjectOfType<PlayerScore>().getScore().ToString();
+        scoreText.text = myPlayerScore.getScore().ToString();
     }
 
     void updateRank()
     {
-        rankText.text = FindObjectOfType<PlayerScore>().getRank();   
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+        rankText.text = myPlayerScore.getRank();   
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
