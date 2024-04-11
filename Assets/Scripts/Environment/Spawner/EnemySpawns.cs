@@ -16,8 +16,13 @@ public class EnemySpawns : MonoBehaviour
         JumpIn
     }
 
+    
+
     [Tooltip("How the enemy should spawned into the screen")]
     public SpawnPointType spawnType;
+
+    [Tooltip("The velocity the enemy should spawn with. Enemy counts as spawned when they land.")]
+    public Vector3 spawnVelocity;
 
     /// <summary>
     /// Creates a copy of the provided enemy at this spawner's location and returns it.
@@ -36,4 +41,6 @@ public class EnemySpawns : MonoBehaviour
     {
 
     }
+    
+
 }
