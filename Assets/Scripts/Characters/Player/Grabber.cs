@@ -16,7 +16,9 @@ public class Grabber : MonoBehaviour
     
     [Tooltip("The force (not speed) applied to thrown objects. Heavier objects will be slower.")]
     [SerializeField] float throwForce;
-    
+
+    [Tooltip("The radius of which the player has the ability to grab an object.")]
+    [SerializeField] float grabRadius = 1f;
     List<Grabbable> currentOverlaps = new();
     
     public bool IsGrabbing => this.transform.childCount > 0;
@@ -44,7 +46,7 @@ public class Grabber : MonoBehaviour
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
     }
 
-    
+
     /// <summary>
     /// Attempts to grab nearby grabbables. Returns false if nothing can be grabbed. <br/>
     /// Otherwise, re-parents the grabbable and invokes its relevant events.
@@ -52,6 +54,21 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
+        Collider[] grabs = Physics.OverlapSphere(transform.position, grabRadius);
+        if (grabs != null && grabs.Length > 0)
+        {
+            for (int i = 0; i <= grabs.Length; i++)
+            {
+                if (grabs[i].TryGetComponent<Grabbable>(out var action))
+                {
+                    currentOverlaps.Add(action);
+                    currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
+                    action.InGrabbingRange();
+                }
+            }
+        }
+
+
         if (currentOverlaps.Count == 0) return false;
 
         var item = currentOverlaps[0];
@@ -67,6 +84,13 @@ public class Grabber : MonoBehaviour
         item.transform.SetParent(this.transform);
         item.transform.position = this.transform.position;
         item.onForceRelease.AddListener(ForceReleaseCallback);
+
+
+        /*if (item != null)
+        {
+            item.OutOfGrabbingRange();
+            currentOverlaps.Remove(item);
+        }*/
         return true;
     }
 
@@ -79,6 +103,7 @@ public class Grabber : MonoBehaviour
         onForceRelease?.Invoke();
     }
 
+    /*
     void OnTriggerEnter(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
@@ -99,4 +124,5 @@ public class Grabber : MonoBehaviour
             currentOverlaps.Remove(grabbable);
         }
     }
+    */
 }
