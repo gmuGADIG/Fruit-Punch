@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-enum PomelaState
+enum LeadingLadyState
 {
     Aggressive,
     Punching,
@@ -12,39 +12,53 @@ enum PomelaState
     BigJump,
 }
 
-public class BossPomela : Boss
+public class BossLeadingLady : Boss
 {
-    StateMachine<PomelaState> stateMachine;
+    StateMachine<LeadingLadyState> stateMachine;
     GroundCheck groundCheck;
     Animator anim;
 
     [Tooltip("When doing a ground pound jump, Pomela will first jump to one of these points before launching much higher.")]
-    [SerializeField] private Transform[] ropePoints;
-    [SerializeField] private float timeBetweenAttacks = 2;
+    [SerializeField] Transform[] ropePoints;
+    [SerializeField] float timeBetweenAttacks = 2;
     [SerializeField] float punchDuration = 2;
     [SerializeField] float spittingDuration = 2;
     [SerializeField] float bigJumpDuration = 2;
+    [SerializeField] float walkSpeed = 2f;
 
     IEnumerator activeCoroutine;
     
-    void Start()
+    new void Start()
     {
+        base.Start();
+        
         this.GetComponentOrError(out anim);
         this.GetComponentOrError(out groundCheck);
         
-        stateMachine = new StateMachine<PomelaState>();
-        stateMachine.AddState(PomelaState.Aggressive, null, AggressiveUpdate, null);
-        stateMachine.AddState(PomelaState.Punching, PunchingEnter, null, AttackStateExit);
-        stateMachine.AddState(PomelaState.Spitting, SpittingEnter, null, AttackStateExit);
-        stateMachine.AddState(PomelaState.BigJump, BigJumpEnter, null, AttackStateExit);
+        stateMachine = new StateMachine<LeadingLadyState>();
+        stateMachine.AddState(LeadingLadyState.Aggressive, null, AggressiveUpdate, null);
+        stateMachine.AddState(LeadingLadyState.Punching, PunchingEnter, null, AttackStateExit);
+        stateMachine.AddState(LeadingLadyState.Spitting, SpittingEnter, null, AttackStateExit);
+        stateMachine.AddState(LeadingLadyState.BigJump, BigJumpEnter, null, AttackStateExit);
+        stateMachine.FinalizeAndSetState(LeadingLadyState.Aggressive);
     }
 
-    PomelaState AggressiveUpdate()
+    void Update()
     {
+        stateMachine.Update();
+        FlipWithVelocity(rb.velocity);
+    }
+
+    LeadingLadyState AggressiveUpdate()
+    {
+        rb.velocity += Vector3.down * 9.8f * Time.deltaTime; // gravity
+        
         if (stateMachine.timeInState >= timeBetweenAttacks)
         {
-            PomelaState[] stateOptions = { PomelaState.Punching, PomelaState.Spitting, PomelaState.BigJump };
+            LeadingLadyState[] stateOptions = { LeadingLadyState.Punching, LeadingLadyState.Spitting, LeadingLadyState.BigJump };
+            // LeadingLadyState[] stateOptions = { LeadingLadyState.BigJump };
             var newState = stateOptions[Random.Range(0, stateOptions.Length)];
+            print($"Boss entering state {newState}");
             return newState;
         }
         else return stateMachine.currentState;
@@ -56,10 +70,10 @@ public class BossPomela : Boss
         StartCoroutine(activeCoroutine);
         IEnumerator Coroutine()
         {
-            yield return WalkToPlayer();
-            anim.Play("Punch"); // TODO: this doesn't exist
+            yield return WalkToPlayer(walkSpeed);
+            anim.Play("Punch");
             yield return new WaitForSeconds(punchDuration);
-            stateMachine.SetState(PomelaState.Aggressive);
+            stateMachine.SetState(LeadingLadyState.Aggressive);
         }
     }
 
@@ -71,7 +85,7 @@ public class BossPomela : Boss
         {
             anim.Play("Spit"); // TODO: make animation exist. add markers in animation for when to shoot.
             yield return new WaitForSeconds(spittingDuration);
-            stateMachine.SetState(PomelaState.Aggressive);
+            stateMachine.SetState(LeadingLadyState.Aggressive);
         }
     }
 
@@ -81,25 +95,36 @@ public class BossPomela : Boss
         StartCoroutine(activeCoroutine);
         IEnumerator Coroutine()
         {
-            anim.Play("Jump"); // TODO: jump to serializable jump positions, then jump near player
+            anim.Play("Jump"); // TODO: this animation clip doesn't exist
+            
+            // jump to rope
+            Utils.Assert(ropePoints.Length != 0);
+            var ropePosition = ropePoints[Random.Range(0, ropePoints.Length)].position;
+            yield return JumpTo(ropePosition, 2, 10);
+            
+            // jump to player
+            yield return JumpTo(GetNearestPlayer().transform.position, 2, 10);
+            
             yield return new WaitForSeconds(bigJumpDuration);
-            stateMachine.SetState(PomelaState.Aggressive);
+            
+            stateMachine.SetState(LeadingLadyState.Aggressive);
         }
     }
 
     /// <summary>  Exit callback for all attack states. Ends the active coroutine. </summary>
-    void AttackStateExit(PomelaState prevState) => StopCoroutine(activeCoroutine);
+    void AttackStateExit(LeadingLadyState prevState) => StopCoroutine(activeCoroutine);
 
     IEnumerator JumpTo(Vector3 targetPosition, float height, float gravity)
     {
+        navMesh.enabled = false; // NavMeshAgents suck and don't work well with rigidbody motion
         float jumpTime = 2 * Mathf.Sqrt(2 * height / gravity);
         float startVelocity = Mathf.Sqrt(2 * height / gravity) * gravity;
-
+        
         Vector3 startPosition = rb.position;
-        rb.velocity += Vector3.up * startVelocity;
+        rb.velocity = Vector3.up * startVelocity;
         
         float elapsedTime = 0;
-        while (elapsedTime < jumpTime / 2 || !groundCheck.IsGrounded())
+        while (elapsedTime < jumpTime)
         {
             float t = elapsedTime / jumpTime;
             rb.position = new Vector3(
@@ -117,5 +142,6 @@ public class BossPomela : Boss
                 break;
             }
         }
+        navMesh.enabled = true;
     }
 }
