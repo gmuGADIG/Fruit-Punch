@@ -3,6 +3,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
+using UnityEngine.InputSystem.LowLevel;
 
 /// <summary>
 /// This component allows an item or an enemy to be grabbed by a player. See also: <c>Grabber.cs</c> <br/>
@@ -22,6 +23,8 @@ public class Grabbable : MonoBehaviour
     NavMeshAgent agent;
 
     public bool currentlyGrabbed { get; private set; } = false;
+
+    public event Action disabled;
 
     void Start()
     {
@@ -79,5 +82,9 @@ public class Grabbable : MonoBehaviour
         grabRangeCount -= 1;
         if (grabRangeCount == 0 && grabIndicator != null) grabIndicator.SetActive(false);
         Utils.Assert(grabRangeCount >= 0);
+    }
+
+    void OnDisable() {
+        disabled?.Invoke();
     }
 }
