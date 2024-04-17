@@ -62,10 +62,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4364914062528230208}
-  - component: {fileID: 4111509909009809856}
+  - component: {fileID: 2249352596175079510}
   - component: {fileID: 2838227829393383091}
-  - component: {fileID: 1977974474926028449}
-  - component: {fileID: 2078219486465392627}
   - component: {fileID: 3606026377898504572}
   - component: {fileID: 4587418126269138842}
   - component: {fileID: 7492476628054674841}
@@ -96,7 +94,7 @@ Transform:
   - {fileID: 3867373416937874151}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4111509909009809856
+--- !u!114 &2249352596175079510
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -105,16 +103,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 3662827940676610809}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0e29cc9a511f60e4aac9ee991fe7d3b8, type: 3}
+  m_Script: {fileID: 11500000, guid: d6b8598a7e56e1f44832ea445fc83149, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  walkingSpeed: 1
-  attackingDistance: 0.5
-  wanderingTimeMin: 5
-  wanderingTimeMax: 10
-  gravity: 10
-  throwBaseDamage: 20
-  debugMarkerPrefab: {fileID: 6433994731368077273, guid: 6f12ea03f13e78315b95893e2f4dda2b, type: 3}
+  walkSpeed: 20
+  ropePoints: []
+  timeBetweenAttacks: 2
+  punchDuration: 2
+  spittingDuration: 2
+  bigJumpDuration: 2
 --- !u!114 &2838227829393383091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,38 +127,6 @@ MonoBehaviour:
   vulnerableTypes: 15
   maxHealth: 100
   currentHealth: 0
---- !u!114 &1977974474926028449
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3662827940676610809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38e3e51e9dff9ab418281d869ddc6fa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  knockBackAngle: {x: 1, y: 0, z: 0.5}
-  knockBackForce: 2
-  knockBackTime: 0.3
-  timeToDeath: 0.8
---- !u!114 &2078219486465392627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3662827940676610809}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38e3e51e9dff9ab418281d869ddc6fa7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  knockBackAngle: {x: 1, y: 0, z: 0.5}
-  knockBackForce: 2
-  knockBackTime: 0.3
-  timeToDeath: 0.8
 --- !u!65 &3606026377898504572
 BoxCollider:
   m_ObjectHideFlags: 0
