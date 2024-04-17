@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 7430155917620359961}
   - component: {fileID: 7635130076662420740}
   - component: {fileID: 3779074901699453107}
+  - component: {fileID: 4909050122740807281}
   m_Layer: 0
   m_Name: EnemyBase
   m_TagString: Untagged
@@ -59,6 +60,7 @@ MonoBehaviour:
   gravity: 10
   throwBaseDamage: 20
   debugMarkerPrefab: {fileID: 6433994731368077273, guid: 6f12ea03f13e78315b95893e2f4dda2b, type: 3}
+  state: 0
 --- !u!114 &2723358761222827117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -90,6 +92,8 @@ MonoBehaviour:
   knockBackForce: 2
   knockBackTime: 0.3
   timeToDeath: 0.8
+  isSplitter: 0
+  enemyTypes: []
 --- !u!65 &620075631160467642
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -150,6 +154,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d6faa86b75162b409354d6b6e95fb3f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  grabIndicator: {fileID: 0}
+  onGrab:
+    m_PersistentCalls:
+      m_Calls: []
+  onThrow:
+    m_PersistentCalls:
+      m_Calls: []
+  onForceRelease:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!195 &3779074901699453107
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -172,6 +186,20 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &4909050122740807281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2217596612548616759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8790d191baedbfc42b076f0bb6850d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  percentChance: 0.25
+  pickup: {fileID: 2684123924724272218, guid: a30df45113d3db74ebdc996b9a7e2e06, type: 3}
 --- !u!1 &2698711387044365139
 GameObject:
   m_ObjectHideFlags: 0
