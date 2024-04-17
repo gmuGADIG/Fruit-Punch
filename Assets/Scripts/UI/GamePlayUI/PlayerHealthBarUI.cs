@@ -13,7 +13,10 @@ public class PlayerHealthBarUI : MonoBehaviour
     public Image maxHealthBar;
     public Image currentHealthBar;
 
-    private Health playerHealth;
+    public Health playerHealth;
+
+    [SerializeField]
+    private Sprite[] CharacterPortraits;
 
     // Start is called before the first frame update
     void Start()
