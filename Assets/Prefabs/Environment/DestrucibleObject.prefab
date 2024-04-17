@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 2323663320877368763}
   - component: {fileID: 9191228136213785952}
   - component: {fileID: 3893338885090483632}
+  - component: {fileID: 7383822542802658058}
   m_Layer: 11
   m_Name: DestrucibleObject
   m_TagString: Untagged
@@ -247,3 +248,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df1147501d1c97e439f65ecb3f972b17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &7383822542802658058
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7313464505417053670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8790d191baedbfc42b076f0bb6850d0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  percentChance: 0.25
+  pickup: {fileID: 2684123924724272218, guid: a30df45113d3db74ebdc996b9a7e2e06, type: 3}
