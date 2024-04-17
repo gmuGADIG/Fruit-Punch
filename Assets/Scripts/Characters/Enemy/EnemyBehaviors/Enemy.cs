@@ -40,6 +40,11 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] float gravity = 10f;
 
+    // New field: weight
+    [Tooltip("Enemy will have less velocity/distance and more damage with this many kilograms.")]
+    [SerializeField]
+    float weight = 1f;
+
     [Tooltip("This much damage multiplied by its mass is dealt on throw, both to itself and anything it hits.")]
     [SerializeField] float throwBaseDamage = 20f;
     
@@ -121,7 +126,7 @@ public class Enemy : MonoBehaviour
     private void Update()
     {
         stateMachine.Update();
-        if (rb.isKinematic == false) rb.velocity += Vector3.down * gravity * Time.deltaTime;
+        if (rb.isKinematic == false) rb.velocity += (Vector3.down * gravity * Time.deltaTime) / rb.mass;
 
         if (NMA.velocity.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
         else if (NMA.velocity.x > 0) transform.localRotation = Quaternion.identity;
