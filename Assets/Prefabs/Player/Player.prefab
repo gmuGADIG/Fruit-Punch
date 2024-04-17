@@ -173,7 +173,7 @@ Animator:
   m_GameObject: {fileID: 5370847992972462549}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9b7416292200c7a43986b22216773e6e, type: 2}
+  m_Controller: {fileID: 22100000, guid: 9958e9b9244247442acfd7903c307d7d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -426,7 +426,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.45, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.4142135, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 269422184631147026}
@@ -472,7 +472,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 7c58ea3121b0bc7418ffb831cc683e85, type: 3}
+  m_Sprite: {fileID: 1222846328, guid: dc7109aedb2cd014ea110e2624aae43f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -670,6 +670,10 @@ PrefabInstance:
     - target: {fileID: 4903578636898687924, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
       propertyPath: m_ReceiveShadows
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5801830051146397517, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
+      propertyPath: m_FarClipPlane
+      value: 100.5
       objectReference: {fileID: 0}
     - target: {fileID: 6806586229155832487, guid: 3a60d3f89bc33e54ca7cf62c5c8fe630, type: 3}
       propertyPath: m_LocalPosition.x
