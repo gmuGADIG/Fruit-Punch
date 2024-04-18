@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 enum LeadingLadyState
@@ -18,13 +19,23 @@ public class BossLeadingLady : Boss
     GroundCheck groundCheck;
     Animator anim;
 
+    [SerializeField] float walkSpeed = 2f;
+    [SerializeField] float timeBetweenAttacks = 2;
+    
+    [Header("Rope Jumps")]
     [Tooltip("When doing a ground pound jump, Pomela will first jump to one of these points before launching much higher.")]
     [SerializeField] Transform[] ropePoints;
-    [SerializeField] float timeBetweenAttacks = 2;
+    [SerializeField] float jumpEndLag = 2;
+    
+    [Header("Punches")]
     [SerializeField] float punchDuration = 2;
+    
+    [Header("Spitting")]
     [SerializeField] float spittingDuration = 2;
-    [SerializeField] float bigJumpDuration = 2;
-    [SerializeField] float walkSpeed = 2f;
+    [SerializeField] float projectileSpeed = 2f;
+    [SerializeField] private float projectileDamage = 10f;
+    [SerializeField] Transform spitEmitPoint;
+    [SerializeField] GameObject spitProjectilePrefab;
 
     IEnumerator activeCoroutine;
     
@@ -56,7 +67,7 @@ public class BossLeadingLady : Boss
         if (stateMachine.timeInState >= timeBetweenAttacks)
         {
             LeadingLadyState[] stateOptions = { LeadingLadyState.Punching, LeadingLadyState.Spitting, LeadingLadyState.BigJump };
-            // LeadingLadyState[] stateOptions = { LeadingLadyState.BigJump };
+            // LeadingLadyState[] stateOptions = { LeadingLadyState.Spitting };
             var newState = stateOptions[Random.Range(0, stateOptions.Length)];
             print($"Boss entering state {newState}");
             return newState;
@@ -83,8 +94,12 @@ public class BossLeadingLady : Boss
         StartCoroutine(activeCoroutine);
         IEnumerator Coroutine()
         {
-            anim.Play("Spit"); // TODO: make animation exist. add markers in animation for when to shoot.
+            // face player
+            FlipWithVelocity(GetNearestPlayer().transform.position - this.transform.position);
+            
+            anim.Play("Spit");
             yield return new WaitForSeconds(spittingDuration);
+            anim.Play("Idle");
             stateMachine.SetState(LeadingLadyState.Aggressive);
         }
     }
@@ -105,7 +120,7 @@ public class BossLeadingLady : Boss
             // jump to player
             yield return JumpTo(GetNearestPlayer().transform.position, 2, 10);
             
-            yield return new WaitForSeconds(bigJumpDuration);
+            yield return new WaitForSeconds(jumpEndLag);
             
             stateMachine.SetState(LeadingLadyState.Aggressive);
         }
@@ -143,5 +158,17 @@ public class BossLeadingLady : Boss
             }
         }
         navMesh.enabled = true;
+    }
+
+    /// <summary>
+    /// Called by animation events. Spits a single projectile forward.
+    /// </summary>
+    public void SpitProjectile()
+    {
+        var proj =
+            Instantiate(spitProjectilePrefab, spitEmitPoint.position, Quaternion.identity)
+            .GetComponent<EnemyProjectile>();
+        proj.GetComponent<HurtBox>().parentTransform = this.transform;
+        proj.Setup(projectileDamage, transform.right * projectileSpeed);
     }
 }

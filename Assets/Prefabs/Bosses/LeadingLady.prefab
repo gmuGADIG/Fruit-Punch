@@ -95,6 +95,7 @@ Transform:
   - {fileID: 7970700784458686470}
   - {fileID: 3867373416937874151}
   - {fileID: 4385806032071568140}
+  - {fileID: 2956785327467380068}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2249352596175079510
@@ -117,6 +118,10 @@ MonoBehaviour:
   spittingDuration: 2
   bigJumpDuration: 2
   walkSpeed: 2
+  spitProjectilePrefab: {fileID: 4009673977994042145, guid: 6fc8a0e3ab816a04d9f4195538fe26bc, type: 3}
+  spitEmitPoint: {fileID: 2956785327467380068}
+  projectileSpeed: 2
+  projectileDamage: 10
 --- !u!114 &2838227829393383091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -270,6 +275,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 435879144fcef144e9fcdc34d9f58200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &3672997285935298499
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2956785327467380068}
+  m_Layer: 11
+  m_Name: ProjectileStartPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2956785327467380068
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3672997285935298499}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4364914062528230208}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5410395647087142400
 GameObject:
   m_ObjectHideFlags: 0

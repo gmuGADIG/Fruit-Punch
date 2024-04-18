@@ -4,13 +4,14 @@ using UnityEngine;
 [RequireComponent(typeof(HurtBox))]
 class EnemyProjectile : MonoBehaviour {
     bool setupCalled = false;
-    Vector2 velocity;
+    Vector3 velocity;
 
-    public void Setup(float damage, Vector2 velocity) {
+    public void Setup(float damage, Vector3 velocity) {
         var hurtBox = GetComponent<HurtBox>();
         hurtBox.damage = damage;
         hurtBox.onHurt += (_d) => Destroy(gameObject);
 
+        print($"setup with velocity {velocity}");
         this.velocity = velocity;
     
         setupCalled = true;
