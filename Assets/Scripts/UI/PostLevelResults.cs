@@ -18,8 +18,8 @@ public class PostLevelResults : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerScore = FindAnyObjectByType<PlayerScore>();
-        player = GameObject.FindWithTag("Player");
+        //player = GameObject.FindWithTag("Player");
+        playerScore = player.GetComponent<PlayerScore>();
 
         scoreText.text = playerScore.getScore().ToString();
         rankText.text = playerScore.getRank();
@@ -27,6 +27,10 @@ public class PostLevelResults : MonoBehaviour
         characterImage.sprite = player.GetComponentInChildren<SpriteRenderer>().sprite;
     }
 
+    public void setPlayer(GameObject myPlayer)
+    {
+        player = myPlayer;
+    }
     // Update is called once per frame
     void Update()
     {
