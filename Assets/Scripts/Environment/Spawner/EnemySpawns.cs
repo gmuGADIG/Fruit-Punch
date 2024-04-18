@@ -8,18 +8,18 @@ public class EnemySpawns : MonoBehaviour
     /// <summary>
     /// Spawner type that affects how the enemy is spawned in the screen.
     /// </summary>
-    public enum SpawnPointType
-    {
-        Left,
-        Right,
-        Ground,
-        JumpIn
-    }
+    //public enum SpawnPointType
+    //{
+    //    Left,
+    //    Right,
+    //    Ground,
+    //    JumpIn
+    //}
 
     
 
-    [Tooltip("How the enemy should spawned into the screen")]
-    public SpawnPointType spawnType;
+    //[Tooltip("How the enemy should spawned into the screen")]
+    //public SpawnPointType spawnType;
 
     [Tooltip("The velocity the enemy should spawn with. Enemy counts as spawned when they land.")]
     public Vector3 spawnVelocity;
@@ -34,6 +34,7 @@ public class EnemySpawns : MonoBehaviour
     {
         Enemy copy = Instantiate(enemy, transform.position, Quaternion.identity);
         copy.GetComponent<Health>().vulnerableTypes = aura;
+        copy.GetComponent<Rigidbody>().velocity = spawnVelocity;
         return copy;
     }
 
