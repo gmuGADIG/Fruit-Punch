@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.Processors;
 
 public class GameSceneManager : MonoBehaviour
 {   
@@ -126,9 +127,24 @@ public class GameSceneManager : MonoBehaviour
             averagePos /= players.Count;
             averagePos += cameraOffset;
             averagePos.z = mainCamera.transform.position.z;
-            Vector3 smoothedPosition = Vector3.Lerp(mainCamera.transform.position, averagePos, cameraSmoothSpeed);
-            smoothedPosition.y = cameraOffset.y;
-            mainCamera.transform.position = smoothedPosition;
+
+            Camera cam = Camera.main;
+            float height = 2f * cam.orthographicSize;
+            float width = height * cam.aspect;
+
+            var x = Mathf.Clamp(
+                mainCamera.transform.position.x,
+                averagePos.x - (width * .1f),
+                averagePos.x + (width * .25f)
+            );
+
+            var newPos = mainCamera.transform.position;
+            newPos.x = x;
+            mainCamera.transform.position = newPos;
+
+            // Vector3 smoothedPosition = Vector3.Lerp(mainCamera.transform.position, averagePos, cameraSmoothSpeed);
+            // smoothedPosition.y = Mathf.Round(cameraOffset.y);
+            // mainCamera.transform.position = smoothedPosition;
 
             //Detects if the player is close enough to the next scene
             if (Vector3.Distance(mainCamera.transform.position-cameraOffset,currentScene.transitionLocation)<cameraFreezeThreshold)
