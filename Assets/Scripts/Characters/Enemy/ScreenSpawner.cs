@@ -103,10 +103,6 @@ public class ScreenSpawner : MonoBehaviour
         enemiesOnScreen = new HashSet<Enemy>();
     }
     // Start is called before the first frame update
-    void Start()
-    {
-       StartSpawning();
-    }
 
     // Update is called once per frame
     void Update()
@@ -133,6 +129,7 @@ public class ScreenSpawner : MonoBehaviour
     }
     public void StartSpawning()
     {
+        Debug.Log("Spawning Enemies...");
         enemiesLeft = EnemyCountToSpawn;
         auraEnemiesLeft = numAura;
         enemiesOnScreen.Clear();

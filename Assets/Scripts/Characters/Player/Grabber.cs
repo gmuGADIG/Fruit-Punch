@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -21,6 +22,13 @@ public class Grabber : MonoBehaviour
     public bool IsGrabbing => this.transform.childCount > 0;
     Grabbable GetGrabbedItem() => this.transform.GetChild(0).GetComponent<Grabbable>();
 
+    void Update()
+    {
+        // keep rotation fixed
+        transform.eulerAngles = new Vector3(0, 0, 0);
+    }
+
+
     /// <summary>
     /// Throws the currently held grabbable left or right (depending on facingLeft).
     /// </summary>
@@ -32,7 +40,7 @@ public class Grabber : MonoBehaviour
         var item = GetGrabbedItem();
         item.Release();
         item.transform.SetParent(null);
-        item.onForceRelease -= ForceReleaseCallback;
+        item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
     }
 
@@ -44,14 +52,21 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        // TODO: player can only grab enemies if the aura allows. this is not yet checked.
         if (currentOverlaps.Count == 0) return false;
-        
+
         var item = currentOverlaps[0];
+
+        //Checks for Health component
+        if (item.GetComponent<Health>())
+        {
+            //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
+            if (!item.gameObject.GetComponent<Health>().IsVulnerableTo(AuraType.Throw)) return false;
+        }
+
         item.Grab();
         item.transform.SetParent(this.transform);
         item.transform.position = this.transform.position;
-        item.onForceRelease += ForceReleaseCallback;
+        item.onForceRelease.AddListener(ForceReleaseCallback);
         return true;
     }
 
@@ -67,12 +82,27 @@ public class Grabber : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null) currentOverlaps.Add(grabbable);
+        if (grabbable != null && grabbable.enabled)
+        {
+            currentOverlaps.Add(grabbable);
+            currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
+            grabbable.InGrabbingRange();
+
+            grabbable.disabled += () => {
+                if (currentOverlaps.Remove(grabbable)) {
+                    grabbable.OutOfGrabbingRange();
+                }
+            };
+        }
     }   
 
     void OnTriggerExit(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null) currentOverlaps.Remove(grabbable);
+        if (grabbable != null && grabbable.enabled)
+        {
+            grabbable.OutOfGrabbingRange();
+            currentOverlaps.Remove(grabbable);
+        }
     }
 }

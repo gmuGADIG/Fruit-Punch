@@ -60,9 +60,15 @@ public class Health : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.TryGetComponent<HurtBox>(out var hurtBox))
-        {
+        { // TODO: should we be handle hurting in the hurtbox?
             var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
-            if (hitsThisLayer) this.Damage(hurtBox.GetDamageInfo());
+            if (hitsThisLayer) {
+                var info = hurtBox.GetDamageInfo();
+                this.Damage(info);
+                if (IsVulnerableTo(info.aura)) {
+                    hurtBox.onHurt?.Invoke(info);
+                }
+            }
         }
     }
 
@@ -78,23 +84,23 @@ public class Health : MonoBehaviour
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
-            print($"{gameObject.name} was immune to an attack");
             return;
         }
         
         currentHealth = Mathf.MoveTowards(currentHealth, 0, info.damage);
+        AuraBreak();
         
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
         
-        print($"{gameObject.name} health down to {currentHealth}");
+        
         if (currentHealth <= 0) Die();
     }
 
     /// <summary>
     /// Returns true if this character is vulnerable to an attack's aura.
     /// </summary>
-    bool IsVulnerableTo(AuraType attackingAura)
+    public bool IsVulnerableTo(AuraType attackingAura)
     {
         // vuln = 0010, atk = 1111 --> effective = 0010; return true
         // vuln = 1111, atk = 0001 --> effective = 0001; return true
@@ -122,6 +128,14 @@ public class Health : MonoBehaviour
     public bool HasAura()
     {
         return vulnerableTypes.IsSpecial();
+    }
+
+    /// <summary>
+    /// When hit by an effective aura, the enemy becomes vulnerable to all damage types.
+    /// </summary>
+    public void AuraBreak()
+    {
+        this.vulnerableTypes = AuraType.Normal;
     }
 }
 
