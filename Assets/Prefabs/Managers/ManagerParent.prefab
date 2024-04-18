@@ -44,15 +44,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0276df2df248474b8f632df9ef6be90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  camera: {fileID: 0}
-  scenes: []
-  currentSceneNumber: 0
+  mainCamera: {fileID: 0}
   cameraFreezeThreshold: 1
-  offset: {x: 0, y: 2, z: 0}
-  startPosition: {x: 0, y: 2, z: 0}
-  smoothSpeed: 0.125
-  isSpawn: 0
-  frozenPos: {x: 0, y: 0, z: 0}
+  cameraSmoothSpeed: 0.125
+  startPosition: {x: 0, y: 6, z: -5}
+  cameraOffset: {x: 0, y: 6, z: -5}
+  scenes:
+  - transitionType: 0
+    transitionLocation: {x: 1000, y: 0, z: 0}
+    spawner: {fileID: 0}
 --- !u!1 &8344196426302387158
 GameObject:
   m_ObjectHideFlags: 0
@@ -83,6 +83,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1601989754054534}
+  - {fileID: 2645096633923011354}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &8517692296923730507
