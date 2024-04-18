@@ -26,6 +26,9 @@ public enum PlayerState
 [RequireComponent(typeof(InputBuffer))]
 public class Player : MonoBehaviour
 {
+    public PlayerState CurrentState => stateMachine.currentState;
+    public event Action<PlayerState> OnPlayerStateChange;
+
     private StateMachine<PlayerState> stateMachine;
     private Rigidbody rb;
     private Animator anim;
@@ -60,7 +63,9 @@ public class Player : MonoBehaviour
     float pearryLength = 3;
     
     bool strikeAnimationOver = false;
-    
+
+    private bool FacingLeft => transform.localEulerAngles.y > 90;
+
     void Start()
     {
         // get components
@@ -78,9 +83,9 @@ public class Player : MonoBehaviour
         // get animation lengths
         foreach (var clip in anim.runtimeAnimatorController.animationClips)
         {
-            if (clip.name == "PlayerStrike1") strike1Length = clip.length;
-            else if (clip.name == "PlayerStrike2") strike2Length = clip.length;
-            else if (clip.name == "PlayerStrike3") strike3Length = clip.length;
+            if (clip.name.EndsWith("Strike1")) strike1Length = clip.length;
+            else if (clip.name.EndsWith("Strike2")) strike2Length = clip.length;
+            else if (clip.name.EndsWith("Strike3")) strike3Length = clip.length;
         }
         if (strike1Length < 0 || strike2Length < 0 || strike3Length < 0)
             throw new Exception("Animation clips weren't found!");
@@ -100,6 +105,8 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
+
+        stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
     }
 
 
@@ -140,8 +147,8 @@ public class Player : MonoBehaviour
         );
 
         // flip according to direction
-        if (targetVel.x < 0) transform.localScale = new Vector3(-1, 1, 1);
-        else if (targetVel.x > 0) transform.localScale = new Vector3(1, 1, 1);
+        if (targetVel.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
+        else if (targetVel.x > 0) transform.localRotation = Quaternion.identity;
     }
 
     // bool IsGrounded()
@@ -172,6 +179,8 @@ public class Player : MonoBehaviour
 
         if (playerInput.actions["gameplay/Jump"].triggered)
         {
+            //Placeholder test for sound manager
+            SoundManager.playSound("ArcadeTest");
             return PlayerState.Jump;
         }
         
@@ -195,7 +204,7 @@ public class Player : MonoBehaviour
 
     void JumpEnter()
     {
-        // anim.Play("Jump");
+        anim.Play("PlayerJump");
         rb.velocity += Vector3.up * jumpSpeed;
     }
     
@@ -300,8 +309,7 @@ public class Player : MonoBehaviour
 
     void ThrowingEnter()
     {
-        var facingLeft = transform.localScale.x < 0;
-        grabber.ThrowItem(facingLeft);
+        grabber.ThrowItem(FacingLeft);
     }
     
     PlayerState ThrowingUpdate()

@@ -14,6 +14,7 @@ public class PlayerSelectorSpawner : MonoBehaviour
     /// </summary>
     public GameObject manager;
 
+
     /// <summary>
     /// called by <see cref="InputLobby.OnPlayerJoin"/>. Instaites controls for the player the just joined and replaces blanks with fucntional character selectors. 
     /// also handles logic for assigning player 1 and player 2 and giving refrences for later game use.
@@ -32,15 +33,16 @@ public class PlayerSelectorSpawner : MonoBehaviour
         if(GameManager.gameManager == null)
             GameManager.gameManager = new GameManager();
 
-        p.gameObject.transform.Find("Button Image").GetComponent<ButtonConfirm>().SetButton(context.ControlScheme);
+        p.gameObject.GetComponent<CharacterSelector>().buttonImage.GetComponent<ButtonConfirm>().SetButton(context.ControlScheme);
 
         //if no player has joined yet, current player joins as player 1.
         if (blankPOneSelector != null)
         {
             //use blanks positions for the new selector
-            p.gameObject.transform.parent = GameObject.Find("Canvas").transform;
+            p.gameObject.transform.parent = GameObject.Find("Canvas").transform.Find("Content").transform;
+            p.gameObject.transform.SetAsFirstSibling();
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -100, 0);
-
+            p.transform.localScale = prefab.transform.localScale;
             //destroy blank
             Destroy(blankPOneSelector);
 
@@ -53,8 +55,9 @@ public class PlayerSelectorSpawner : MonoBehaviour
         else if (blankPTwoSelector != null) //a player had joined already, current player joins as player 2.
         {
             //use blanks positions for the new selector
-            p.gameObject.transform.parent = GameObject.Find("Canvas").transform;
+            p.gameObject.transform.parent = GameObject.Find("Canvas").transform.Find("Content").transform;
             p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(250, -100, 0);
+            p.transform.localScale = prefab.transform.localScale;
 
             //destroy blank
             Destroy(blankPTwoSelector);

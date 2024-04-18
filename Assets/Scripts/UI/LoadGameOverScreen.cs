@@ -20,7 +20,9 @@ public class LoadGameOverScreen : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        playersHealth = FindObjectsOfType<Health>();
+        GameObject[] temp = GameObject.FindGameObjectsWithTag("Player");
+        playersHealth = new Health[temp.Length];
+        for(int i =0; i < playersHealth.Length; i++) { playersHealth[i] = temp[i].GetComponent<Health>(); }
         numOfLivingPlayers = playersHealth.Length;
         Debug.Log("num of lliving players " + numOfLivingPlayers);
     }

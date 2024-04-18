@@ -8,7 +8,7 @@ Shader "Custom/InnerBillboard"
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
+        Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
         LOD 200
         
         Pass
@@ -51,14 +51,17 @@ Shader "Custom/InnerBillboard"
                 // Apply offset
                 uv += _UvOffset.xy;
                 
-                // Sample the texture
-                fixed4 col = tex2D(_MainTex, uv);
+                // Sample the texture, or use (0, 0, 0, 0) if outside the image
+                fixed4 col;
+                if (uv.x < 0 || uv.y < 0 || uv.x > 1 || uv.y > 1) col = fixed4(0, 0, 0, 0);
+                else col = tex2D(_MainTex, uv);
+                
+                clip(col.a - .5);
 
                 // debug
                 // col *= .8;
 
                 return col;
-                // return float4(i.screenPos.x, i.screenPos.y, 0, 1);
             }
             ENDCG
         }

@@ -35,7 +35,6 @@ public class PauseScreenButtons : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         SceneManager.UnloadSceneAsync("PauseScreen");
-        Debug.Log("PauseScreen unloaded");
     }
 
     /// <summary>
@@ -54,7 +53,6 @@ public class PauseScreenButtons : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(0);
-        Debug.Log("Return to Main");
     }
     /// <summary>
     /// Quits the Game
@@ -63,7 +61,6 @@ public class PauseScreenButtons : MonoBehaviour
     {
         //add script to save game
         Application.Quit();
-        Debug.Log("Quit Game");
     }
 
     /// <summary>
@@ -72,6 +69,5 @@ public class PauseScreenButtons : MonoBehaviour
     public void OptionsMenu() 
     {
         SceneManager.LoadSceneAsync(OptionsScene, LoadSceneMode.Additive);
-        Debug.Log("Open Options Menu");
     }
 }
