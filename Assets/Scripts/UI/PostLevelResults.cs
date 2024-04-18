@@ -18,7 +18,6 @@ public class PostLevelResults : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //player = GameObject.FindWithTag("Player");
         playerScore = player.GetComponent<PlayerScore>();
 
         scoreText.text = playerScore.getScore().ToString();

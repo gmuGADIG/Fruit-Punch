@@ -14,7 +14,7 @@ public class PostUIPlayerManager : MonoBehaviour
     {
         players = GameObject.FindGameObjectsWithTag("Player");
 
-        for(int i = 0; i < players.Length; i++)
+        for(int i = players.Length- 1; i >= 0 ; i--)
         {
             PostLevelResults temp = Instantiate(resultUI, transform).GetComponent<PostLevelResults>();
             temp.setPlayer(players[i]);

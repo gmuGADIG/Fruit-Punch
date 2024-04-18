@@ -171,17 +171,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 867822136764030668, guid: 77356f5dddf51224a84256c013603b72, type: 3}
+      propertyPath: playerScore
+      value: 42
+      objectReference: {fileID: 0}
     - target: {fileID: 5370847992972462549, guid: 77356f5dddf51224a84256c013603b72, type: 3}
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
+    - target: {fileID: 5370847992972462549, guid: 77356f5dddf51224a84256c013603b72, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5370847992972462549, guid: 77356f5dddf51224a84256c013603b72, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1307336314}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 77356f5dddf51224a84256c013603b72, type: 3}
 --- !u!1 &768716663
 GameObject:
@@ -409,40 +414,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 975397109}
   m_CullTransparentMesh: 1
---- !u!1 &1307336304 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5370847992972462549, guid: 77356f5dddf51224a84256c013603b72, type: 3}
-  m_PrefabInstance: {fileID: 18797532}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1307336314
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1307336304}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f3c518c6042b2a147ab74619455d2fdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playerScore: 42
-  rankList:
-  - rankName: Fresh
-    pointThreshold: 50
-    rankImage: {fileID: 21300000, guid: 7c58ea3121b0bc7418ffb831cc683e85, type: 3}
-  - rankName: Ripe
-    pointThreshold: 40
-    rankImage: {fileID: 21300000, guid: b75217906d4b5eb4aa33a51f2d82347b, type: 3}
-  - rankName: Bog-Standard
-    pointThreshold: 30
-    rankImage: {fileID: 21300000, guid: 6ec53c8d41364423da0c30f70ef5ea3b, type: 3}
-  - rankName: Rotten
-    pointThreshold: 20
-    rankImage: {fileID: 21300000, guid: 2a3fc403d4e7eb0488a501aefe1613fb, type: 3}
-  - rankName: Vegetable
-    pointThreshold: 10
-    rankImage: {fileID: 21300000, guid: 3f923262c62eefd4aa51f81b2cc317ae, type: 3}
 --- !u!1 &1511036243 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5370847992972462549, guid: 77356f5dddf51224a84256c013603b72, type: 3}
@@ -737,7 +708,7 @@ GameObject:
   - component: {fileID: 1979624535}
   - component: {fileID: 1979624537}
   m_Layer: 5
-  m_Name: HorrizontalGroup
+  m_Name: Results_HorrizontalGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -857,6 +828,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 867822136764030668, guid: 77356f5dddf51224a84256c013603b72, type: 3}
+      propertyPath: playerScore
+      value: 11
+      objectReference: {fileID: 0}
     - target: {fileID: 4516769140236419451, guid: 77356f5dddf51224a84256c013603b72, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -864,6 +839,10 @@ PrefabInstance:
     - target: {fileID: 5370847992972462549, guid: 77356f5dddf51224a84256c013603b72, type: 3}
       propertyPath: m_Name
       value: Player (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5370847992972462549, guid: 77356f5dddf51224a84256c013603b72, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
