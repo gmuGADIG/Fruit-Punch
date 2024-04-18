@@ -30,9 +30,5 @@ public class PostLevelResults : MonoBehaviour
     {
         player = myPlayer;
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

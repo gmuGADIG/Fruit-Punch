@@ -14,7 +14,7 @@ public class PostUIPlayerManager : MonoBehaviour
     {
         players = GameObject.FindGameObjectsWithTag("Player");
 
-        for(int i = players.Length- 1; i >= 0 ; i--)
+        for(int i = 0; i < players.Length; i++) //Goes through players, adds a result screen for each player and passes player info to them.
         {
             PostLevelResults temp = Instantiate(resultUI, transform).GetComponent<PostLevelResults>();
             temp.setPlayer(players[i]);
@@ -22,9 +22,4 @@ public class PostUIPlayerManager : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
