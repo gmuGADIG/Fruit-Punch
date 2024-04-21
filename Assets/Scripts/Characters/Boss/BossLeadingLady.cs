@@ -119,7 +119,7 @@ public class BossLeadingLady : Boss
             
             // jump to player
             yield return JumpTo(GetNearestPlayer().transform.position, 2, 10);
-            
+            anim.Play("Landing");
             yield return new WaitForSeconds(jumpEndLag);
             
             stateMachine.SetState(LeadingLadyState.Aggressive);

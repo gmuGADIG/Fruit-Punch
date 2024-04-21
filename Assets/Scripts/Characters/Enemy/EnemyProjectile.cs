@@ -2,7 +2,9 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(HurtBox))]
-class EnemyProjectile : MonoBehaviour {
+class EnemyProjectile : MonoBehaviour
+{
+    [SerializeField] float lifetime = 10;
     bool setupCalled = false;
     Vector3 velocity;
 
@@ -11,17 +13,18 @@ class EnemyProjectile : MonoBehaviour {
         hurtBox.damage = damage;
         hurtBox.onHurt += (_d) => Destroy(gameObject);
 
-        print($"setup with velocity {velocity}");
         this.velocity = velocity;
     
         setupCalled = true;
     }
 
     void Start() {
-        //yield return null;
         if (!setupCalled) {
             Debug.LogError("EnemyProjectile.Setup not called!");
         }
+        
+        // destroy after lifetime expires
+        Destroy(gameObject, lifetime);
     }
 
     public void Update() {

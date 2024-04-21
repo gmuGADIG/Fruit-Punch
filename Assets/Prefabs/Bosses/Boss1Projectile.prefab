@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 6405773143206647117}
   - component: {fileID: 1649278108347242269}
   - component: {fileID: 8091393318765199267}
+  - component: {fileID: 1521532438421154156}
   m_Layer: 0
   m_Name: Boss1Projectile
   m_TagString: Untagged
@@ -64,6 +65,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17396a98c38d4404eb7ef90846bc469c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &1521532438421154156
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4009673977994042145}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.17965831, y: 0.17965831, z: 0.17965831}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8886919550589385527
 GameObject:
   m_ObjectHideFlags: 0

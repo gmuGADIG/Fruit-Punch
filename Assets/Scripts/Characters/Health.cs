@@ -90,6 +90,8 @@ public class Health : MonoBehaviour
         currentHealth = Mathf.MoveTowards(currentHealth, 0, info.damage);
         AuraBreak();
         
+        print($"{gameObject.name}'s health lowered to {currentHealth}");
+        
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
         
@@ -102,9 +104,6 @@ public class Health : MonoBehaviour
     /// </summary>
     public bool IsVulnerableTo(AuraType attackingAura)
     {
-        // vuln = 0010, atk = 1111 --> effective = 0010; return true
-        // vuln = 1111, atk = 0001 --> effective = 0001; return true
-        // vuln = 0000, atk = 1111 --> effective = 0000; return false
         var effectiveAuras = this.vulnerableTypes & attackingAura;
         return effectiveAuras != 0;
     }
@@ -135,7 +134,7 @@ public class Health : MonoBehaviour
     /// </summary>
     public void AuraBreak()
     {
-        this.vulnerableTypes = AuraType.Normal;
+        this.vulnerableTypes = AuraType.Everything;
     }
 }
 

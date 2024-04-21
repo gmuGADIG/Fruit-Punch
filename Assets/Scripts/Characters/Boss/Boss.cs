@@ -34,7 +34,7 @@ public class Boss : MonoBehaviour
 
         var player = GetNearestPlayer();
         
-        Debug.Assert(player != null); // TODO: handle this gracefully
+        Debug.Assert(player != null); // TODO: should probably handle this gracefully
         navMesh.ResetPath();
 
         var safetyTimer = 0f; // if traversal fails for too long, just exit
@@ -60,7 +60,6 @@ public class Boss : MonoBehaviour
             }
         }
         
-        print("finished moving to player");
         rb.velocity = Vector3.zero;
     }
 
