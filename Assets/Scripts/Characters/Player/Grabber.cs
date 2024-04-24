@@ -38,7 +38,7 @@ public class Grabber : MonoBehaviour
         var throwDir = new Vector3(1, 1f, 0);
         if (facingLeft) throwDir.x *= -1;
         var item = GetGrabbedItem();
-        item.Release();
+        item.Throw();
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
@@ -56,11 +56,11 @@ public class Grabber : MonoBehaviour
 
         var item = currentOverlaps[0];
 
-        //Checks for Health component
-        if (item.GetComponent<Health>())
+        // If the item has a health component and its aura isn't vulnerable to throw attacks, cancel grab.
+        // todo: this also cancels the grab even if another vulnerable enemy is within range. might be worth a fix.
+        if (item.TryGetComponent<Health>(out var health))
         {
-            //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
-            if (!item.gameObject.GetComponent<Health>().IsVulnerableTo(AuraType.Throw)) return false;
+            if (!health.IsVulnerableTo(AuraType.Throw)) return false;
         }
 
         item.Grab();
@@ -72,10 +72,13 @@ public class Grabber : MonoBehaviour
 
     /// <summary>
     /// Callback function subscribed to each grabbed item's onForceRelease event. <br/>
-    /// This function simply invokes 
+    /// This function releases the item (calls item.Release and un-parents it) and invokes the grabber's onForceRelease event.
     /// </summary>
     void ForceReleaseCallback()
     {
+        var item = GetGrabbedItem();
+        item.transform.SetParent(null);
+        item.onForceRelease.RemoveListener(ForceReleaseCallback);
         onForceRelease?.Invoke();
     }
 

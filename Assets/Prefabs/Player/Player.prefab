@@ -117,6 +117,7 @@ GameObject:
   - component: {fileID: 8358055831198858737}
   - component: {fileID: 4711652885617091301}
   - component: {fileID: 1771982198922200145}
+  - component: {fileID: 867822136764030668}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -303,6 +304,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bounceFactor: 0
+--- !u!114 &867822136764030668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5370847992972462549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3c518c6042b2a147ab74619455d2fdf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerScore: 0
+  rankList:
+  - rankName: Fresh
+    pointThreshold: 50
+    rankImage: {fileID: 21300000, guid: 7c58ea3121b0bc7418ffb831cc683e85, type: 3}
+  - rankName: Ripe
+    pointThreshold: 40
+    rankImage: {fileID: 21300000, guid: b75217906d4b5eb4aa33a51f2d82347b, type: 3}
+  - rankName: Bog-Standard
+    pointThreshold: 30
+    rankImage: {fileID: 21300000, guid: 6ec53c8d41364423da0c30f70ef5ea3b, type: 3}
+  - rankName: Rotten
+    pointThreshold: 20
+    rankImage: {fileID: 21300000, guid: 2a3fc403d4e7eb0488a501aefe1613fb, type: 3}
+  - rankName: Vegetable
+    pointThreshold: 10
+    rankImage: {fileID: 21300000, guid: 3f923262c62eefd4aa51f81b2cc317ae, type: 3}
 --- !u!1 &7384358105077054236
 GameObject:
   m_ObjectHideFlags: 0
