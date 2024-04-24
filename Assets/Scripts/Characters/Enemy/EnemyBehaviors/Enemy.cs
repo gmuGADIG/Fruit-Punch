@@ -158,7 +158,6 @@ public class Enemy : MonoBehaviour
     
     protected virtual void SpawningEnter() {
         // Enemy should be disabled until it lands
-        NMA.enabled = false;
         health.enabled = false;
     }
     protected virtual EnemyState SpawningUpdate() { 
@@ -170,7 +169,6 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState; 
     }
     protected virtual void SpawningExit(EnemyState newState) {
-        NMA.enabled = true;
         health.enabled = true;
     }
 
