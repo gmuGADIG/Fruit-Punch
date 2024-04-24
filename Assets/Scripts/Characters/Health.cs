@@ -97,6 +97,9 @@ public class Health : MonoBehaviour
         
         
         if (currentHealth <= 0) Die();
+        
+        // throw new Exception("oww!");
+        print("oww");
     }
 
     /// <summary>
