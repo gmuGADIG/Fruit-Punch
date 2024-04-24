@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Animations;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public enum PlayerState
 {
@@ -57,7 +58,8 @@ public class Player : MonoBehaviour
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
-    float pearryLength = 3;
+    float pearryStateLength = 3;
+    float pearryStrikeLength = -1;
     
     bool strikeAnimationOver = false;
 
@@ -83,8 +85,10 @@ public class Player : MonoBehaviour
             if (clip.name == "PlayerStrike1") strike1Length = clip.length;
             else if (clip.name == "PlayerStrike2") strike2Length = clip.length;
             else if (clip.name == "PlayerStrike3") strike3Length = clip.length;
+            else if (clip.name == "PearryEnterPlaceholder") pearryStateLength = clip.length;
+            else if (clip.name == "PearryPlaceholder") pearryStrikeLength += clip.length;
         }
-        if (strike1Length < 0 || strike2Length < 0 || strike3Length < 0)
+        if (strike1Length < 0 || strike2Length < 0 || strike3Length < 0 || pearryStateLength < 0 || pearryStrikeLength < 0)
             throw new Exception("Animation clips weren't found!");
         
         // set layer
@@ -269,12 +273,12 @@ public class Player : MonoBehaviour
     // new Pearry Script has been moved from 
     // Pearry.cs to its own PearryEnter and PearryUpdate methods
     void PearryEnter() {
-        // anim.Play("PlayerPearry");
+        anim.Play("PearryEnterPlaceholder");
     }
 
     PlayerState PearryUpdate() {
 
-        if (stateMachine.timeInState >= pearryLength)
+        if (stateMachine.timeInState >= pearryStateLength)
         {
             return PlayerState.Normal;
         }
