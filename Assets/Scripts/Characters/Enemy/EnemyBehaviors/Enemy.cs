@@ -4,9 +4,18 @@ using UnityEngine;
 using UnityEngine.AI;
 using Random = UnityEngine.Random;
 
+// NOTE: exploder enemy works around the states.
+// if you add a new state, make sure exploder enemy
+// can handle it properly with it's countdown state.
 public enum EnemyState
 {
-    Wandering, Aggressive, Attacking, Hurt, Grabbed, InAir
+    Spawning,
+    Wandering, 
+    Aggressive, 
+    Attacking, 
+    Hurt, 
+    Grabbed, 
+    InAir
 }
 
 [RequireComponent(typeof(Health))]
@@ -31,6 +40,11 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float wanderingTimeMax = 10000;
 
     [SerializeField] float gravity = 10f;
+
+    // New field: weight
+    [Tooltip("Enemy will have less velocity/distance and more damage with this many kilograms.")]
+    [SerializeField]
+    float weight = 1f;
 
     [Tooltip("This much damage multiplied by its mass is dealt on throw, both to itself and anything it hits.")]
     [SerializeField] float throwBaseDamage = 20f;
@@ -58,7 +72,9 @@ public class Enemy : MonoBehaviour
     /// </summary>
     protected Transform aggressiveCurrentTarget = null;
 
-    private float hurtTimeLeft;
+    // TODO: Serialize field? Use animation triggers instead?
+    const float initialHurtTime = .75f;
+    private float hurtTimeLeft = initialHurtTime;
 
     /// <summary>
     /// When the enemy is thrown, it queues its damaged, taking it when it lands.
@@ -66,7 +82,7 @@ public class Enemy : MonoBehaviour
     private bool thrownDamageQueue = false;
     
     protected GroundCheck groundCheck;
-    private Grabbable grabbable;
+    protected Grabbable grabbable;
     private Rigidbody rb;
     private Health health;
     protected StateMachine<EnemyState> stateMachine = new();
@@ -88,31 +104,56 @@ public class Enemy : MonoBehaviour
         this.GetComponentInChildrenOrError(out groundCheck);
         NMA = GetComponent<NavMeshAgent>(); 
 
+        stateMachine.AddState(EnemyState.Spawning, SpawningEnter, SpawningUpdate, SpawningExit);
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, WanderingExit);
         stateMachine.AddState(EnemyState.Aggressive, AggressiveEnterExt, AggressiveUpdate, AggressiveExitExt);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExitExt);
         stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, HurtExit);
         stateMachine.AddState(EnemyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
         stateMachine.AddState(EnemyState.InAir, InAirEnter, InAirUpdate, InAirExit);
-        stateMachine.FinalizeAndSetState(EnemyState.Wandering);
+        stateMachine.FinalizeAndSetState(EnemyState.Spawning);
 
         grabbable.onGrab.AddListener(OnGrabCallback);
         grabbable.onThrow.AddListener(OnThrowCallback);
 
         NMA.speed = walkingSpeed;
 
+        health.onHurt += OnHurt;
+    }
+
+    protected virtual void OnHurt(DamageInfo damageInfo) {
+        stateMachine.SetState(EnemyState.Hurt);
     }
 
     private void Update()
     {
         stateMachine.Update();
-        if (rb.isKinematic == false) rb.velocity += Vector3.down * gravity * Time.deltaTime;
+        if (rb.isKinematic == false) rb.velocity += (Vector3.down * gravity * Time.deltaTime) / rb.mass;
 
         if (NMA.velocity.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
         else if (NMA.velocity.x > 0) transform.localRotation = Quaternion.identity;
 
         state = stateMachine.currentState;
     }
+
+    protected virtual void SpawningEnter() {
+        // Enemy should be disabled until it lands
+        NMA.enabled = false;
+        health.enabled = false;
+    }
+    protected virtual EnemyState SpawningUpdate() { 
+        if(groundCheck.IsGrounded())
+        {
+            return EnemyState.Wandering;
+        }
+
+        return stateMachine.currentState; 
+    }
+    protected virtual void SpawningExit(EnemyState newState) {
+        NMA.enabled = true;
+        health.enabled = true;
+    }
+
 
     protected virtual void WanderingEnter()
     {
@@ -228,7 +269,7 @@ public class Enemy : MonoBehaviour
 
     protected virtual void HurtEnter()
     {
-        currentAttackingEnemies -= 1;
+        hurtTimeLeft = initialHurtTime;
     }
     
     protected virtual EnemyState HurtUpdate()
@@ -246,7 +287,7 @@ public class Enemy : MonoBehaviour
     {
         if (stateMachine.timeInState >= grabTimeToEscape)
         {
-            GetComponent<Grabbable>().ForceRelease();
+            grabbable.ForceRelease();
             return EnemyState.Aggressive;
         }
 
@@ -279,5 +320,9 @@ public class Enemy : MonoBehaviour
     {
         thrownDamageQueue = true;
         stateMachine.SetState(EnemyState.InAir);
+    }
+
+    private void OnDestroy() {
+        health.onHurt -= OnHurt;
     }
 }

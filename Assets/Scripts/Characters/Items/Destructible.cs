@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Destructible : MonoBehaviour
 {
-    Health health;
+    private Health health;
 
     private void Start()
     {
