@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 // can handle it properly with it's countdown state.
 public enum EnemyState
 {
+    Spawning,
     Wandering, 
     Aggressive, 
     Attacking, 
@@ -97,14 +98,15 @@ public class Enemy : MonoBehaviour
         this.GetComponentOrError(out health);
         this.GetComponentInChildrenOrError(out groundCheck);
 
+        stateMachine.AddState(EnemyState.Spawning, SpawningEnter, SpawningUpdate, SpawningExit);
         stateMachine.AddState(EnemyState.Wandering, WanderingEnter, WanderingUpdate, WanderingExit);
         stateMachine.AddState(EnemyState.Aggressive, AggressiveEnterExt, AggressiveUpdate, AggressiveExitExt);
         stateMachine.AddState(EnemyState.Attacking, AttackingEnter, AttackingUpdate, AttackingExitExt);
         stateMachine.AddState(EnemyState.Hurt, HurtEnter, HurtUpdate, HurtExit);
         stateMachine.AddState(EnemyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
         stateMachine.AddState(EnemyState.InAir, InAirEnter, InAirUpdate, InAirExit);
-        stateMachine.FinalizeAndSetState(EnemyState.Wandering);
-        
+        stateMachine.FinalizeAndSetState(EnemyState.Spawning);
+
         grabbable.onGrab.AddListener(OnGrabCallback);
         grabbable.onForceRelease.AddListener(OnForceReleaseCallback);
         grabbable.onThrow.AddListener(OnThrowCallback);
@@ -154,6 +156,25 @@ public class Enemy : MonoBehaviour
         else return false;
     }
     
+    protected virtual void SpawningEnter() {
+        // Enemy should be disabled until it lands
+        NMA.enabled = false;
+        health.enabled = false;
+    }
+    protected virtual EnemyState SpawningUpdate() { 
+        if(groundCheck.IsGrounded())
+        {
+            return EnemyState.Wandering;
+        }
+
+        return stateMachine.currentState; 
+    }
+    protected virtual void SpawningExit(EnemyState newState) {
+        NMA.enabled = true;
+        health.enabled = true;
+    }
+
+
     protected virtual void WanderingEnter()
     {
         wanderingTimeTillAttack = Random.Range(wanderingTimeMin, wanderingTimeMax);
