@@ -7,7 +7,7 @@ public class EnemyHealthBar : MonoBehaviour
 {
     public Slider healthBar;
 
-    Health enemyHealth;
+    protected Health enemyHealth;
 
     void Start()
     {
@@ -23,6 +23,9 @@ public class EnemyHealthBar : MonoBehaviour
 
     void UpdateHealthbar(HealthChange change)
     {
+        if (enemyHealth == null || healthBar == null) {
+            return;
+        }
         healthBar.value = change.newHealthValue / enemyHealth.MaxHealth * healthBar.maxValue;
         if (healthBar.value <= 0)
         {
