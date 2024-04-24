@@ -21,13 +21,20 @@ public class ScreenSpawner : MonoBehaviour
 
     [Tooltip("Time between an enemy dying and another enemy entering the play area.")]
     public float spawnDelay = 2.0f;
+    [Tooltip("Number of enemies to spawn (1 player)")]
     public int numEnemy = 10;
+    [Tooltip("Number of aura enemies to spawn (1 player)")]
     public int numAura = 0;
     [Tooltip("Maximum number of enemies allowed on screen at once")]
     public int enemyOnScreen = 3;
     [Tooltip("Maximum number of aura enemies allowed on screen at once")]
     public int auraOnScreen = 1;
+    [Tooltip("Multiplier for enemy scaling when two players are in game")]
     public float enemyScalingMultiplier = 1.0f;
+
+    [Tooltip("Spawn as if two players are in game")]
+    [SerializeField]
+    private bool spawnAsTwoPlayer = false;
 
     /// <summary>
     /// List of enemies to spawn that is editable before spawning starts.
@@ -35,6 +42,7 @@ public class ScreenSpawner : MonoBehaviour
     [SerializeField]
     private List<EnemySpawnData> enemiesToSpawn;
 
+    
     /// <summary>
     /// Event that is called when the max number of enemies are spawned.
     /// </summary>
@@ -45,7 +53,7 @@ public class ScreenSpawner : MonoBehaviour
     /// <summary>
     /// Property to mark if two player for debugging.
     /// </summary>
-    private bool twoPlayer = true;
+    private bool twoPlayer => spawnAsTwoPlayer;
 
     /// <summary>
     /// The number of enemies that need to be spawned before stopping spawns.
@@ -64,15 +72,20 @@ public class ScreenSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// The queue of enemies to spawn from.
+    /// The queue of non-aura enemies to spawn from.
     /// </summary>
-    private Queue<EnemySpawnData> enemySpawnQueue;
+    private Queue<EnemySpawnData> normalEnemySpawnQueue;
+
+    /// <summary>
+    /// The queue of aura enemies to spawn from.
+    /// </summary>
+    private Queue<EnemySpawnData> auraEnemySpawnQueue;
 
     /// <summary>
     /// Manager for what enemies are on screen.
     /// </summary>
     private HashSet<Enemy> enemiesOnScreen;
-    
+
     /// <summary>
     /// Number of aura enemies currently on screen.
     /// </summary>
@@ -94,6 +107,8 @@ public class ScreenSpawner : MonoBehaviour
     /// </summary>
     private bool isCurrentlySpawning;
 
+    private bool spawningComplete => enemiesLeft <= 0 && auraEnemiesLeft <= 0 && enemiesOnScreen.Count == 0;
+
     private float spawnTimer;
 
 
@@ -102,7 +117,6 @@ public class ScreenSpawner : MonoBehaviour
     {
         enemiesOnScreen = new HashSet<Enemy>();
     }
-    // Start is called before the first frame update
 
     // Update is called once per frame
     void Update()
@@ -115,51 +129,63 @@ public class ScreenSpawner : MonoBehaviour
             } else
             {
                 spawnTimer += spawnDelay;
-                if(ShouldSpawn())
-                {
-                    DoSpawn();
-                }
+                DoSpawn();
             }
         }
     }
     private void LoadSpawnQueue()
     {
-        enemySpawnQueue = new Queue<EnemySpawnData>(enemiesToSpawn);
-
+        normalEnemySpawnQueue = new Queue<EnemySpawnData>();
+        auraEnemySpawnQueue = new Queue<EnemySpawnData>();
+        foreach(EnemySpawnData data in enemiesToSpawn)
+        {
+            if(data.aura.IsSpecial())
+            {
+                auraEnemySpawnQueue.Enqueue(data);
+            } else
+            {
+                normalEnemySpawnQueue.Enqueue(data);
+            }
+        }
     }
     public void StartSpawning()
     {
         Debug.Log("Spawning Enemies...");
         enemiesLeft = EnemyCountToSpawn;
-        auraEnemiesLeft = numAura;
+        auraEnemiesLeft = AuraCountToSpawn;
         enemiesOnScreen.Clear();
         LoadSpawnQueue();
-        while (ShouldSpawn())
+        for (int i = 0; i < enemyOnScreen; i++)
         {
             DoSpawn();
         }
     }
 
-    /// <summary>
-    /// Checks if spawning an enemy would exceed the max on screen values.
-    /// </summary>
-    /// <returns>True if spawning the next enemy is okay</returns>
-    private bool ShouldSpawn()
+    private EnemySpawnData PickSpawnData()
     {
-        if(enemiesOnScreen.Count >= enemyOnScreen)
+        //if we can spawn an aura enemy, do so
+        if(auraEnemiesLeft > 0 && auraEnemiesOnScreen < auraOnScreen && auraEnemySpawnQueue.Count > 0)
         {
-            return false;
+            return auraEnemySpawnQueue.Dequeue();
         }
-        EnemySpawnData data = enemySpawnQueue.Peek();
-        if(data.aura.IsSpecial() && auraEnemiesOnScreen >= auraOnScreen)
+        //if we can spawn a normal enemy, do so
+        if(enemiesLeft > 0 && enemiesOnScreen.Count < enemyOnScreen && normalEnemySpawnQueue.Count > 0)
         {
-            return false;
-        }     
-        return true;
+            return normalEnemySpawnQueue.Dequeue();
+        }
+
+        return default;
     }
+
+
     private void DoSpawn()
     {
-        EnemySpawnData spawnData = enemySpawnQueue.Dequeue();
+        EnemySpawnData spawnData = PickSpawnData();
+        if(spawnData.Equals(default(EnemySpawnData)))
+        {
+            // Both queues are empty, we are done spawning
+            return;
+        }
         
         Enemy instance = spawnData.spawnpoint.SpawnEnemy(spawnData.enemy, spawnData.aura);
         enemiesOnScreen.Add(instance);
@@ -173,10 +199,6 @@ public class ScreenSpawner : MonoBehaviour
             auraEnemiesOnScreen++;
             auraEnemiesLeft--;
         }
-
-        if(enemySpawnQueue.Count == 0) {
-            LoadSpawnQueue();
-        }
     }
 
     /// <summary>
@@ -185,19 +207,22 @@ public class ScreenSpawner : MonoBehaviour
     /// <param name="enemyThatDied"></param>
     private void OnEnemyDeath(Enemy enemyThatDied)
     {
+        Debug.Log($"Enemy {enemyThatDied.name} has died.");
         Health healthInstance = enemyThatDied.GetComponent<Health>();
         if(healthInstance.HasAura())
         {
             auraEnemiesOnScreen--;
         }
         enemiesOnScreen.Remove(enemyThatDied);
-        enemyThatDied.GetComponent<Health>().onDeath -= () => OnEnemyDeath(enemyThatDied);
-        //TODO Enemies should probably find a way to end themselves.
-        Destroy(enemyThatDied.gameObject);
-        if(!isCurrentlySpawning)
+        if (spawningComplete)
+        {
+            onWaveComplete?.Invoke();
+            Debug.Log("Wave Complete");
+        } else if(!isCurrentlySpawning)
         {
             isCurrentlySpawning = true;
             spawnTimer = spawnDelay;
         }
+        enemyThatDied.GetComponent<Health>().onDeath -= () => OnEnemyDeath(enemyThatDied);
     }
 }
