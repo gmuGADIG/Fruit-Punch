@@ -54,7 +54,10 @@ public class InnerBillboard : MonoBehaviour
         Mat.SetVector("_CamToTexScale", new Vector4(texture.width / referenceRes.x,texture.height / referenceRes.y,0,0));
     }
 
-    void OnValidate()
+    void OnValidate() => UpdateShaderTex();
+    private void Start() => UpdateShaderTex();
+
+    void UpdateShaderTex()
     {
         Mat.SetTexture("_MainTex", texture);
     }

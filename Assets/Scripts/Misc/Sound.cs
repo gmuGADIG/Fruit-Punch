@@ -1,29 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
-[System.Serializable]
-public class Sound : MonoBehaviour
+[CreateAssetMenu(fileName = "NewSound", menuName = "Sound")]
+public class Sound : ScriptableObject
 {
-    int id;
-    string soundInfo;
-    AudioClip soundAudio;
-    public Sound(int ID, string info, AudioClip clip)
+    public AudioClip[] audioVariants;
+
+    [Range(0f, 2f)]
+    public float volume = 1f;
+    [Range(0f, 1f)]
+    public float volumeVariance = .1f;
+
+    [Range(.1f, 3f)]
+    public float pitch = 1f;
+    [Range(0f, 1f)]
+    public float pitchVariance = .1f;
+
+    public float minimumDistance = 10f;
+    public bool loop = false;
+
+    public AudioMixerGroup mixerGroup;
+
+    [HideInInspector]
+    public AudioSource source;
+
+    /// <summary>
+    /// Gets an audio clip from audioVariants.
+    /// </summary>
+    /// <returns>A random audio clip from audioVariants. </returns>
+    public AudioClip GetRandomAudioClip()
     {
-        id = ID;
-        soundInfo = info;
-        soundAudio = clip;
-    }
-    public int getID()
-    {
-        return id;
-    }
-    public string getSoundInfo()
-    {
-        return soundInfo;
-    }
-    public AudioClip getAudio()
-    {
-        return soundAudio;
+        if (audioVariants.Length == 0)
+        {
+            return null;
+        }
+        return audioVariants[Random.Range(0, audioVariants.Length)];
     }
 }

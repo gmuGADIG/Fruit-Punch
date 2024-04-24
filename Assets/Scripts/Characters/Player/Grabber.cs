@@ -82,18 +82,24 @@ public class Grabber : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null)
+        if (grabbable != null && grabbable.enabled)
         {
             currentOverlaps.Add(grabbable);
             currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
             grabbable.InGrabbingRange();
+
+            grabbable.disabled += () => {
+                if (currentOverlaps.Remove(grabbable)) {
+                    grabbable.OutOfGrabbingRange();
+                }
+            };
         }
     }   
 
     void OnTriggerExit(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null)
+        if (grabbable != null && grabbable.enabled)
         {
             grabbable.OutOfGrabbingRange();
             currentOverlaps.Remove(grabbable);
