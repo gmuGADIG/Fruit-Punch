@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 /// <summary>
 /// Lets the play grab any nearby grabbables (items or enemies). <br/>
@@ -16,7 +17,9 @@ public class Grabber : MonoBehaviour
     
     [Tooltip("The force (not speed) applied to thrown objects. Heavier objects will be slower.")]
     [SerializeField] float throwForce;
-    
+
+    [Tooltip("The radius of which the player has the ability to grab an object.")]
+    [SerializeField] float grabRadius = 1f;
     List<Grabbable> currentOverlaps = new();
     
     public bool IsGrabbing => this.transform.childCount > 0;
@@ -42,9 +45,14 @@ public class Grabber : MonoBehaviour
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
+        OnRelease(); // Sometimes its called sometimes its not, and when it is't it brings Unity to it's knees. 
     }
 
-    
+    public Grabbable item;
+
+    public float grabCoolDown = 2f;
+    public float currentTime;
+
     /// <summary>
     /// Attempts to grab nearby grabbables. Returns false if nothing can be grabbed. <br/>
     /// Otherwise, re-parents the grabbable and invokes its relevant events.
@@ -52,22 +60,55 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        if (currentOverlaps.Count == 0) return false;
+        if (currentTime <= 0.0f) {
+            //currentOverlaps.Clear();
+            Collider[] grabs = Physics.OverlapSphere(transform.position, grabRadius);
 
-        var item = currentOverlaps[0];
+            if (grabs != null && grabs.Length > 0)
+            {
+                for (int i = 0; i < grabs.Length; i++)
+                {
+                    if (grabs[i].TryGetComponent<Grabbable>(out var action))
+                    {
+                        currentOverlaps.Add(action);
+                        currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
+                        action.InGrabbingRange();
+                        break;
+                    }
+                }
+            }
 
-        // If the item has a health component and its aura isn't vulnerable to throw attacks, cancel grab.
-        // todo: this also cancels the grab even if another vulnerable enemy is within range. might be worth a fix.
-        if (item.TryGetComponent<Health>(out var health))
-        {
-            if (!health.IsVulnerableTo(AuraType.Throw)) return false;
-            if (health.CurrentHealth <= 0) return false;
+
+            if (currentOverlaps.Count == 0) return false;
+
+            item = currentOverlaps[0];
+
+            //Checks for Health component
+            if (item.GetComponent<Health>())
+            {
+                //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
+                if (!item.gameObject.GetComponent<Health>().IsVulnerableTo(AuraType.Throw)) return false;
+                if (health.CurrentHealth <= 0) return false;
+            }
+
+            item.Grab();
+            item.transform.SetParent(this.transform);
+            item.transform.position = this.transform.position;
+            item.onForceRelease.AddListener(ForceReleaseCallback);
+
+
+            /*if (item != null)
+            {
+                item.OutOfGrabbingRange();
+                currentOverlaps.Remove(item);
+            }*/
+            return true;
         }
-        item.Grab();
-        item.transform.SetParent(this.transform);
-        item.transform.position = this.transform.position;
-        item.onForceRelease.AddListener(ForceReleaseCallback);
-        return true;
+        else
+        {
+            currentTime -= Time.deltaTime;
+            return false;
+        }
     }
 
     /// <summary>
@@ -82,6 +123,17 @@ public class Grabber : MonoBehaviour
         onForceRelease?.Invoke();
     }
 
+
+    public void OnRelease()
+    {
+        item.OutOfGrabbingRange();
+        currentOverlaps.Remove(item);
+        
+        item = null;
+        currentOverlaps.Clear();
+    }
+
+    /*
     void OnTriggerEnter(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
@@ -108,4 +160,6 @@ public class Grabber : MonoBehaviour
             currentOverlaps.Remove(grabbable);
         }
     }
+    */
+    
 }
