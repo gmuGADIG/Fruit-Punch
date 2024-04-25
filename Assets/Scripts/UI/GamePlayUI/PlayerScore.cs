@@ -15,6 +15,7 @@ public class PlayerScore : MonoBehaviour
     {
         public string rankName;
         public int pointThreshold;
+        public Sprite rankImage;
 
     }
     [Tooltip("Top rank at index 0, descending Order")]
@@ -52,9 +53,19 @@ public class PlayerScore : MonoBehaviour
         return tempRank;
     }
 
+    public Sprite getRankImage()
+    {
+        Sprite tempRankSprite = null;
+        for (int i = rankList.Length - 1; i >= 0; i--)
+        {
+            if (playerScore > rankList[i].pointThreshold) { tempRankSprite = rankList[i].rankImage; }
+        }
+        return tempRankSprite;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-        updateScoreAndRank();
+        //updateScoreAndRank();
     }
 }

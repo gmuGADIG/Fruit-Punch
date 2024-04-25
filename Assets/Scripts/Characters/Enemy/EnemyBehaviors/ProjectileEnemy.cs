@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 class ProjectileEnemy : Enemy {
     [Tooltip("Minimum distance from the player in order to shoot.")]
@@ -28,11 +29,9 @@ class ProjectileEnemy : Enemy {
         var pos = transform.position - aggressiveCurrentTarget.position;
         var absPos = pos.Abs();
 
-        var deltaX = Mathf.Abs(transform.position.x - aggressiveCurrentTarget.position.x);
-        var deltaZ = Mathf.Abs(transform.position.z - aggressiveCurrentTarget.position.z);
-        if (minX <= absPos.x && absPos.x <= maxX && absPos.z <= fuzzyZ) {
-            return EnemyState.Attacking; // we can shoot them!
-        }
+        // if (minX <= absPos.x && absPos.x <= maxX && absPos.z <= fuzzyZ) {
+        //     return EnemyState.Attacking; // we can shoot them!
+        // }
 
         Vector3 goalPos = new();
         var signs = new Vector3(
@@ -56,12 +55,11 @@ class ProjectileEnemy : Enemy {
         goalPos += aggressiveCurrentTarget.position;
         goalPos.y = transform.position.y;
 
-        NMA.SetDestination(goalPos);
-        // transform.position = Vector3.MoveTowards(
-        //     transform.position,
-        //     goalPos,
-        //     walkingSpeed * Time.deltaTime
-        // );
+        var atTarget = WalkTowards(goalPos, walkingSpeed);
+        if (atTarget)
+        {
+            return EnemyState.Attacking; // We can shoot them!
+        }
 
         if (Application.isEditor) {
             if (aggressiveMarker == null) {
