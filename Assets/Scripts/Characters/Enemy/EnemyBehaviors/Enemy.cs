@@ -79,7 +79,7 @@ public class Enemy : MonoBehaviour
     protected GroundCheck groundCheck;
     protected Grabbable grabbable;
     protected Rigidbody rb;
-    protected Health health;
+    private Health health;
     protected StateMachine<EnemyState> stateMachine = new();
 
     [SerializeField] protected GameObject debugMarkerPrefab;
