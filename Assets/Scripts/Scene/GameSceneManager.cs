@@ -71,11 +71,10 @@ public class GameSceneManager : MonoBehaviour
     {
         currentState = CameraState.frozen;
         frozenPos = pos;
-        Debug.Log("Spawner exits?");
         if (currentScene.spawner != null)
         {
-            Debug.Log("Yes!!");
             currentScene.spawner.StartSpawning();
+            currentScene.spawner.onWaveComplete.AddListener(UnfreezeCamera);
         }
     }
 
