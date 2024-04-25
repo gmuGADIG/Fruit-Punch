@@ -61,8 +61,8 @@ public class Grabber : MonoBehaviour
         if (item.TryGetComponent<Health>(out var health))
         {
             if (!health.IsVulnerableTo(AuraType.Throw)) return false;
+            if (health.CurrentHealth <= 0) return false;
         }
-        //if (item.health <= 0) return false; --Fix
         item.Grab();
         item.transform.SetParent(this.transform);
         item.transform.position = this.transform.position;
