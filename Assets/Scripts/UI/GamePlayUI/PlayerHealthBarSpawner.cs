@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealthBarSpawner : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class PlayerHealthBarSpawner : MonoBehaviour
 
         bar.gameObject.transform.parent = healthBarCanvasObject.transform;
         bar.transform.localScale = playerHealthBarUIPrefab.transform.localScale;
+        bar.gameObject.GetComponent<RectTransform>().position = new Vector3(bar.gameObject.GetComponent<RectTransform>().position.x, bar.gameObject.GetComponent<RectTransform>().position.y , -5);
 
         bar.GetComponent<PlayerHealthBarUI>().playerHealth = player.GetComponent<Health>();
 

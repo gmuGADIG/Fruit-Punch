@@ -1,58 +1,171 @@
+using UnityEngine.Audio;
+using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.InputSystem;
-[RequireComponent(typeof(AudioSource))]
+
 public class SoundManager : MonoBehaviour
 {
-    // placeholder
-    public string sound = "ArcadeTest";
+    public static SoundManager Instance { get; private set; }
+    public int numOfPositionalSources = 100;
 
-    // May be redeveloped in a cleaner Soundbank.cs file
-    public AudioClip[] soundBank;
+    public AudioMixerGroup mixerGroup;
 
-    public static SoundManager Current { get; private set; }
+    [SerializeField]
+    private Sound[] sounds;
 
-    public void Start()
+    private Queue<PositionalAudioSource> positionalSources = new Queue<PositionalAudioSource>();
+    private List<AudioSource> toUnpause = new List<AudioSource>();
+
+    void Awake()
     {
-        if (Current == null)
+        if (Instance != null)
         {
-            Current = this;
+            Destroy(gameObject);
         }
         else
         {
-            Destroy(this);
+            Instance = this;
+            //DontDestroyOnLoad(gameObject);
         }
-        // warnings should go away when a sound name is linked?
-        // May be redeveloped in a cleaner Soundbank.cs file
-        //soundBank[0] = new Sound(0, "playerWalk", AudioClip.Create("ArcadeTest.wav", 44100 * 2, 1, 44100, true, true, OnAudioRead));
-        //soundBank[1] = new Sound(1, "playerJump", AudioClip.Create("ArcadeTest.wav", 44100 * 2, 1, 44100, true, true, OnAudioRead));
-        //soundBank[2] = new Sound(2, "playerStrike", AudioClip.Create("ArcadeTest.wav", 44100 * 2, 1, 44100, true, true, OnAudioRead));
-        //soundBank[3] = new Sound(3, "playerPearry", AudioClip.Create("ArcadeTest.wav", 44100 * 2, 1, 44100, true, true, OnAudioRead));
-        //soundBank[4] = new Sound(4, "playerDie", AudioClip.Create("ArcadeTest.wav", 44100 * 2, 1, 44100, true, true, OnAudioRead));
-    }
-    public void Update()
-    {
-
-        //playSound(sound);
-    }
-    public static void playSound(string sound)
-    {
-        foreach(AudioClip s in Current.soundBank)
+        foreach (Sound s in sounds)
         {
-            if (s.name.Contains(sound))
+            s.source = gameObject.AddComponent<AudioSource>();
+            s.source.clip = s.GetRandomAudioClip();
+            s.source.loop = s.loop;
+            s.source.outputAudioMixerGroup = s.mixerGroup;
+        }
+        Transform positionalSourceParent = new GameObject("Positional Audio Sources").transform;
+        for (int i = 0; i < numOfPositionalSources; i++)
+        {
+            PositionalAudioSource newPositional = new GameObject("Positional Audio Source").AddComponent<PositionalAudioSource>();
+            newPositional.transform.parent = positionalSourceParent;
+            positionalSources.Enqueue(newPositional);
+        }
+    }
+
+    /// <summary>
+    /// Play sound with name globally. This means that the sound will be the same volume regardless of where the audio listener is located
+    /// and will not sound 3D.
+    /// </summary>
+    /// <param soundName="soundName">The name used to identify the sound. Should match the Sound asset filename.</param>
+    /// <returns>The AudioSource that is playing the sound. null if sound not found.</returns>
+    public AudioSource PlaySoundGlobal(string soundName)
+    {
+        int soundID = GetSoundIndex(soundName);
+        if (soundID < 0 || soundID >= sounds.Length)
+        {
+            Debug.LogWarning("Invalid Sound ID: " + soundID);
+            return null;
+        }
+        Sound sound = sounds[soundID];
+
+        sound.source.clip = sound.GetRandomAudioClip();
+        sound.source.volume = sound.volume * (1f + UnityEngine.Random.Range(-sound.volumeVariance / 2f, sound.volumeVariance / 2f));
+        sound.source.pitch = sound.pitch * (1f + UnityEngine.Random.Range(-sound.pitchVariance / 2f, sound.pitchVariance / 2f));
+
+        sound.source.Play();
+        return sound.source;
+    }
+
+    /// <summary>
+    /// Play sound with name soundName at position. The AudioSource will use 3D sound settings.
+    /// </summary>
+    /// <param soundName="soundName">The name used to identify the sound. Should match the Sound asset filename.</param>
+    /// <returns>The AudioSource that is playing the sound. null if sound not found.</returns>
+    public PositionalAudioSource PlaySoundAtPosition(string soundName, Vector3 position)
+    {
+        int soundID = GetSoundIndex(soundName);
+        if (soundID < 0 || soundID >= sounds.Length)
+        {
+            Debug.LogWarning("Invalid Sound ID: " + soundID);
+            return null;
+        }
+        Sound sound = sounds[soundID];
+
+        PositionalAudioSource source = positionalSources.Dequeue();
+        source.transform.SetParent(null);
+        source.SetSound(sound);
+        source.transform.position = position;
+        source.Play(sound.mixerGroup);
+        positionalSources.Enqueue(source);
+        return source;
+    }
+
+    /// <summary>
+    /// Play sound with name soundName at position. Takes an extra parameter for parenting the AudioSource.
+    /// </summary>
+    /// <param soundName="soundName">The name used to identify the sound. Should match the Sound asset filename.</param>
+    /// <param parent="parent"> The transform the AudioSource should be parented to. </param>
+    /// <returns>The AudioSource that is playing the sound. null if not found.</returns>
+    public PositionalAudioSource PlaySoundAtPosition(string soundName, Vector3 position, Transform parent)
+    {
+        PositionalAudioSource source = PlaySoundAtPosition(soundName, position);
+        //source.SetFollowTarget(parent);
+        source.transform.SetParent(parent);
+        return source;
+    }
+
+    /// <summary>
+    /// Stops playing the sound with name soundName.
+    /// </summary>
+    /// <param soundName="soundName">The name used to identify the sound. Should match the Sound asset filename.</param>
+    public void StopPlayingGlobal(string soundName)
+    {
+        int soundID = GetSoundIndex(soundName);
+        Sound sound = sounds[soundID];
+        if (sound.source != null)
+        {
+            sound.source.volume = sound.volume * (1f + UnityEngine.Random.Range(-sound.volumeVariance / 2f, sound.volumeVariance / 2f));
+            sound.source.pitch = sound.pitch * (1f + UnityEngine.Random.Range(-sound.pitchVariance / 2f, sound.pitchVariance / 2f));
+
+            sound.source.Stop();
+        }
+    }
+
+    /// <summary>
+    /// Gets the index of a sound with string name from the sounds[] array. The index will be greater than 0 and less than
+    /// the total number of sounds.
+    /// Logs a warning if the sound is not found.
+    /// </summary>
+    /// <param name="name">The name used to identify the sound. Should match the Sound asset filename.</param>
+    /// <returns>The sound index. -1 if the sound is not found.</returns>
+    int GetSoundIndex(string name)
+    {
+        int id = Array.FindIndex(sounds, sound => sound.name == name);
+        if (id == -1)
+        {
+            Debug.LogWarning("Sound with name: " + name + " does not exist!");
+        }
+        return id;
+    }
+
+    /// <summary>
+    /// Pauses all audio sources in the scene.
+    /// </summary>
+    public void PauseAllSounds()
+    {
+        AudioSource[] sources = FindObjectsOfType<AudioSource>();
+        for (int i = 0; i < sources.Length; i++)
+        {
+            if (sources[i].isPlaying)
             {
-                Debug.Log("Found match with " + s.name);
-                AudioSource audio = Current.GetComponent<AudioSource>();
-                audio.clip = s;
-                audio.Play();
-                return;
+                sources[i].Pause();
+                toUnpause.Add(sources[i]);
             }
         }
-        Debug.Log("No match found with " + sound);
     }
-    static void OnAudioRead(float[] data)
+
+    /// <summary>
+    /// Unpauses all audio sources that were paused with PauseAllSounds(). If this method is called before PauseAllSounds() it will
+    /// do nothing.
+    /// </summary>
+    public void UnPauseAllSounds()
     {
-        // PCM callback?
+        for (int i = 0; i < toUnpause.Count; i++)
+        {
+            toUnpause[i].UnPause();
+        }
+        toUnpause.Clear();
     }
 }

@@ -53,7 +53,7 @@ public class Grabbable : MonoBehaviour
             agent.enabled = false;
     }
 
-    public void Release()
+    public void Throw()
     {
         currentlyGrabbed = false;
         onThrow?.Invoke();
