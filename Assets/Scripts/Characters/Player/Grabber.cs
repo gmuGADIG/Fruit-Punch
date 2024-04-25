@@ -88,6 +88,7 @@ public class Grabber : MonoBehaviour
             {
                 //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
                 if (!item.gameObject.GetComponent<Health>().IsVulnerableTo(AuraType.Throw)) return false;
+                if (health.CurrentHealth <= 0) return false;
             }
 
             item.Grab();
