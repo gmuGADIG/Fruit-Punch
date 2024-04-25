@@ -131,11 +131,12 @@ public class GameSceneManager : MonoBehaviour
             Camera cam = Camera.main;
             float height = 2f * cam.orthographicSize;
             float width = height * cam.aspect;
+            var halfWidth = width * .5f;
 
             var x = Mathf.Clamp(
                 mainCamera.transform.position.x,
-                averagePos.x - (width * .1f),
-                averagePos.x + (width * .25f)
+                averagePos.x - halfWidth * .3f,
+                averagePos.x + halfWidth * .8f
             );
 
             var newPos = mainCamera.transform.position;
