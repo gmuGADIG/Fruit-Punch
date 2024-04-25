@@ -14,7 +14,8 @@ public enum AuraType
     Pearry   = 1 << 3,
     EnemyAtk = 1 << 4,
     
-    Normal = Strike | Throw | JumpAtk | Pearry
+    Normal = Strike | Throw | JumpAtk | Pearry,
+    Everything = Strike | Throw | JumpAtk | Pearry | EnemyAtk
 }
 
 public struct DamageInfo
