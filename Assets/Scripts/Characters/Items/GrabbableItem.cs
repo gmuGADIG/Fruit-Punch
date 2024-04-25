@@ -22,5 +22,9 @@ public class GrabbableItem : MonoBehaviour
         {
             rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, groundDecel * Time.deltaTime);
         }
+        else if (!groundCheck.IsGrounded() && !rb.isKinematic)
+        {
+            rb.velocity = Vector3.MoveTowards(rb.velocity / rb.mass, Vector3.zero / rb.mass, groundDecel * Time.deltaTime);
+        }
     }
 }

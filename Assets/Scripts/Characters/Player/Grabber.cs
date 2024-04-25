@@ -41,7 +41,7 @@ public class Grabber : MonoBehaviour
         var throwDir = new Vector3(1, 1f, 0);
         if (facingLeft) throwDir.x *= -1;
         var item = GetGrabbedItem();
-        item.Release();
+        item.Throw();
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
@@ -112,10 +112,13 @@ public class Grabber : MonoBehaviour
 
     /// <summary>
     /// Callback function subscribed to each grabbed item's onForceRelease event. <br/>
-    /// This function simply invokes 
+    /// This function releases the item (calls item.Release and un-parents it) and invokes the grabber's onForceRelease event.
     /// </summary>
     void ForceReleaseCallback()
     {
+        var item = GetGrabbedItem();
+        item.transform.SetParent(null);
+        item.onForceRelease.RemoveListener(ForceReleaseCallback);
         onForceRelease?.Invoke();
     }
 
@@ -133,18 +136,24 @@ public class Grabber : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null)
+        if (grabbable != null && grabbable.enabled)
         {
             currentOverlaps.Add(grabbable);
             currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
             grabbable.InGrabbingRange();
+
+            grabbable.disabled += () => {
+                if (currentOverlaps.Remove(grabbable)) {
+                    grabbable.OutOfGrabbingRange();
+                }
+            };
         }
     }   
 
     void OnTriggerExit(Collider other)
     {
         var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null)
+        if (grabbable != null && grabbable.enabled)
         {
             grabbable.OutOfGrabbingRange();
             currentOverlaps.Remove(grabbable);
