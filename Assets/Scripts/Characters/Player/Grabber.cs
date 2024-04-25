@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 /// <summary>
 /// Lets the play grab any nearby grabbables (items or enemies). <br/>
@@ -44,8 +45,13 @@ public class Grabber : MonoBehaviour
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
+        OnRelease(); // Sometimes its called sometimes its not, and when it is't it brings Unity to it's knees. 
     }
 
+    public Grabbable item;
+
+    public float grabCoolDown = 2f;
+    public float currentTime;
 
     /// <summary>
     /// Attempts to grab nearby grabbables. Returns false if nothing can be grabbed. <br/>
@@ -54,44 +60,54 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        Collider[] grabs = Physics.OverlapSphere(transform.position, grabRadius);
-        if (grabs != null && grabs.Length > 0)
-        {
-            for (int i = 0; i <= grabs.Length; i++)
+        if (currentTime <= 0.0f) {
+            //currentOverlaps.Clear();
+            Collider[] grabs = Physics.OverlapSphere(transform.position, grabRadius);
+
+            if (grabs != null && grabs.Length > 0)
             {
-                if (grabs[i].TryGetComponent<Grabbable>(out var action))
+                for (int i = 0; i < grabs.Length; i++)
                 {
-                    currentOverlaps.Add(action);
-                    currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
-                    action.InGrabbingRange();
+                    if (grabs[i].TryGetComponent<Grabbable>(out var action))
+                    {
+                        currentOverlaps.Add(action);
+                        currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
+                        action.InGrabbingRange();
+                        break;
+                    }
                 }
             }
+
+
+            if (currentOverlaps.Count == 0) return false;
+
+            item = currentOverlaps[0];
+
+            //Checks for Health component
+            if (item.GetComponent<Health>())
+            {
+                //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
+                if (!item.gameObject.GetComponent<Health>().IsVulnerableTo(AuraType.Throw)) return false;
+            }
+
+            item.Grab();
+            item.transform.SetParent(this.transform);
+            item.transform.position = this.transform.position;
+            item.onForceRelease.AddListener(ForceReleaseCallback);
+
+
+            /*if (item != null)
+            {
+                item.OutOfGrabbingRange();
+                currentOverlaps.Remove(item);
+            }*/
+            return true;
         }
-
-
-        if (currentOverlaps.Count == 0) return false;
-
-        var item = currentOverlaps[0];
-
-        //Checks for Health component
-        if (item.GetComponent<Health>())
+        else
         {
-            //Checks if enemies are vulnerable throw attacks, if they are not then the grap is canceled
-            if (!item.gameObject.GetComponent<Health>().IsVulnerableTo(AuraType.Throw)) return false;
+            currentTime -= Time.deltaTime;
+            return false;
         }
-
-        item.Grab();
-        item.transform.SetParent(this.transform);
-        item.transform.position = this.transform.position;
-        item.onForceRelease.AddListener(ForceReleaseCallback);
-
-
-        /*if (item != null)
-        {
-            item.OutOfGrabbingRange();
-            currentOverlaps.Remove(item);
-        }*/
-        return true;
     }
 
     /// <summary>
@@ -101,6 +117,16 @@ public class Grabber : MonoBehaviour
     void ForceReleaseCallback()
     {
         onForceRelease?.Invoke();
+    }
+
+
+    public void OnRelease()
+    {
+        item.OutOfGrabbingRange();
+        currentOverlaps.Remove(item);
+        
+        item = null;
+        currentOverlaps.Clear();
     }
 
     /*
@@ -125,4 +151,5 @@ public class Grabber : MonoBehaviour
         }
     }
     */
+    
 }
