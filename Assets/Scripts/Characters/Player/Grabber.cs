@@ -62,7 +62,7 @@ public class Grabber : MonoBehaviour
         {
             if (!health.IsVulnerableTo(AuraType.Throw)) return false;
         }
-
+        //if (item.health <= 0) return false; --Fix
         item.Grab();
         item.transform.SetParent(this.transform);
         item.transform.position = this.transform.position;
