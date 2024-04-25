@@ -62,7 +62,14 @@ public class Player : MonoBehaviour
     float strike3Length = -1;
     float pearryLength = 3;
     
+    /// <summary>
+    /// True when the player can move on to the next part of the strike animation.
+    /// </summary>
     bool strikeAnimationOver = false;
+    /// <summary>
+    /// True when the player hit something during their strike animation.
+    /// </summary>
+    bool hasHitSomething = false;
 
     private bool FacingLeft => transform.localEulerAngles.y > 90;
 
@@ -75,6 +82,12 @@ public class Player : MonoBehaviour
         this.GetComponentOrError(out inputBuffer);
         this.GetComponentInChildrenOrError(out grabber);
         this.GetComponentInChildrenOrError(out groundCheck);
+
+        foreach (var hb in GetComponentsInChildren<HurtBox>(true)) {
+            hb.onHurt += damageInfo => {
+                hasHitSomething = true;
+            };
+        }
         
         // subscribe events
         grabber.onForceRelease += ForceReleaseCallback;
@@ -240,7 +253,10 @@ public class Player : MonoBehaviour
     {
         // avoid reading inputs before we entered this state
         inputBuffer.ClearAction("gameplay/Strike");
+
+        // make sure we only move onto the next strike animation when we're ready
         strikeAnimationOver = false;
+        hasHitSomething = false;
         
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
@@ -251,8 +267,9 @@ public class Player : MonoBehaviour
         rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
 
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
-        if (strikeAnimationOver && inputBuffer.CheckAction("gameplay/Strike"))
+        if (strikeAnimationOver && hasHitSomething && inputBuffer.CheckAction("gameplay/Strike"))
         {
+            print("next animation please");
             if (strikeState == 1) return PlayerState.Strike2;
             if (strikeState == 2) return PlayerState.Strike3;
         }
@@ -323,7 +340,11 @@ public class Player : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    public void OnStikeAnimationOver() {
+    /// <summary>
+    /// When called, it signals to the player script that the player can strike again for a combo. 
+    /// Should be called through an animation event.
+    /// </summary>
+    public void OnStrikeAnimationOver() {
         strikeAnimationOver = true;
     }
 }
