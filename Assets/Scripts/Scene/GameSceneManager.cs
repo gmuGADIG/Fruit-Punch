@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 public class GameSceneManager : MonoBehaviour
@@ -65,7 +66,6 @@ public class GameSceneManager : MonoBehaviour
         }
         mainCamera.transform.position = startPosition;
         currentState = CameraState.follow;
-        players = FindObjectsOfType<Player>().ToList();
     }
     public void FreezeCamera(Vector3 pos)
     {
@@ -115,9 +115,17 @@ public class GameSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (players.Count == 0)
+        {
+            players = FindObjectsOfType<Player>().ToList();
+        }
+        
         // Move the camera to follow the player if conditions are met
         if (currentState == CameraState.follow)
         {
+            if (players.Count == 0)
+                return;
+                
             Vector3 averagePos = Vector3.zero;
             for (int i = 0; i < players.Count; i++)
             {

@@ -15,18 +15,7 @@ public class PlayerSpawner : MonoBehaviour
     public Transform playerOneSpawnPoint;
     public Transform playerTwoSpawnPoint;
 
-    private void Awake()
-    {
-        StartCoroutine(DelayStartUp(1f));
-    }
-
-    public IEnumerator DelayStartUp(float delay)
-    {
-        yield return new WaitForSecondsRealtime(delay);
-        StartUp();
-    }
-
-    public void StartUp()
+    private void Start()
     {
         //game manger doesnt exist
         if (GameManager.gameManager == null)

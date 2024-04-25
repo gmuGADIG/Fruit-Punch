@@ -16,7 +16,6 @@ Max Health, Current Health, Decrease and Increase health functions.
 Magic of Events Implemented by Justin from designed code. 
 
 */
-[RequireComponent(typeof(Rigidbody))]
 public class Health : MonoBehaviour
 {
     public AuraType vulnerableTypes;
@@ -80,6 +79,7 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Damage(DamageInfo info)
     {
+        print("oww");
         if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {
