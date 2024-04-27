@@ -191,6 +191,7 @@ public class Player : MonoBehaviour
 
         if (playerInput.actions["gameplay/Pearry"].triggered)
         {
+            rb.velocity = new Vector3(0, rb.velocity.y, 0);
             return PlayerState.Pearry;
         }
         
@@ -259,7 +260,7 @@ public class Player : MonoBehaviour
 
         var animLengths = new[] { strike1Length, strike2Length, strike3Length };
         var thisAnimLength = animLengths[strikeState - 1];
-        if (stateMachine.timeInState >= thisAnimLength)
+        if (stateMachine.timeInState >= thisAnimLength || !groundCheck.IsGrounded())
         {
             return PlayerState.Normal;
         }
