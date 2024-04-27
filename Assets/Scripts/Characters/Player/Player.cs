@@ -260,7 +260,7 @@ public class Player : MonoBehaviour
 
         var animLengths = new[] { strike1Length, strike2Length, strike3Length };
         var thisAnimLength = animLengths[strikeState - 1];
-        if (stateMachine.timeInState >= thisAnimLength)
+        if (stateMachine.timeInState >= thisAnimLength || !groundCheck.IsGrounded())
         {
             return PlayerState.Normal;
         }
