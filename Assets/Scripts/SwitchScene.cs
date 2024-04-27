@@ -5,9 +5,11 @@ public class SwitchScene : MonoBehaviour
     public static SwitchScene switchScene;
 
     [SerializeField]
-    public string MainMenu="MainMenu";
+    public string MainMenu = "MainMenu";
     [SerializeField]
-    public string Options="OptionsMenu";
+    public string Options = "OptionsMenu";
+    [SerializeField]
+    public string Codex = "CodexMenu";
     [SerializeField]
     public string CharacterSelect="CharacterSelect";
     [SerializeField]
