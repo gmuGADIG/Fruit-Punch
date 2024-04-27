@@ -28,6 +28,7 @@ public class GameSceneManager : MonoBehaviour
     [SerializeField]
     public float cameraSmoothSpeed = 0.125f; // Smoothness of camera movement
     [SerializeField]
+    [Tooltip("The position the camera will start at. Only used if it can't find any players.")]
     public Vector3 startPosition = new Vector3(0f, 2f); // Adjust as needed
     [SerializeField]
     public Vector3 cameraOffset = new Vector3(0f, 2f); // Adjust as needed
@@ -64,19 +65,26 @@ public class GameSceneManager : MonoBehaviour
             currentSceneNumber = 0;
             currentScene = scenes[0];
         }
-        mainCamera.transform.position = startPosition;
         currentState = CameraState.follow;
+        
+        // WARN: Players are currently spawned 1 second into the game, not immediately (see PlayerSpawner.cs)
+        // This is a problem for future me :)
         players = FindObjectsOfType<Player>().ToList();
+        
+        if (players.Count() == 0) {
+            mainCamera.transform.position = startPosition;
+        } else {
+            mainCamera.transform.position = GetAveragePlayerPosition();
+        }
     }
     public void FreezeCamera(Vector3 pos)
     {
         currentState = CameraState.frozen;
         frozenPos = pos;
-        Debug.Log("Spawner exits?");
         if (currentScene.spawner != null)
         {
-            Debug.Log("Yes!!");
             currentScene.spawner.StartSpawning();
+            currentScene.spawner.onWaveComplete.AddListener(UnfreezeCamera);
         }
     }
 
@@ -113,20 +121,30 @@ public class GameSceneManager : MonoBehaviour
         UnfreezeCamera();
     }
 
+    /// <summary>
+    /// Gets the average player position offset by cameraOffset and the z component set to mainCamera's z position.
+    /// </summary>
+    /// <returns>Definitely the average player position.</returns>
+    Vector3 GetAveragePlayerPosition() {
+        Vector3 averagePos = Vector3.zero;
+        for (int i = 0; i < players.Count; i++)
+        {
+            averagePos += players[i].transform.position;
+        }
+        averagePos /= players.Count;
+        averagePos += cameraOffset;
+        averagePos.z = mainCamera.transform.position.z;
+
+        return averagePos;
+    }
+
     // Update is called once per frame
     void Update()
     {
         // Move the camera to follow the player if conditions are met
         if (currentState == CameraState.follow)
         {
-            Vector3 averagePos = Vector3.zero;
-            for (int i = 0; i < players.Count; i++)
-            {
-                averagePos += players[i].transform.position;
-            }
-            averagePos /= players.Count;
-            averagePos += cameraOffset;
-            averagePos.z = mainCamera.transform.position.z;
+            Vector3 averagePos = GetAveragePlayerPosition();
 
             Camera cam = Camera.main;
             float height = 2f * cam.orthographicSize;
@@ -136,7 +154,8 @@ public class GameSceneManager : MonoBehaviour
             var x = Mathf.Clamp(
                 mainCamera.transform.position.x,
                 averagePos.x - halfWidth * .3f,
-                averagePos.x + halfWidth * .8f
+                mainCamera.transform.position.x
+                //averagePos.x + halfWidth * .8f
             );
 
             var newPos = mainCamera.transform.position;
