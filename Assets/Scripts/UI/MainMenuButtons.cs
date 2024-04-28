@@ -32,7 +32,7 @@ public class MainMenuButtons : MonoBehaviour
     /// </summary>
     public void Codex()
     {
-        SceneManager.LoadSceneAsync(SwitchScene.switchScene.Codex, LoadSceneMode.Additive);
+        SceneManager.LoadScene(SwitchScene.switchScene.Codex);
     }
     /// <summary>
     /// Quits the game

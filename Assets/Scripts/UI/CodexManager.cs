@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Codex : MonoBehaviour
 {
@@ -98,6 +99,11 @@ public class Codex : MonoBehaviour
     {
         CreateCodex();
         SwitchCategory(0);
+    }
+
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene(FindAnyObjectByType<SwitchScene>().MainMenu);
     }
 
     void CreateCodex()
