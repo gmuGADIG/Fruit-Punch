@@ -2,11 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor.U2D;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using static UnityEditor.Timeline.TimelinePlaybackControls;
+using UnityEngine.SceneManagement;
 
 public class Codex : MonoBehaviour
 {
@@ -101,6 +99,11 @@ public class Codex : MonoBehaviour
     {
         CreateCodex();
         SwitchCategory(0);
+    }
+
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene(FindAnyObjectByType<SwitchScene>().MainMenu);
     }
 
     void CreateCodex()

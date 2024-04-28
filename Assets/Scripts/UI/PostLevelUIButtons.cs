@@ -14,6 +14,6 @@ public class PostLevelUIButtons : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(FindObjectOfType<LoadPostLevelUI>().nextLevelName); //Gets next level name from the level loader
     }
 }

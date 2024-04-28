@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,8 @@ public class MainMenuButtons : MonoBehaviour
 {
     [SerializeField]
     public string SelectScene;
+    [SerializeField] 
+    public string CodexScene;
     [SerializeField]
     public string OptionsScene;
 
@@ -23,6 +26,13 @@ public class MainMenuButtons : MonoBehaviour
     public void Options()
     {
         SceneManager.LoadSceneAsync(SwitchScene.switchScene.Options, LoadSceneMode.Additive);
+    }
+    /// <summary>
+    /// Goes to the Codex
+    /// </summary>
+    public void Codex()
+    {
+        SceneManager.LoadScene(SwitchScene.switchScene.Codex);
     }
     /// <summary>
     /// Quits the game
