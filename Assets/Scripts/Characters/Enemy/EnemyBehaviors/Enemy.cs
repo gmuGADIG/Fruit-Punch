@@ -115,6 +115,7 @@ public class Enemy : MonoBehaviour
     }
 
     protected virtual void OnHurt(DamageInfo damageInfo) {
+        SoundManager.Instance.PlaySoundAtPosition("EnemyHurt", transform.position);
         stateMachine.SetState(EnemyState.Hurt);
     }
 

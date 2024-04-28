@@ -192,8 +192,6 @@ public class Player : MonoBehaviour
 
         if (playerInput.actions["gameplay/Jump"].triggered)
         {
-            //Placeholder test for sound manager
-            SoundManager.Instance.PlaySoundAtPosition("ArcadeTest", transform.position);
             return PlayerState.Jump;
         }
         
@@ -219,6 +217,7 @@ public class Player : MonoBehaviour
     void JumpEnter()
     {
         anim.Play("PlayerJump");
+        SoundManager.Instance.PlaySoundAtPosition("Jump", transform.position);
         rb.velocity += Vector3.up * jumpSpeed;
     }
     
@@ -261,6 +260,10 @@ public class Player : MonoBehaviour
         
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
+        SoundManager.Instance.PlaySoundAtPosition(
+            (strikeState == 3)  ? "HitHeavy"  : "Hit",
+            transform.position
+        );
     }
 
     PlayerState StrikeUpdate(int strikeState)

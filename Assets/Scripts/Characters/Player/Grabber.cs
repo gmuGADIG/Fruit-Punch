@@ -95,7 +95,7 @@ public class Grabber : MonoBehaviour
             item.transform.SetParent(this.transform);
             item.transform.position = this.transform.position;
             item.onForceRelease.AddListener(ForceReleaseCallback);
-
+            SoundManager.Instance.PlaySoundAtPosition("Pickup", this.transform.position);
 
             /*if (item != null)
             {

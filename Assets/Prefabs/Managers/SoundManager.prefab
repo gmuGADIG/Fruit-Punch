@@ -45,8 +45,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d7df08b7ac5b1145b3a21d2bb9b082b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sound: ArcadeTest
-  soundBank: []
+  numOfPositionalSources: 100
+  mixerGroup: {fileID: 0}
+  sounds:
+  - {fileID: 11400000, guid: afd364078e1ac464dab658889e06050c, type: 2}
+  - {fileID: 11400000, guid: 75ca260d94e14fd458dedffdea6226c8, type: 2}
+  - {fileID: 11400000, guid: 73964698a3fdfb24a837c3d08c1b064c, type: 2}
+  - {fileID: 11400000, guid: bc595333b7ed76649af53325caa53905, type: 2}
+  - {fileID: 11400000, guid: 2f59198e1b961a64d8b91d5d5991aa95, type: 2}
+  - {fileID: 11400000, guid: cf2baea8e5e5d7d40bba70078fb8f5db, type: 2}
+  - {fileID: 11400000, guid: bf19ef0ce3a413c4fa2fceffa2b16e9d, type: 2}
+  - {fileID: 11400000, guid: 66ad52f4b87cc8a4eb64c94b3b9d0bbb, type: 2}
 --- !u!82 &1065912249317691874
 AudioSource:
   m_ObjectHideFlags: 0
