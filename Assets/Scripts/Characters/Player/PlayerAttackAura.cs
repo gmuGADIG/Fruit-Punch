@@ -22,6 +22,7 @@ public class PlayerAttackAura : MonoBehaviour
     {
         auraSprite = GetComponent<SpriteRenderer>();
         player = GetComponentInParent<Player>();
+        SetAuraColor(PlayerState.Normal);
         player.OnPlayerStateChange += SetAuraColor;
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem.Processors;
 
 public class GameSceneManager : MonoBehaviour
@@ -19,7 +20,6 @@ public class GameSceneManager : MonoBehaviour
         public Transition transitionType;
         public Vector3 transitionLocation;
         public ScreenSpawner spawner;
-
     }
 
     public GameObject mainCamera;
@@ -77,6 +77,7 @@ public class GameSceneManager : MonoBehaviour
             mainCamera.transform.position = GetAveragePlayerPosition();
         }
     }
+
     public void FreezeCamera(Vector3 pos)
     {
         currentState = CameraState.frozen;

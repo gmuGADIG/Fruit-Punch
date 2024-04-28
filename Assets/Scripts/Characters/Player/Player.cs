@@ -38,8 +38,6 @@ public class Player : MonoBehaviour
     private GroundCheck groundCheck;
     private float halfPlayerSizeX;
 
-    [SerializeField] SpriteRenderer playerSprite;
-
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
     
@@ -152,12 +150,26 @@ public class Player : MonoBehaviour
             playerInput.actions["gameplay/Up/Down"].ReadValue<float>()
         ).normalized * maxSpeed;
 
+        if (CurrentState == PlayerState.Normal)
+        {
+            if (targetVel.sqrMagnitude != 0)
+            {
+                anim.Play("Walk");
+            }
+            else
+            {
+                anim.Play("Idle");
+            }
+        }
+
+
         targetVel.y = rb.velocity.y;
         rb.velocity = Vector3.MoveTowards(
             rb.velocity,
             targetVel,
             runAccel * Time.deltaTime * controlMult
         );
+
 
         // flip according to direction
         if (targetVel.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
