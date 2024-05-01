@@ -26,6 +26,7 @@ public class BasicCutsceneCamera : MonoBehaviour
     // It gets set to true when any player hits their strike input.
     public bool panelSkipped = false;
 
+    public string nextScene = "Scenes/Build Scenes/DemoLevel02";
 
 /// <summary>
 /// 
@@ -129,7 +130,7 @@ public class BasicCutsceneCamera : MonoBehaviour
         }
         // Wait a frame, though, because IEnumerator said so.
         yield return null;
-        SceneManager.LoadScene(SwitchScene.switchScene.Demo);
+        SceneManager.LoadScene(nextScene);
     }
 
     void Skip(InputAction.CallbackContext _context)

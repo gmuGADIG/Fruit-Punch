@@ -35,7 +35,6 @@ public class PlayerSpawner : MonoBehaviour
             return;
         }
 
-        //unassigned public var
         if (healthBarCanvasObject == null)
         {
             Debug.LogWarning("HealthBarCanvasObject NOT ASSIGNED");
@@ -43,60 +42,26 @@ public class PlayerSpawner : MonoBehaviour
             if (healthBarCanvasObject == null)
                 Debug.LogError("HealthBarCanvasObject NOT FOUND AND NOT ASSIGNED");
         }
-
-        GameObject pOne = null;
-        GameObject pTwo = null;
-
-        switch (GameManager.gameManager.PlayerCount())
+        
+        for (int i = 0; i < GameManager.gameManager.PlayerCount(); i++)
         {
-
-            case 0:
-                Debug.LogError("gameManager.PlayerCount() was 0");
-                break;
-            case 1:
-                pOne = SpawnPlayer(GameManager.gameManager.playerOne, true);
-                barSpawner.SpawnHealthBar(GameManager.gameManager.playerOne, pOne);
-                break;
-            case 2:
-                pOne = SpawnPlayer(GameManager.gameManager.playerOne, true);
-                barSpawner.SpawnHealthBar(GameManager.gameManager.playerOne, pOne).transform.SetAsFirstSibling();
-                pTwo = SpawnPlayer(GameManager.gameManager.playerTwo, false);
-                barSpawner.SpawnHealthBar(GameManager.gameManager.playerTwo, pTwo);
-                break;
-            default:
-                Debug.LogError("gameManager.PlayerCount() return a value that was not 0,1, or 2");
-                break;
+            SpawnPlayer(GameManager.gameManager.characters[i], i);
         }
     }
 
-    public GameObject SpawnPlayer(Character character, bool isPlayerOne)
+    public GameObject SpawnPlayer(Character character, int playerIndex)
     {
-        GameObject player;
-        
-        if (isPlayerOne)
-        {
-            player = PlayerInput.Instantiate(
-                playerPrefabs[(int)character],
-                controlScheme: GameManager.gameManager.playerOneControlScheme,
-                pairWithDevice: GameManager.gameManager.playerOneInputDevice
-            ).gameObject;
-        }
-        else 
-        {
-            player = PlayerInput.Instantiate(
-                playerPrefabs[(int)character],
-                controlScheme: GameManager.gameManager.playerTwoControlScheme,
-                pairWithDevice: GameManager.gameManager.playerTwoInputDevice
-            ).gameObject;
-        }
+        var player = PlayerInput.Instantiate(
+            playerPrefabs[(int)character],
+            controlScheme: GameManager.gameManager.playerControlSchemes[playerIndex],
+            pairWithDevice: GameManager.gameManager.playerInputDevices[playerIndex]
+        ).gameObject;
 
         //bar.gameObject.transform.parent = healthBarCanvasObject.transform;
         
         player.transform.localScale = playerPrefabs[(int)character].transform.localScale;
-        if (isPlayerOne)
-            player.transform.position = playerOneSpawnPoint.transform.position;
-        else
-            player.transform.position = playerTwoSpawnPoint.transform.position;
+        var spawnPoint = (playerIndex == 0) ? playerOneSpawnPoint : playerTwoSpawnPoint;
+        player.transform.position = spawnPoint.position;
 
         return player;
     }

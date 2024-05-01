@@ -1,73 +1,45 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 public class PlayerSelectorSpawner : MonoBehaviour
 {
-    public GameObject prefab;
-    public GameObject blankPOneSelector;
-    public GameObject blankPTwoSelector;
-    /// <summary>
-    /// game obejct in scene that has <see cref="CharacterSelectorManager"/>.
-    /// </summary>
-    public GameObject manager;
-
+    public GameObject selectorPrefab;
+    public ButtonDisplay joinIndicator;
 
     /// <summary>
-    /// called by <see cref="InputLobby.OnPlayerJoin"/>. Instaites controls for the player the just joined and replaces blanks with fucntional character selectors. 
-    /// also handles logic for assigning player 1 and player 2 and giving refrences for later game use.
+    /// called by <see cref="InputLobby.OnPlayerJoin"/>. Instantiates controls for the player the just joined and replaces blanks with functional character selectors. 
+    /// also handles logic for assigning player 1 and player 2 and giving references for later game use.
     /// </summary>
     /// <param name="context"></param>
     public void ConnectPlayer(JoinContext context)
     {
-
-        PlayerInput p = PlayerInput.Instantiate(
-            prefab,
+        // create player and its input
+        PlayerInput playerInput = PlayerInput.Instantiate(
+            selectorPrefab,
             controlScheme: context.ControlScheme,
             pairWithDevice: context.InputDevice
         );
+        var characterSelector = playerInput.gameObject.GetComponent<CharacterSelector>();
+        characterSelector.transform.parent = this.transform;
+        characterSelector.Setup(context);
 
-        //redudant? checks if gameManager singleton exists, if not it creates it. but i dont think this would work.
-        if(GameManager.gameManager == null)
-            GameManager.gameManager = new GameManager();
-
-        p.gameObject.GetComponent<CharacterSelector>().buttonImage.GetComponent<ButtonConfirm>().SetButton(context.ControlScheme);
-
-        //if no player has joined yet, current player joins as player 1.
-        if (blankPOneSelector != null)
+        // adjust or destroy join indicator
+        if (CharacterSelector.selectorCount == 2)
+            Destroy(joinIndicator.gameObject);
+        else
         {
-            //use blanks positions for the new selector
-            p.gameObject.transform.parent = GameObject.Find("Canvas").transform.Find("Content").transform;
-            p.gameObject.transform.SetAsFirstSibling();
-            p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(-250, -100, 0);
-            p.transform.localScale = prefab.transform.localScale;
-            //destroy blank
-            Destroy(blankPOneSelector);
+            joinIndicator.transform.SetAsLastSibling();
 
-            ///set refrences for other objects that need the info (<see cref="CharacterSelectorManager.playerOneSelector"/>, <see cref="GameManager.playerOneInputDevice"/>, etc.)
-            manager.GetComponent<CharacterSelectorManager>().playerOneSelector = p.gameObject.GetComponent<CharacterSelector>();
-            p.GetComponent<CharacterSelector>().isPlayerOne = true;
-            GameManager.gameManager.playerOneInputDevice = context.InputDevice; 
-            GameManager.gameManager.playerOneControlScheme = context.ControlScheme; 
+            var otherSchemes = new List<string> { "controller" };
+            if (context.ControlScheme == "keyboardLeft") otherSchemes.Add("keyboardRight");
+            if (context.ControlScheme == "keyboardRight") otherSchemes.Add("keyboardLeft");
+            
+            joinIndicator.keyboardSchemes = otherSchemes.ToArray();
         }
-        else if (blankPTwoSelector != null) //a player had joined already, current player joins as player 2.
-        {
-            //use blanks positions for the new selector
-            p.gameObject.transform.parent = GameObject.Find("Canvas").transform.Find("Content").transform;
-            p.gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector3(250, -100, 0);
-            p.transform.localScale = prefab.transform.localScale;
-
-            //destroy blank
-            Destroy(blankPTwoSelector);
-
-            ///set refrences for other objects that need the info (<see cref="CharacterSelectorManager.playerTwoSelector"/>, <see cref="GameManager.playerTwoInputDevice"/>, etc.)
-            manager.GetComponent<CharacterSelectorManager>().playerTwoSelector = p.gameObject.GetComponent<CharacterSelector>();
-            p.GetComponent<CharacterSelector>().isPlayerOne = false;
-            GameManager.gameManager.playerTwoInputDevice = context.InputDevice;
-            GameManager.gameManager.playerTwoControlScheme = context.ControlScheme;
-        }
-        
     }
 }

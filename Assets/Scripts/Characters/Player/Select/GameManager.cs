@@ -1,31 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
-    //singlton instance
+    // singleton instance
     public static GameManager gameManager;
 
     //player's character
-    public Character playerOne = Character.None;
-    public Character playerTwo = Character.None;
+    public readonly Character[] characters = new[] {Character.None, Character.None};
 
     //player's Input Devices
-    public InputDevice playerOneInputDevice;
-    public InputDevice playerTwoInputDevice;
+    public readonly InputDevice[] playerInputDevices = {null, null};
 
     //player's Control Schemes
-    public string playerOneControlScheme;
-    public string playerTwoControlScheme;
+    public readonly string[] playerControlSchemes = {null, null};
 
 
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
 
-        //singlton check
+        // singleton check
         if (gameManager == null)
             gameManager = this;
         else
@@ -38,15 +37,8 @@ public class GameManager : MonoBehaviour
     /// <returns> 0 if no </returns>
     public int PlayerCount()
     {
-        int r = 0;
-        if (playerOne != Character.None)
-            r++;
-        if (playerTwo != Character.None)
-            r++;
-        return r;
+        if (characters[0] == Character.None) return 0;
+        else if (characters[1] == Character.None) return 1;
+        else return 2;
     }
-
-    
-    
-
 }

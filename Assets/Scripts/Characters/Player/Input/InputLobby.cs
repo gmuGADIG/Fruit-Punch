@@ -56,7 +56,7 @@ public class InputLobby : MonoBehaviour
             };
         }
         
-        foreach (string scheme in new string[] {"KeyboardLeft", "KeyboardRight"}) {
+        foreach (string scheme in new[] { "keyboardLeft", "keyboardRight" }) {
             var playerInput = PlayerInput.Instantiate(
                 InputSensorPrefab, 
                 controlScheme: scheme,

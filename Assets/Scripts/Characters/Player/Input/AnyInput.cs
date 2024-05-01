@@ -21,7 +21,7 @@ public class AnyInput : MonoBehaviour
             playerInput.PlayerInputActionOfActionId(action.action.id).performed += (c) => performed?.Invoke(c);
         }
         
-        foreach (string scheme in new string[] {"KeyboardLeft", "KeyboardRight"}) {
+        foreach (string scheme in new string[] { "keyboardLeft", "keyboardRight" }) {
             var playerInput = PlayerInput.Instantiate(
                 inputSensorPrefab, 
                 controlScheme: scheme,

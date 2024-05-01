@@ -501,7 +501,6 @@ GameObject:
   - component: {fileID: 8504809857062456930}
   - component: {fileID: 5012692914166087461}
   - component: {fileID: 7748653252873518553}
-  - component: {fileID: 7478663390361298727}
   m_Layer: 5
   m_Name: Button Image
   m_TagString: Untagged
@@ -578,26 +577,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e3f58ac538e0d24e915fa92f63efc2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  images:
-  - {fileID: 21300000, guid: 2a3fc403d4e7eb0488a501aefe1613fb, type: 3}
-  - {fileID: 21300000, guid: 3f923262c62eefd4aa51f81b2cc317ae, type: 3}
-  - {fileID: 21300000, guid: 6c00bb6eaba9903448e9d5326b3dba4b, type: 3}
---- !u!114 &7478663390361298727
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2504604260711829739}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 193483f04daa4a647b3d83323a115cd8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  images:
-  - {fileID: 21300000, guid: 2a3fc403d4e7eb0488a501aefe1613fb, type: 3}
-  - {fileID: 21300000, guid: 3f923262c62eefd4aa51f81b2cc317ae, type: 3}
-  - {fileID: 21300000, guid: 6c00bb6eaba9903448e9d5326b3dba4b, type: 3}
+  keyboardLeftImage: {fileID: 21300000, guid: 2a3fc403d4e7eb0488a501aefe1613fb, type: 3}
+  keyboardRightImage: {fileID: 21300000, guid: 3f923262c62eefd4aa51f81b2cc317ae, type: 3}
+  controllerImage: {fileID: 21300000, guid: 6c00bb6eaba9903448e9d5326b3dba4b, type: 3}
+  keyboardSchemes:
+  - keyboardLeft
+  - keyboardRight
+  - controller
 --- !u!1 &3291366174271141300
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,7 +1653,7 @@ RectTransform:
   m_GameObject: {fileID: 8652386732564820398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.8, y: 0.8, z: 0.8}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3678133917031652447}
@@ -1690,16 +1676,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54754ed916347264fb5a1fdc0140a25d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  images:
-  - {fileID: 21300000, guid: 217e3c61db9b47d46b9b0540b1a56f2d, type: 3}
-  - {fileID: 21300000, guid: ea87311db4d7b314690c023c82a089f4, type: 3}
-  - {fileID: 21300000, guid: 88a87066eef9a1946b46411088a55cda, type: 3}
-  - {fileID: 21300000, guid: 65b4eb0a6721552448238a5e3dd948ee, type: 3}
   stats:
   - {fileID: 11400000, guid: 4ae3f07f0e5db2142918394611bed121, type: 2}
   - {fileID: 11400000, guid: 8fe54acc140c4d645bc83252099f08d9, type: 2}
   - {fileID: 11400000, guid: 7ff7aa8d63857704185913e10f897ad2, type: 2}
   - {fileID: 11400000, guid: 244e55ce253a18a4b9cccac2af5ee3ee, type: 2}
+  characterPreviews:
+  - {fileID: 21300000, guid: 217e3c61db9b47d46b9b0540b1a56f2d, type: 3}
+  - {fileID: 21300000, guid: ea87311db4d7b314690c023c82a089f4, type: 3}
+  - {fileID: 21300000, guid: 88a87066eef9a1946b46411088a55cda, type: 3}
+  - {fileID: 21300000, guid: 65b4eb0a6721552448238a5e3dd948ee, type: 3}
   starFull: {fileID: 21300000, guid: c053c253a5d7d5b4bbc89fe50e2e1aac, type: 3}
   starEmpty: {fileID: 21300000, guid: 94270b7d0ff3f3e4fb42b071fe11600a, type: 3}
   characterImage: {fileID: 5512968473977897114}
@@ -1707,10 +1693,7 @@ MonoBehaviour:
   healthStars: {fileID: 8418237391216285462}
   damageStars: {fileID: 6828176522314733888}
   speedStars: {fileID: 5043317295769075471}
-  buttonImage: {fileID: 2504604260711829739}
-  character: 0
-  characterSelected: 0
-  isPlayerOne: 0
+  buttonDisplay: {fileID: 7748653252873518553}
 --- !u!114 &4776601624282739311
 MonoBehaviour:
   m_ObjectHideFlags: 0
