@@ -103,7 +103,7 @@ public class Codex : MonoBehaviour
 
     public void BackToMainMenu()
     {
-        SceneManager.LoadScene(FindAnyObjectByType<SwitchScene>().MainMenu);
+        SceneManager.LoadScene(SwitchScene.mainMenu);
     }
 
     void CreateCodex()

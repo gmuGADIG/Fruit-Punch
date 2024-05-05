@@ -17,9 +17,6 @@ public enum Character
 
 public class CharacterSelector : MonoBehaviour
 {
-    const string NextScene = "Scenes/Build Scenes/CutsceneTest";
-    const string PreviousScene = "Scenes/Build Scenes/MainMenu";
-    
     [Header("Stats")]
     // index = (int) Character
     [SerializeField] StatsInfo[] stats;
@@ -139,7 +136,7 @@ public class CharacterSelector : MonoBehaviour
             if (selectorsLockedIn == selectorCount) // Start Game
             {
                 Debug.Log("Starting game!");
-                SceneManager.LoadScene(NextScene);
+                SceneManager.LoadScene(SwitchScene.cutscene1);
             }
             else Debug.Log($"Not everyone's selected! ({selectorsLockedIn} out of {selectorCount} locked in)");
         }
@@ -191,7 +188,7 @@ public class CharacterSelector : MonoBehaviour
         }
         else
         {
-            SceneManager.LoadScene(PreviousScene);
+            SceneManager.LoadScene(SwitchScene.mainMenu);
         }
     }
 

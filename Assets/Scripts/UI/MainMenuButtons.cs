@@ -16,21 +16,21 @@ public class MainMenuButtons : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene(playScene);
+        SceneManager.LoadScene(SwitchScene.characterSelect);
     }
     /// <summary>
     /// Goes to Options Menu
     /// </summary>
     public void Options()
     {
-        SceneManager.LoadSceneAsync(optionsScene);
+        SceneManager.LoadSceneAsync(SwitchScene.optionsMenu);
     }
     /// <summary>
     /// Goes to the Codex
     /// </summary>
     public void Codex()
     {
-        SceneManager.LoadSceneAsync(codexScene);
+        SceneManager.LoadSceneAsync(SwitchScene.codex);
     }
     /// <summary>
     /// Quits the game
