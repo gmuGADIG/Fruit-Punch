@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem.Processors;
@@ -142,6 +143,11 @@ public class GameSceneManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (players.Count == 0)
+        {
+            players = FindObjectsOfType<Player>().ToList();
+        }
+        
         // Move the camera to follow the player if conditions are met
         if (currentState == CameraState.follow)
         {
