@@ -63,6 +63,11 @@ public class CharacterSelector : MonoBehaviour
         UpdateDisplay();
     }
 
+    void OnDestroy()
+    {
+        selectorCount -= 1;
+    }
+
     /// <summary>
     /// Change to next character (or does nothing if already selected).
     /// </summary>
@@ -136,7 +141,7 @@ public class CharacterSelector : MonoBehaviour
             if (selectorsLockedIn == selectorCount) // Start Game
             {
                 Debug.Log("Starting game!");
-                SceneManager.LoadScene(SwitchScene.cutscene1);
+                SceneManager.LoadScene(SwitchScene.level1_1);
             }
             else Debug.Log($"Not everyone's selected! ({selectorsLockedIn} out of {selectorCount} locked in)");
         }

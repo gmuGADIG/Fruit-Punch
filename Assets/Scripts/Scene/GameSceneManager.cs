@@ -5,6 +5,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem.Processors;
+using UnityEngine.SceneManagement;
 
 public class GameSceneManager : MonoBehaviour
 {   
@@ -28,6 +29,9 @@ public class GameSceneManager : MonoBehaviour
 
     [SerializeField]
     public Scene[] scenes;
+
+    [Tooltip("When the final battle is finished, the scene with this name will be loaded.")]
+    public string nextStage;
 
     private int currentSceneNumber;
     private Scene currentScene;
@@ -85,10 +89,10 @@ public class GameSceneManager : MonoBehaviour
     public void UnfreezeCamera()
     {
         currentSceneNumber++;
-        if (currentSceneNumber >= scenes.Length)
+        if (currentSceneNumber >= scenes.Length) // final screen; move to next stage
         {
-            Debug.LogWarning("GameSceneManager: Out of scenes, recycling last scene");//TODO: remove the recycle for when there is a proper end to the level
-            currentSceneNumber--;
+            SceneManager.LoadScene(nextStage);
+            return;
         }
 
         currentScene = scenes[currentSceneNumber];

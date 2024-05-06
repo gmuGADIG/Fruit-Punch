@@ -285,7 +285,6 @@ public class Player : MonoBehaviour
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         if (strikeAnimationOver && hasHitSomething && inputBuffer.CheckAction("gameplay/Strike"))
         {
-            print("next animation please");
             if (strikeState == 1) return PlayerState.Strike2;
             if (strikeState == 2) return PlayerState.Strike3;
         }

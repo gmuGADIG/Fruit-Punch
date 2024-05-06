@@ -25,7 +25,7 @@ public class PlayerSelectorSpawner : MonoBehaviour
             pairWithDevice: context.InputDevice
         );
         var characterSelector = playerInput.gameObject.GetComponent<CharacterSelector>();
-        characterSelector.transform.parent = this.transform;
+        characterSelector.transform.SetParent(this.transform, true);
         characterSelector.Setup(context);
 
         // adjust or destroy join indicator

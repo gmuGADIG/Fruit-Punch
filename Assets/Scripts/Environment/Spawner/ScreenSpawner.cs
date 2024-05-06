@@ -44,7 +44,7 @@ public class ScreenSpawner : MonoBehaviour
 
     
     /// <summary>
-    /// Event that is called when the max number of enemies are spawned.
+    /// Event that is called when the final enemy is defeated.
     /// </summary>
     public UnityEvent onWaveComplete;
     #endregion
@@ -137,16 +137,27 @@ public class ScreenSpawner : MonoBehaviour
     {
         normalEnemySpawnQueue = new Queue<EnemySpawnData>();
         auraEnemySpawnQueue = new Queue<EnemySpawnData>();
-        foreach(EnemySpawnData data in enemiesToSpawn)
+        
+        for (int i = 0; i < 1000; i++)
         {
-            if(data.aura.IsSpecial())
+            var enemyData = enemiesToSpawn[i % enemiesToSpawn.Count];
+            if (enemyData.aura.IsSpecial())
             {
-                auraEnemySpawnQueue.Enqueue(data);
-            } else
-            {
-                normalEnemySpawnQueue.Enqueue(data);
+                if (auraEnemySpawnQueue.Count >= numAura) continue;
+                auraEnemySpawnQueue.Enqueue(enemyData);
             }
+            else
+            {
+                if (normalEnemySpawnQueue.Count >= EnemyCountToSpawn) continue;
+                normalEnemySpawnQueue.Enqueue(enemyData);
+            }
+            
+            if (normalEnemySpawnQueue.Count + auraEnemySpawnQueue.Count >= EnemyCountToSpawn)
+                return;
         }
+        
+        // if execution reaches here, the loop got to 1000, which should never happen
+        throw new Exception("LoadSpawnQueue failsafe was used!");
     }
     public void StartSpawning()
     {
