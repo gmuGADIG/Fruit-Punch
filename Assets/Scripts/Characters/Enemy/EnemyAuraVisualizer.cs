@@ -40,25 +40,14 @@ public class EnemyAuraVisualizer : MonoBehaviour
     void setAuraColor()
     {
         AuraType newAura = parentHealth.vulnerableTypes;
-        switch (newAura)
+        auraSprite.color = newAura switch
         {
-            case AuraType.Strike:
-                auraSprite.color = strikeColor;
-                break;
-            case AuraType.Throw:
-                auraSprite.color = throwColor;
-                break;
-            case AuraType.JumpAtk:
-                auraSprite.color = jumpColor;
-                break;
-            case AuraType.Pearry:
-                auraSprite.color = peariesColor;
-                break;
-            default:
-                auraSprite.color = noAuraColor;
-                break;
-        }
-
+            AuraType.Strike => strikeColor,
+            AuraType.Throw => throwColor,
+            AuraType.JumpAtk => jumpColor,
+            AuraType.Pearry => peariesColor,
+            _ => noAuraColor
+        };
     }
 
 }

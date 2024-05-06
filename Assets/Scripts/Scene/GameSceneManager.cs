@@ -11,14 +11,6 @@ public class GameSceneManager : MonoBehaviour
     [System.Serializable]//The camera moves between scenes using a serializable object
     public class Scene
     {
-        public enum Transition
-        {
-            Soft,
-            Hard, //Note: enemy spawns are currently ignored on hard transition
-            End
-        }
-        
-        public Transition transitionType;
         public Vector3 transitionLocation;
         public ScreenSpawner spawner;
     }
@@ -100,27 +92,7 @@ public class GameSceneManager : MonoBehaviour
         }
 
         currentScene = scenes[currentSceneNumber];
-
-        if (currentScene.transitionType==Scene.Transition.Soft) {
-            currentState = CameraState.follow;
-        }
-        else
-        {
-            currentState = CameraState.follow;
-            HardTransition();
-        }
-    }
-
-    public void HardTransition()
-    {
-        Vector3 oldCameraLocation = mainCamera.transform.position;
-        foreach (Player p in players)
-        {
-            Vector3 playerOffset = p.transform.position - (oldCameraLocation-cameraOffset);
-            p.transform.position = currentScene.transitionLocation+ playerOffset;
-        }
-        mainCamera.transform.position = currentScene.transitionLocation+cameraOffset;
-        UnfreezeCamera();
+        currentState = CameraState.follow;
     }
 
     /// <summary>

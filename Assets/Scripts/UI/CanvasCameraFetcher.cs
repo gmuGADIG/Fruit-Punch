@@ -12,7 +12,11 @@ public class CanvasCameraFetcher : MonoBehaviour
 {
     void OnValidate()
     {
-        var canvas = GetComponent<Canvas>();
-        canvas.worldCamera = Camera.main;
+        GetComponent<Canvas>().worldCamera = Camera.main;
+    }
+
+    void Start()
+    {
+        GetComponent<Canvas>().worldCamera = Camera.main;
     }
 }

@@ -6,52 +6,49 @@ using UnityEngine.InputSystem;
 
 public class PlayerSpawner : MonoBehaviour
 {
+    [SerializeField] PlayerHealthBarSpawner barSpawner;
+    [SerializeField] GameObject[] playerPrefabs;
+    [SerializeField] Transform playerOneSpawnPoint;
+    [SerializeField] Transform playerTwoSpawnPoint;
 
-    public PlayerHealthBarSpawner barSpawner;
-    [SerializeField]
-    private GameObject[] playerPrefabs;
-    [SerializeField]
-    private GameObject healthBarCanvasObject;
-    public Transform playerOneSpawnPoint;
-    public Transform playerTwoSpawnPoint;
-
+    // During development, it's helpful to start directly from a scene instead of the main menu.
+    // When the character-select scene is skipped, a single player with these values is spawned.
+    [Header("Debug")]
+    [SerializeField] string debugControlScheme;
+    [SerializeField] Character debugCharacter;
+    [SerializeField] InputDevice debugInputDevice;
+    
     private void Start()
     {
-        //game manger doesnt exist
-        if (GameManager.gameManager == null)
+        var playerCount = PlayerInfo.PlayerCount();
+        if (playerCount == 0) // debug spawn 
         {
-            Debug.LogError("Game Manager NOT FOUND / NOT INSTANCEATED");
-            return;
+            if (Application.isEditor == false) Debug.LogError("Debug spawn should not be used in a build!");
+            SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
         }
-
-        if (healthBarCanvasObject == null)
-        {
-            Debug.LogWarning("HealthBarCanvasObject NOT ASSIGNED");
-            healthBarCanvasObject = GameObject.Find("Canvas").transform.Find("Health Bars").gameObject;
-            if (healthBarCanvasObject == null)
-                Debug.LogError("HealthBarCanvasObject NOT FOUND AND NOT ASSIGNED");
-        }
-        
-        for (int i = 0; i < GameManager.gameManager.PlayerCount(); i++)
-        {
-            SpawnPlayer(GameManager.gameManager.characters[i], i);
+        else // normal spawn
+        { 
+            for (int i = 0; i < PlayerInfo.PlayerCount(); i++)
+            {
+                var character = PlayerInfo.characters[i];
+                var controlScheme = PlayerInfo.playerControlSchemes[i];
+                var inputDevice = PlayerInfo.playerInputDevices[i];
+                var spawnPoint = (i == 0) ? playerOneSpawnPoint : playerTwoSpawnPoint;
+                SpawnPlayer(character, controlScheme, inputDevice, spawnPoint);
+            }
         }
     }
 
-    public GameObject SpawnPlayer(Character character, int playerIndex)
+    public GameObject SpawnPlayer(Character character, string controlScheme, InputDevice inputDevice, Transform spawnPoint)
     {
         var player = PlayerInput.Instantiate(
-            playerPrefabs[(int)character],
-            controlScheme: GameManager.gameManager.playerControlSchemes[playerIndex],
-            pairWithDevice: GameManager.gameManager.playerInputDevices[playerIndex]
+            prefab: playerPrefabs[(int) character],
+            controlScheme: controlScheme,
+            pairWithDevice: inputDevice
         ).gameObject;
-
-        //bar.gameObject.transform.parent = healthBarCanvasObject.transform;
         
-        player.transform.localScale = playerPrefabs[(int)character].transform.localScale;
-        var spawnPoint = (playerIndex == 0) ? playerOneSpawnPoint : playerTwoSpawnPoint;
         player.transform.position = spawnPoint.position;
-
+        
         return player;
     }
 

@@ -12,15 +12,13 @@ public class PlayerAttackAura : MonoBehaviour
     public Color peariesColor;
     public Color noAuraColor;
 
-
-    SpriteRenderer auraSprite;
+    ParticleSystem particles;
     
     Player player;
-    //PlayerState currState;
-    // Start is called before the first frame update
+
     void Start()
     {
-        auraSprite = GetComponent<SpriteRenderer>();
+        this.GetComponentOrError(out particles);
         player = GetComponentInParent<Player>();
         SetAuraColor(PlayerState.Normal);
         player.OnPlayerStateChange += SetAuraColor;
@@ -29,37 +27,21 @@ public class PlayerAttackAura : MonoBehaviour
     /// <summary>
     /// Switches sprite color base on PlayerState
     /// </summary>
-    /// <param name="pAura"></param>
-    void SetAuraColor(PlayerState pAura)
+    void SetAuraColor(PlayerState newState)
     {
-        Color newColor = noAuraColor;
-        switch (pAura)
+        Color newColor = newState switch
         {
-            case PlayerState.Strike1:
-                newColor = strikeColor;
-                break;
-            case PlayerState.Strike2:
-                newColor = strikeColor;
-                break;
-            case PlayerState.Strike3:
-                newColor = strikeColor;
-                break;
-            case PlayerState.Grabbing:
-                newColor = throwColor;  
-                break;
-            case PlayerState.JumpStrike:
-                newColor = jumpColor;
-                break;
-            case PlayerState.Pearry:
-                newColor = peariesColor;
-                break;
-            case PlayerState.Normal:
-                newColor = noAuraColor;
-                break;
-            
-        }
+            PlayerState.Strike1 => strikeColor,
+            PlayerState.Strike2 => strikeColor,
+            PlayerState.Strike3 => strikeColor,
+            PlayerState.Grabbing => throwColor,
+            PlayerState.JumpStrike => jumpColor,
+            PlayerState.Pearry => peariesColor,
+            PlayerState.Normal => noAuraColor,
+            _ => noAuraColor
+        };
 
-        auraSprite.color = newColor;
-
+        particles.startColor = newColor;
+        particles.Play();
     }
 }

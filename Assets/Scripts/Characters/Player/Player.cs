@@ -58,7 +58,7 @@ public class Player : MonoBehaviour
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
-    float pearryLength = 3;
+    float pearryLength = .6f;
     
     /// <summary>
     /// True when the player can move on to the next part of the strike animation.
@@ -228,7 +228,7 @@ public class Player : MonoBehaviour
 
     void JumpEnter()
     {
-        anim.Play("PlayerJump");
+        anim.Play("Jump");
         SoundManager.Instance.PlaySoundAtPosition("Jump", transform.position);
         rb.velocity += Vector3.up * jumpSpeed;
     }
@@ -268,7 +268,7 @@ public class Player : MonoBehaviour
 
         // make sure we only move onto the next strike animation when we're ready
         strikeAnimationOver = false;
-        hasHitSomething = false;
+        hasHitSomething = true; // TEMP
         
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
@@ -301,13 +301,12 @@ public class Player : MonoBehaviour
     }
 
     void JumpStrikeEnter() {
-        anim.Play("PlayerJumpStrike");
+        anim.Play("JumpStrike");
     }
 
-    // new Pearry Script has been moved from 
-    // Pearry.cs to its own PearryEnter and PearryUpdate methods
     void PearryEnter() {
-        // anim.Play("PlayerPearry");
+        print("pearrying");
+        anim.Play("Pearry");
     }
 
     PlayerState PearryUpdate() {

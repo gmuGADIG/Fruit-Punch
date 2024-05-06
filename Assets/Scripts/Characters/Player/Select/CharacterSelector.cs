@@ -120,8 +120,8 @@ public class CharacterSelector : MonoBehaviour
 
     public void Setup(JoinContext joinContext)
     {
-        GameManager.gameManager.playerControlSchemes[playerIndex] = joinContext.ControlScheme;
-        GameManager.gameManager.playerInputDevices[playerIndex] = joinContext.InputDevice;
+        PlayerInfo.playerControlSchemes[playerIndex] = joinContext.ControlScheme;
+        PlayerInfo.playerInputDevices[playerIndex] = joinContext.InputDevice;
         buttonDisplay.keyboardSchemes = new[] { joinContext.ControlScheme };
     }
     
@@ -159,7 +159,7 @@ public class CharacterSelector : MonoBehaviour
         selectorsLockedIn += 1;
         selectedCharacters.Add(this.character);
         
-        GameManager.gameManager.characters[playerIndex] = character;
+        PlayerInfo.characters[playerIndex] = character;
         text.text = "Press\r\n\r\n\r\nto start";
         characterSelected = true;
         
