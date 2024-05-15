@@ -51,9 +51,6 @@ public class CharacterSelector : MonoBehaviour
 
     private void Start()
     {
-        playerIndex = selectorCount;
-        selectorCount += 1;
-        
         // get names of characters
         numCharacters = Enum.GetNames(typeof(Character)).Length-1;
         Utils.Assert(numCharacters == characterPreviews.Length);
@@ -125,6 +122,9 @@ public class CharacterSelector : MonoBehaviour
 
     public void Setup(JoinContext joinContext)
     {
+        playerIndex = selectorCount;
+        selectorCount += 1;
+        
         PlayerInfo.playerControlSchemes[playerIndex] = joinContext.ControlScheme;
         PlayerInfo.playerInputDevices[playerIndex] = joinContext.InputDevice;
         buttonDisplay.keyboardSchemes = new[] { joinContext.ControlScheme };

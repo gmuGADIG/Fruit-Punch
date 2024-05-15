@@ -12,7 +12,8 @@ public class PlayerSelectorSpawner : MonoBehaviour
     public ButtonDisplay joinIndicator;
 
     /// <summary>
-    /// called by <see cref="InputLobby.OnPlayerJoin"/>. Instantiates controls for the player the just joined and replaces blanks with functional character selectors. 
+    /// called by <see cref="InputLobby.OnPlayerJoin"/>. Instantiates controls for the player the just 
+    /// joined and replaces blanks with functional character selectors. 
     /// also handles logic for assigning player 1 and player 2 and giving references for later game use.
     /// </summary>
     /// <param name="context"></param>
@@ -24,6 +25,7 @@ public class PlayerSelectorSpawner : MonoBehaviour
             controlScheme: context.ControlScheme,
             pairWithDevice: context.InputDevice
         );
+
         var characterSelector = playerInput.gameObject.GetComponent<CharacterSelector>();
         characterSelector.transform.SetParent(this.transform, true);
         characterSelector.Setup(context);
