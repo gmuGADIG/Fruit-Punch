@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -25,8 +26,13 @@ public class StayInCamera : MonoBehaviour
         if (TryGetComponent<Collider>(out var col))
         {
             // get the bounds of the collider, relative to the center
-            leftExtent = col.bounds.min.x - transform.position.x;
-            rightExtent = col.bounds.max.x - transform.position.x;
+
+            // NOTE: hopefully the collider is centered
+            // you cant use Collider.bounds here because sometimes it's in world space
+            // sometimes not
+
+            leftExtent = col.bounds.size.x / -2;
+            rightExtent = col.bounds.size.x / 2;
         }
     }
 
@@ -53,5 +59,30 @@ public class StayInCamera : MonoBehaviour
             // position.x = Mathf.Clamp(position.x, leftBorder, rightBorder);
 
         transform.position = position;
+    }
+
+    // draw gizmos for where the player is bounded
+    void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+
+        float distance = 0f;
+        float leftBorder = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)).x - leftExtent;
+        float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - rightExtent;
+
+        var l = transform.position;
+        l.x = leftBorder;
+
+        var r = transform.position;
+        r.x = rightBorder;
+
+        Gizmos.DrawLine(
+            l - (Vector3.up * 10),
+            l - (Vector3.down * 10)
+        );
+
+        Gizmos.DrawLine(
+            r - (Vector3.up * 10),
+            r - (Vector3.down * 10)
+        );
     }
 }
