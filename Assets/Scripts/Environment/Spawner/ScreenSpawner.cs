@@ -234,6 +234,5 @@ public class ScreenSpawner : MonoBehaviour
             isCurrentlySpawning = true;
             spawnTimer = spawnDelay;
         }
-        enemyThatDied.GetComponent<Health>().onDeath -= () => OnEnemyDeath(enemyThatDied);
     }
 }

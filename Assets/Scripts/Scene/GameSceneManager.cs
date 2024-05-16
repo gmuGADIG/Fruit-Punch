@@ -15,15 +15,11 @@ public class GameSceneManager : MonoBehaviour
         public Vector3 transitionLocation;
         public ScreenSpawner spawner;
     }
-
-    public GameObject mainCamera;
+    
     [SerializeField]
     float cameraFreezeThreshold = 1.0f; //The distance from the freeze location before it triggers the start.
     [SerializeField]
     public float cameraSmoothSpeed = 0.125f; // Smoothness of camera movement
-    [SerializeField]
-    [Tooltip("The position the camera will start at. Only used if it can't find any players.")]
-    public Vector3 startPosition = new Vector3(0f, 2f); // Adjust as needed
     [SerializeField]
     public Vector3 cameraOffset = new Vector3(0f, 2f); // Adjust as needed
 
@@ -38,6 +34,8 @@ public class GameSceneManager : MonoBehaviour
     
     private bool areEnemiesPresent = false; // Boolean to track if enemies are present
     private Vector3 frozenPos;
+    
+    private GameObject mainCamera;
 
     public enum CameraState
     {
@@ -62,17 +60,8 @@ public class GameSceneManager : MonoBehaviour
             currentSceneNumber = 0;
             currentScene = scenes[0];
         }
+
         currentState = CameraState.follow;
-        
-        // WARN: Players are currently spawned 1 second into the game, not immediately (see PlayerSpawner.cs)
-        // This is a problem for future me :)
-        players = FindObjectsOfType<Player>().ToList();
-        
-        if (players.Count() == 0) {
-            mainCamera.transform.position = startPosition;
-        } else {
-            mainCamera.transform.position = GetAveragePlayerPosition();
-        }
     }
 
     public void FreezeCamera(Vector3 pos)

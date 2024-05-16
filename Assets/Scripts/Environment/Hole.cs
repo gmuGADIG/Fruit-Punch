@@ -19,12 +19,15 @@ public class Hole : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.GetComponent<Player>() == null) return;
-        
-        StartCoroutine(FallCoroutine(other));
+        if (other.TryGetComponent<Player>(out var player))
+            StartCoroutine(PlayerFallCoroutine(player));
+        else if (other.TryGetComponent<Health>(out var enemyHealth))
+        {
+            enemyHealth.Damage(new DamageInfo(10000000f, Vector2.zero, AuraType.Everything)); // is she hurt enough
+        }
     }
 
-    IEnumerator FallCoroutine(Collider col)
+    IEnumerator PlayerFallCoroutine(Player col)
     {
         yield return new WaitForSeconds(1);
         
