@@ -262,6 +262,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 4058682035419029229}
     m_Modifications:
     - target: {fileID: 5267779760628061305, guid: 13d29feb8f77a6546bf2bc175abbf5d9, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.4142135
+      objectReference: {fileID: 0}
+    - target: {fileID: 5267779760628061305, guid: 13d29feb8f77a6546bf2bc175abbf5d9, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.02
       objectReference: {fileID: 0}
@@ -468,7 +472,6 @@ MonoBehaviour:
   wanderingTimeMin: 5
   wanderingTimeMax: 10
   gravity: 10
-  weight: 1
   throwBaseDamage: 20
   debugMarkerPrefab: {fileID: 6433994731368077273, guid: 6f12ea03f13e78315b95893e2f4dda2b, type: 3}
   state: 0
