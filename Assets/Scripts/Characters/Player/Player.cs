@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
 public enum PlayerState
@@ -15,6 +12,11 @@ public enum PlayerState
     JumpStrike,
     Pearry,
     Grabbing, Throwing
+}
+
+public enum PlayerCharacter
+{
+    Apple, Banana, Watermelon, Grape
 }
 
 /// <summary>
@@ -37,6 +39,9 @@ public class Player : MonoBehaviour
     private Grabber grabber;
     private GroundCheck groundCheck;
     private float halfPlayerSizeX;
+
+    [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
+    [SerializeField] PlayerCharacter playerCharacter;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
