@@ -84,7 +84,7 @@ public class ScreenSpawner : MonoBehaviour
     /// <summary>
     /// Manager for what enemies are on screen.
     /// </summary>
-    private HashSet<GameObject> enemiesOnScreen;
+    private HashSet<GameObject> enemiesOnScreen = new();
 
     /// <summary>
     /// Number of aura enemies currently on screen.
