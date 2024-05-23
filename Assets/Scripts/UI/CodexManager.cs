@@ -147,16 +147,16 @@ public class Codex : MonoBehaviour
 
     IEnumerator ChangeSelectedEntry(int nextIndex)
     {
-        Vector3 startPos = new Vector3(0, -100.0f + 40.0f * entryIndex[categoryIndex]);
-        Vector3 endPos = new Vector3(0, -100.0f + 40.0f * nextIndex);
+        Vector3 startPos = new Vector3(7.5f, -100.0f + 40.0f * entryIndex[categoryIndex]);
+        Vector3 endPos = new Vector3(7.5f, -100.0f + 40.0f * nextIndex);
         for (float t = 0; t < 1.0; t+=0.08f) {
             ResizeButton(categoryIndex,entryIndex[categoryIndex],largeButton,smallButton,t);
-            Scroll(categoryIndex, startPos, endPos, t, true);
+            Scroll(categoryIndex, startPos, endPos, t, false);
             ResizeButton(categoryIndex,nextIndex,smallButton, largeButton, t);
             yield return new WaitForSeconds(0.005f);
         }
         ResizeButton(categoryIndex,entryIndex[categoryIndex],largeButton, smallButton,1.0f);
-        Scroll(categoryIndex, startPos, endPos, 1.0f, true);
+        Scroll(categoryIndex, startPos, endPos, 1.0f, false);
         ResizeButton(categoryIndex,nextIndex,smallButton, largeButton, 1.0f);
 
         entryIndex[categoryIndex] = nextIndex;
@@ -268,7 +268,7 @@ public class Codex : MonoBehaviour
         SwitchEntry(entryIndex[categoryIndex] + 1);
     }
 
-    private void Left()
+    public void Left()
     {
         if (categoryIndex <= 0)
             return;
@@ -278,7 +278,7 @@ public class Codex : MonoBehaviour
 
 
 
-    private void Right()
+    public void Right()
     {
         if (categoryIndex>= categoryMenus.Length-1)
             return;
