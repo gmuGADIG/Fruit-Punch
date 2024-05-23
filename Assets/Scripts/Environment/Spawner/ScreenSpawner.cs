@@ -15,6 +15,7 @@ public class ScreenSpawner : MonoBehaviour
     public struct EnemySpawnData
     {
         public Enemy enemy;
+        public GameObject enemyPrefab;
         public AuraType aura;
         public EnemySpawns spawnpoint;
     }
