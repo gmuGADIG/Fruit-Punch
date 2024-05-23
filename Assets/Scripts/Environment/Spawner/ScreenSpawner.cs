@@ -14,7 +14,7 @@ public class ScreenSpawner : MonoBehaviour
     [System.Serializable]
     public struct EnemySpawnData
     {
-        public GameObject enemy;
+        public GameObject enemyPrefab;
         public AuraType aura;
         public EnemySpawns spawnpoint;
     }
@@ -113,6 +113,10 @@ public class ScreenSpawner : MonoBehaviour
 
 
     #endregion
+    private void Awake()
+    {
+        enemiesOnScreen = new HashSet<GameObject>();
+    }
 
     // Update is called once per frame
     void Update()
@@ -194,7 +198,7 @@ public class ScreenSpawner : MonoBehaviour
             return;
         }
         
-        var instance = spawnData.spawnpoint.SpawnEnemy(spawnData.enemy, spawnData.aura);
+        GameObject instance = spawnData.spawnpoint.SpawnEnemy(spawnData.enemyPrefab, spawnData.aura);
         enemiesOnScreen.Add(instance);
         
         enemiesLeft--;
