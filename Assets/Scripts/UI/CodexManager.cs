@@ -169,8 +169,8 @@ public class Codex : MonoBehaviour
     {
         //Scroll Out
         if (categoryIndex!=-1) {
-            Vector3 startPosA = new Vector3(0f, -100.0f + 40.0f * entryIndex[categoryIndex]);
-            Vector3 endPosA = new Vector3(-160f, -100.0f + 40.0f * entryIndex[categoryIndex]);
+            Vector3 startPosA = new Vector3(7.5f, -100.0f + 40.0f * entryIndex[categoryIndex]);
+            Vector3 endPosA = new Vector3(-170f, -100.0f + 40.0f * entryIndex[categoryIndex]);
 
             for (float t = 0; t < 1.0; t += 0.08f)
             {
@@ -183,8 +183,8 @@ public class Codex : MonoBehaviour
         }
 
         //Scroll in
-        Vector3 startPosB = new Vector3(-160f, -100.0f + 40.0f * entryIndex[newCategory]);
-        Vector3 endPosB = new Vector3(0f, -100.0f + 40.0f * entryIndex[newCategory]);
+        Vector3 startPosB = new Vector3(-170f, -100.0f + 40.0f * entryIndex[newCategory]);
+        Vector3 endPosB = new Vector3(7.5f, -100.0f + 40.0f * entryIndex[newCategory]);
 
         for (float t = 0; t < 1.0; t += 0.08f)
         {
