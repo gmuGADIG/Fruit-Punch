@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
@@ -16,7 +17,8 @@ public class Grabbable : MonoBehaviour
     /// <summary>
     /// Amount of Grabbers currently in grabbing range. grabIndicator should be visible when this != 0.
     /// </summary>
-    int grabRangeCount = 0;
+    HashSet<Grabber> grabbers = new();
+    int grabRangeCount => grabbers.Count();
     
     Rigidbody rb;
 
@@ -71,15 +73,25 @@ public class Grabbable : MonoBehaviour
             agent.enabled = true;
     }
 
-    public void InGrabbingRange()
+    /// <summary>
+    /// Indicate that there is a player that is in range to pick up the grabbable.
+    /// Turns on the grabbable indicator.
+    /// <paramref name="grabber"/> is used to uniquely identify the player that got in range.
+    /// </summary>
+    public void InGrabbingRange(Grabber grabber)
     {
-        grabRangeCount += 1;
+        grabbers.Add(grabber);
         if (grabIndicator != null) grabIndicator.SetActive(true);
     }
 
-    public void OutOfGrabbingRange()
+    /// <summary>
+    /// Indicate that a player left the range to pick up the grabbable.
+    /// Turns off the grabbable indicator when all players leave.
+    /// <paramref name="grabber"/> is used to uniquely identify the player that left.
+    /// </summary>
+    public void OutOfGrabbingRange(Grabber grabber)
     {
-        grabRangeCount -= 1;
+        grabbers.Remove(grabber);
         if (grabRangeCount == 0 && grabIndicator != null) grabIndicator.SetActive(false);
         Utils.Assert(grabRangeCount >= 0);
     }
