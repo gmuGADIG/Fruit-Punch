@@ -50,6 +50,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2560
   damage: 20
+  knockback: 0.1
   parentTransform: {fileID: 269422184631147026}
   aura: 1
 --- !u!65 &8744580873528428989
@@ -158,6 +159,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a829487ecab01548b7869b067b65eed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playerCharacter: 0
   maxSpeed: 2
   runAccel: 40
   jumpControlMult: 0.3
@@ -199,6 +201,7 @@ MonoBehaviour:
   vulnerableTypes: -1
   maxHealth: 100
   currentHealth: 0
+  knockbackMultiplier: 1
 --- !u!114 &4033087471224058494
 MonoBehaviour:
   m_ObjectHideFlags: 0

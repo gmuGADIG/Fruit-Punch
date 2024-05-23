@@ -31,6 +31,10 @@ public class Health : MonoBehaviour
     [SerializeField]
     private float currentHealth;
     public float CurrentHealth => currentHealth;
+
+    [Tooltip("How affected by knockback this entity is.")]
+    public float knockbackMultiplier = 1f;
+
     /// <summary>
     /// Invoked when this character's health reaches zero. <br/>
     /// (run after onHealthChange and onHurt)
@@ -63,7 +67,7 @@ public class Health : MonoBehaviour
             var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
             if (hitsThisLayer) {
                 var info = hurtBox.GetDamageInfo();
-                this.Damage(info);
+                Damage(info);
                 if (IsVulnerableTo(info.aura)) {
                     hurtBox.onHurt?.Invoke(info);
                 }
@@ -94,7 +98,9 @@ public class Health : MonoBehaviour
         
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
-        
+
+        // apply knockback
+        transform.Translate(info.knockback * knockbackMultiplier);
         
         if (currentHealth <= 0) Die();
         
