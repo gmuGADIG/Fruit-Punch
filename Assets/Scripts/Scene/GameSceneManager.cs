@@ -68,7 +68,8 @@ public class GameSceneManager : MonoBehaviour
     {
         currentState = CameraState.frozen;
         frozenPos = pos;
-        if (currentScene.spawner != null)
+        if (currentScene.spawner == null) Debug.LogError($"stage {currentSceneNumber} has null spawner!");
+        else
         {
             currentScene.spawner.StartSpawning();
             currentScene.spawner.onWaveComplete.AddListener(UnfreezeCamera);

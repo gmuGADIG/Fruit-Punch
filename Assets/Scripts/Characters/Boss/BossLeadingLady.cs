@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -22,9 +23,7 @@ public class BossLeadingLady : Boss
     [SerializeField] float walkSpeed = 2f;
     [SerializeField] float timeBetweenAttacks = 2;
     
-    [Header("Rope Jumps")]
-    [Tooltip("When doing a ground pound jump, Pomela will first jump to one of these points before launching much higher.")]
-    [SerializeField] Transform[] ropePoints;
+    [Header("Jumping")]
     [SerializeField] float jumpEndLag = 2;
     
     [Header("Punches")]
@@ -37,11 +36,14 @@ public class BossLeadingLady : Boss
     [SerializeField] Transform spitEmitPoint;
     [SerializeField] GameObject spitProjectilePrefab;
 
+    List<Transform> ropePoints;
     IEnumerator activeCoroutine;
     
     new void Start()
     {
         base.Start();
+        
+        ropePoints = GameObject.FindGameObjectsWithTag("Boss1RopePoint").Select(obj => obj.transform).ToList();
         
         this.GetComponentOrError(out anim);
         this.GetComponentOrError(out groundCheck);
@@ -113,8 +115,8 @@ public class BossLeadingLady : Boss
             anim.Play("Jump"); // TODO: this animation clip doesn't exist
             
             // jump to rope
-            Utils.Assert(ropePoints.Length != 0);
-            var ropePosition = ropePoints[Random.Range(0, ropePoints.Length)].position;
+            Utils.Assert(ropePoints.Count != 0);
+            var ropePosition = ropePoints[Random.Range(0, ropePoints.Count)].position;
             yield return JumpTo(ropePosition, 2, 10);
             
             // jump to player
