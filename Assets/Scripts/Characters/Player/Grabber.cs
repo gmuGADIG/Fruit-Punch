@@ -72,8 +72,6 @@ public class Grabber : MonoBehaviour
                 return false;
             }
 
-            grabbed.InGrabbingRange(); // TODO: We should not be calling this here
-
             // item = currentOverlaps[0];
 
             //Checks for Health component
@@ -112,33 +110,19 @@ public class Grabber : MonoBehaviour
         onForceRelease?.Invoke();
     }
 
-    /*
-    void OnTriggerEnter(Collider other)
-    {
-        var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null && grabbable.enabled)
-        {
-            currentOverlaps.Add(grabbable);
-            currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
-            grabbable.InGrabbingRange();
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out Grabbable grabbable)) {
+            grabbable.InGrabbingRange(this);
 
             grabbable.disabled += () => {
-                if (currentOverlaps.Remove(grabbable)) {
-                    grabbable.OutOfGrabbingRange();
-                }
+                grabbable.OutOfGrabbingRange(this);
             };
         }
-    }   
+    }
 
-    void OnTriggerExit(Collider other)
-    {
-        var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null && grabbable.enabled)
-        {
-            grabbable.OutOfGrabbingRange();
-            currentOverlaps.Remove(grabbable);
+    void OnTriggerExit(Collider other) {
+        if (other.TryGetComponent(out Grabbable grabbable)) {
+            grabbable.OutOfGrabbingRange(this);
         }
     }
-    */
-    
 }
