@@ -28,17 +28,17 @@ public class Grabbable : MonoBehaviour
 
     public event Action disabled;
 
+
+    [Tooltip("The hurtbox to be used when throwing an object")]
+    [SerializeField] HurtBox throwingHurtBox;
+
     void Start()
     {
+        Utils.Assert(throwingHurtBox != null);
+        throwingHurtBox.gameObject.SetActive(false); // make sure it's off
+
         this.GetComponentOrError(out rb);
-        if (GetComponent<NavMeshAgent>() != null)
-        {
-            agent = GetComponent<NavMeshAgent>();
-        }
-        else
-        {
-            return;
-        }
+        agent = GetComponent<NavMeshAgent>();
     }
 
     public UnityEvent onGrab;
@@ -62,6 +62,8 @@ public class Grabbable : MonoBehaviour
         rb.isKinematic = false;
         if(agent != null)
             agent.enabled = true;
+
+        throwingHurtBox.gameObject.SetActive(true);
     }
 
     public void ForceRelease()
@@ -98,5 +100,11 @@ public class Grabbable : MonoBehaviour
 
     void OnDisable() {
         disabled?.Invoke();
+    }
+
+    void OnCollisionEnter(Collision collision) {
+        if (collision.collider.gameObject.layer == LayerMask.NameToLayer("World")) {
+            throwingHurtBox.gameObject.SetActive(false);
+        }
     }
 }
