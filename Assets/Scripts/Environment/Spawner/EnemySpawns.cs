@@ -30,9 +30,9 @@ public class EnemySpawns : MonoBehaviour
     /// <param name="enemy">Source enemy to copy</param>
     /// <param name="aura"></param>
     /// <returns></returns>
-    public Enemy SpawnEnemy(Enemy enemy, AuraType aura)
+    public GameObject SpawnEnemy(GameObject enemy, AuraType aura)
     {
-        Enemy copy = Instantiate(enemy, transform.position, Quaternion.identity);
+        GameObject copy = Instantiate(enemy, transform.position, Quaternion.identity);
         copy.GetComponent<Health>().vulnerableTypes = aura;
         copy.GetComponent<Rigidbody>().velocity = spawnVelocity;
         return copy;
