@@ -212,10 +212,11 @@ public class Codex : MonoBehaviour
     //This updates the Icon, title, and description to the right values based off of the global variables.
     void UpdateDisplay()
     {
-        title.text = entriesInternal[categoryIndex][entryIndex[categoryIndex]].name;
-        description.text = entriesInternal[categoryIndex][entryIndex[categoryIndex]].description;
-        Debug.LogWarning("CodexManager: error! no sprite set for entry named '"+ entriesInternal[categoryIndex][entryIndex[categoryIndex]].name+"'");
-        image.sprite = entriesInternal[categoryIndex][entryIndex[categoryIndex]].image;
+        var entry = entriesInternal[categoryIndex][entryIndex[categoryIndex]];
+        title.text = entry.name;
+        description.text = entry.description;
+        Debug.LogWarning("CodexManager: error! no sprite set for entry named '"+ entry.name+"'");
+        image.sprite = entry.image;
     }
 
     void ResizeButton(int i, int j,Vector3 start, Vector3 end, float t)
