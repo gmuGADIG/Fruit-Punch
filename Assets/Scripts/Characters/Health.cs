@@ -50,6 +50,8 @@ public class Health : MonoBehaviour
     public event Action<HealthChange> onHealthChange;
 
     public event Action<DamageInfo> onDamageImmune;
+
+    public event Action<AuraType> onAuraChange;
     
     void Start()
     {
@@ -134,6 +136,7 @@ public class Health : MonoBehaviour
     public void AuraBreak()
     {
         this.vulnerableTypes = AuraType.Everything;
+        onAuraChange?.Invoke(vulnerableTypes);
     }
 }
 
