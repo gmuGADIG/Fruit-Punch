@@ -36,7 +36,7 @@ public class Player : MonoBehaviour
     private InputBuffer inputBuffer;
     private Grabber grabber;
     private GroundCheck groundCheck;
-    private float halfPlayerSizeX;
+    private ColorTweaker colorTweaker;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
@@ -80,6 +80,7 @@ public class Player : MonoBehaviour
         this.GetComponentOrError(out inputBuffer);
         this.GetComponentInChildrenOrError(out grabber);
         this.GetComponentInChildrenOrError(out groundCheck);
+        this.GetComponentInChildrenOrError(out colorTweaker);
 
         foreach (var hb in GetComponentsInChildren<HurtBox>(true)) {
             hb.onHurt += damageInfo => {
@@ -175,27 +176,12 @@ public class Player : MonoBehaviour
         if (targetVel.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
         else if (targetVel.x > 0) transform.localRotation = Quaternion.identity;
     }
-
-    // bool IsGrounded()
-    // {
-    //     // overlap a box below the player to see if it's grounded
-    //     // uses the hitbox's x and z size, with an arbitrary height
-    //     var hitBox = GetComponent<BoxCollider>();
-    //     const float groundBoxHeight = 0.05f;
-    //     
-    //     var overlaps = Physics.OverlapBox(
-    //         transform.position, 
-    //         new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
-    //         Quaternion.identity,
-    //         collidingLayers
-    //     );
-    //
-    //     return overlaps.Length > 0;
-    // }
+    
 
     void NormalEnter()
     {
         anim.Play("Idle");
+        colorTweaker.RemoveAuraColor();
     }
 
     PlayerState NormalUpdate()
@@ -263,6 +249,8 @@ public class Player : MonoBehaviour
 
     void StrikeEnter(int strikeState)
     {
+        colorTweaker.SetAuraColor(AuraType.Strike);
+        
         // avoid reading inputs before we entered this state
         inputBuffer.ClearAction("gameplay/Strike");
 
@@ -300,11 +288,12 @@ public class Player : MonoBehaviour
     }
 
     void JumpStrikeEnter() {
+        colorTweaker.SetAuraColor(AuraType.JumpAtk);
         anim.Play("JumpStrike");
     }
 
     void PearryEnter() {
-        print("pearrying");
+        colorTweaker.SetAuraColor(AuraType.Pearry);
         anim.Play("Pearry");
     }
 
@@ -340,6 +329,7 @@ public class Player : MonoBehaviour
 
     void ThrowingEnter()
     {
+        colorTweaker.SetAuraColor(AuraType.Throw);
         grabber.ThrowItem(FacingLeft);
     }
     
