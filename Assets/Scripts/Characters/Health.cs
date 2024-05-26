@@ -120,7 +120,7 @@ public class Health : MonoBehaviour
         onHealthChange?.Invoke(new HealthChange(currentHealth));
     }
 
-    private void Die()
+    public void Die()
     {
         onDeath?.Invoke();
     }
