@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
 public enum PlayerState
@@ -14,7 +11,14 @@ public enum PlayerState
     Strike1, Strike2, Strike3,
     JumpStrike,
     Pearry,
-    Grabbing, Throwing
+    Grabbing, Throwing,
+    // Apple specific
+    AppleStrike3
+}
+
+public enum PlayerCharacter
+{
+    Apple, Banana, Watermelon, Grape
 }
 
 /// <summary>
@@ -37,6 +41,9 @@ public class Player : MonoBehaviour
     private Grabber grabber;
     private GroundCheck groundCheck;
     private ColorTweaker colorTweaker;
+
+    [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
+    [SerializeField] PlayerCharacter playerCharacter;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
@@ -116,6 +123,8 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
+        // apple specific
+        stateMachine.AddState(PlayerState.AppleStrike3, AppleStrikeEnter, AppleStrikeUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
 
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
@@ -163,7 +172,6 @@ public class Player : MonoBehaviour
             }
         }
 
-
         targetVel.y = rb.velocity.y;
         rb.velocity = Vector3.MoveTowards(
             rb.velocity,
@@ -176,7 +184,6 @@ public class Player : MonoBehaviour
         if (targetVel.x < 0) transform.localRotation = new Quaternion(0, 180, 0, 1);
         else if (targetVel.x > 0) transform.localRotation = Quaternion.identity;
     }
-    
 
     void NormalEnter()
     {
@@ -274,7 +281,17 @@ public class Player : MonoBehaviour
         if (strikeAnimationOver && hasHitSomething && inputBuffer.CheckAction("gameplay/Strike"))
         {
             if (strikeState == 1) return PlayerState.Strike2;
-            if (strikeState == 2) return PlayerState.Strike3;
+            if (strikeState == 2)
+            {
+                if (playerCharacter == PlayerCharacter.Apple)
+                {
+                    return PlayerState.AppleStrike3;
+                }
+                else
+                {
+                    return PlayerState.Strike3;
+                }
+            }
         }
 
         var animLengths = new[] { strike1Length, strike2Length, strike3Length };
@@ -350,5 +367,31 @@ public class Player : MonoBehaviour
     /// </summary>
     public void OnStrikeAnimationOver() {
         strikeAnimationOver = true;
+    }
+
+    void AppleStrikeEnter()
+    {
+        // avoid reading inputs before we entered this state
+        inputBuffer.ClearAction("gameplay/Strike");
+
+        // make sure we only move onto the next strike animation when we're ready
+        strikeAnimationOver = false;
+        hasHitSomething = true; // TEMP
+
+        anim.Play("Strike3"); // e.g. "Strike1", "Strike2", "Strike3"
+        SoundManager.Instance.PlaySoundAtPosition("HitHeavy", transform.position);
+    }
+
+    PlayerState AppleStrikeUpdate()
+    {
+        rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
+
+        var thisAnimLength = strike3Length;
+        if (stateMachine.timeInState >= thisAnimLength || !groundCheck.IsGrounded())
+        {
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
     }
 }
