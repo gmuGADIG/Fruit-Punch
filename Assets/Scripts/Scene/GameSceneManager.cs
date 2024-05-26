@@ -68,7 +68,7 @@ public class GameSceneManager : MonoBehaviour
     {
         currentState = CameraState.frozen;
         frozenPos = pos;
-        if (currentScene.spawner == null) Debug.LogError($"stage {currentSceneNumber} has null spawner!");
+        if (currentScene.spawner == null) Debug.LogError($"screen {currentSceneNumber} has null spawner!");
         else
         {
             currentScene.spawner.StartSpawning();
