@@ -147,16 +147,16 @@ public class Codex : MonoBehaviour
 
     IEnumerator ChangeSelectedEntry(int nextIndex)
     {
-        Vector3 startPos = new Vector3(0, -100.0f + 40.0f * entryIndex[categoryIndex]);
-        Vector3 endPos = new Vector3(0, -100.0f + 40.0f * nextIndex);
+        Vector3 startPos = new Vector3(7.5f, -100.0f + 40.0f * entryIndex[categoryIndex]);
+        Vector3 endPos = new Vector3(7.5f, -100.0f + 40.0f * nextIndex);
         for (float t = 0; t < 1.0; t+=0.08f) {
             ResizeButton(categoryIndex,entryIndex[categoryIndex],largeButton,smallButton,t);
-            Scroll(categoryIndex, startPos, endPos, t, true);
+            Scroll(categoryIndex, startPos, endPos, t, false);
             ResizeButton(categoryIndex,nextIndex,smallButton, largeButton, t);
             yield return new WaitForSeconds(0.005f);
         }
         ResizeButton(categoryIndex,entryIndex[categoryIndex],largeButton, smallButton,1.0f);
-        Scroll(categoryIndex, startPos, endPos, 1.0f, true);
+        Scroll(categoryIndex, startPos, endPos, 1.0f, false);
         ResizeButton(categoryIndex,nextIndex,smallButton, largeButton, 1.0f);
 
         entryIndex[categoryIndex] = nextIndex;
@@ -169,8 +169,8 @@ public class Codex : MonoBehaviour
     {
         //Scroll Out
         if (categoryIndex!=-1) {
-            Vector3 startPosA = new Vector3(0f, -100.0f + 40.0f * entryIndex[categoryIndex]);
-            Vector3 endPosA = new Vector3(-160f, -100.0f + 40.0f * entryIndex[categoryIndex]);
+            Vector3 startPosA = new Vector3(7.5f, -100.0f + 40.0f * entryIndex[categoryIndex]);
+            Vector3 endPosA = new Vector3(-170f, -100.0f + 40.0f * entryIndex[categoryIndex]);
 
             for (float t = 0; t < 1.0; t += 0.08f)
             {
@@ -183,8 +183,8 @@ public class Codex : MonoBehaviour
         }
 
         //Scroll in
-        Vector3 startPosB = new Vector3(-160f, -100.0f + 40.0f * entryIndex[newCategory]);
-        Vector3 endPosB = new Vector3(0f, -100.0f + 40.0f * entryIndex[newCategory]);
+        Vector3 startPosB = new Vector3(-170f, -100.0f + 40.0f * entryIndex[newCategory]);
+        Vector3 endPosB = new Vector3(7.5f, -100.0f + 40.0f * entryIndex[newCategory]);
 
         for (float t = 0; t < 1.0; t += 0.08f)
         {
@@ -212,10 +212,11 @@ public class Codex : MonoBehaviour
     //This updates the Icon, title, and description to the right values based off of the global variables.
     void UpdateDisplay()
     {
-        title.text = entriesInternal[categoryIndex][entryIndex[categoryIndex]].name;
-        description.text = entriesInternal[categoryIndex][entryIndex[categoryIndex]].description;
-        Debug.LogWarning("CodexManager: error! no sprite set for entry named '"+ entriesInternal[categoryIndex][entryIndex[categoryIndex]].name+"'");
-        image.sprite = entriesInternal[categoryIndex][entryIndex[categoryIndex]].image;
+        var entry = entriesInternal[categoryIndex][entryIndex[categoryIndex]];
+        title.text = entry.name;
+        description.text = entry.description;
+        Debug.LogWarning("CodexManager: error! no sprite set for entry named '"+ entry.name+"'");
+        image.sprite = entry.image;
     }
 
     void ResizeButton(int i, int j,Vector3 start, Vector3 end, float t)
@@ -268,7 +269,7 @@ public class Codex : MonoBehaviour
         SwitchEntry(entryIndex[categoryIndex] + 1);
     }
 
-    private void Left()
+    public void Left()
     {
         if (categoryIndex <= 0)
             return;
@@ -278,7 +279,7 @@ public class Codex : MonoBehaviour
 
 
 
-    private void Right()
+    public void Right()
     {
         if (categoryIndex>= categoryMenus.Length-1)
             return;

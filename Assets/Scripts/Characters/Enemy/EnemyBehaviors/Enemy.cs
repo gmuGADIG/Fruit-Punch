@@ -321,9 +321,11 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    protected virtual void InAirExit(EnemyState _newState)
+    protected virtual void InAirExit(EnemyState newState)
     {
-        if (thrownDamageQueue)
+        // make sure we're not being regrabbed, because then there shouldn't be
+        // any damage being taken
+        if (thrownDamageQueue && newState != EnemyState.Grabbed)
         {
             thrownDamageQueue = false;
             var dmg = throwBaseDamage * rb.mass;

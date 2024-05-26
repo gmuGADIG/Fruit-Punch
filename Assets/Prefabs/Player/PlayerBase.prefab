@@ -431,7 +431,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   throwForce: 200
   grabRadius: 1
-  item: {fileID: 0}
   grabCoolDown: 2
   currentTime: 0
 --- !u!1 &7444369387174406894
@@ -487,7 +486,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 3b9dac4360a87984488fc7f2730cb12d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -611,6 +610,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1933817064116278092, guid: b8ba94f9e29dd85428801752b30cfa3f, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 4516769140236419451}
     - target: {fileID: 8093165449067494439, guid: b8ba94f9e29dd85428801752b30cfa3f, type: 3}
       propertyPath: m_Name
       value: PlayerAttackAura

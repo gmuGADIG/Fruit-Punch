@@ -54,6 +54,8 @@ public class Health : MonoBehaviour
     public event Action<HealthChange> onHealthChange;
 
     public event Action<DamageInfo> onDamageImmune;
+
+    public event Action<AuraType> onAuraChange;
     
     void Start()
     {
@@ -83,7 +85,6 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Damage(DamageInfo info)
     {
-        print("oww");
         if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {
@@ -103,9 +104,6 @@ public class Health : MonoBehaviour
         transform.Translate(info.knockback * knockbackMultiplier);
         
         if (currentHealth <= 0) Die();
-        
-        // throw new Exception("oww!");
-        print("oww");
     }
 
     /// <summary>
@@ -144,6 +142,7 @@ public class Health : MonoBehaviour
     public void AuraBreak()
     {
         this.vulnerableTypes = AuraType.Everything;
+        onAuraChange?.Invoke(vulnerableTypes);
     }
 }
 

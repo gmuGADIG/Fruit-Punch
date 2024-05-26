@@ -14,7 +14,7 @@ public class ScreenSpawner : MonoBehaviour
     [System.Serializable]
     public struct EnemySpawnData
     {
-        public Enemy enemy;
+        public GameObject enemyPrefab;
         public AuraType aura;
         public EnemySpawns spawnpoint;
     }
@@ -84,7 +84,7 @@ public class ScreenSpawner : MonoBehaviour
     /// <summary>
     /// Manager for what enemies are on screen.
     /// </summary>
-    private HashSet<Enemy> enemiesOnScreen;
+    private HashSet<GameObject> enemiesOnScreen = new();
 
     /// <summary>
     /// Number of aura enemies currently on screen.
@@ -115,7 +115,7 @@ public class ScreenSpawner : MonoBehaviour
     #endregion
     private void Awake()
     {
-        enemiesOnScreen = new HashSet<Enemy>();
+        enemiesOnScreen = new HashSet<GameObject>();
     }
 
     // Update is called once per frame
@@ -198,7 +198,7 @@ public class ScreenSpawner : MonoBehaviour
             return;
         }
         
-        Enemy instance = spawnData.spawnpoint.SpawnEnemy(spawnData.enemy, spawnData.aura);
+        GameObject instance = spawnData.spawnpoint.SpawnEnemy(spawnData.enemyPrefab, spawnData.aura);
         enemiesOnScreen.Add(instance);
         
         enemiesLeft--;
@@ -216,7 +216,7 @@ public class ScreenSpawner : MonoBehaviour
     /// Callback function that runs when a enemies dies. Starts a spawn check.
     /// </summary>
     /// <param name="enemyThatDied"></param>
-    private void OnEnemyDeath(Enemy enemyThatDied)
+    private void OnEnemyDeath(GameObject enemyThatDied)
     {
         Debug.Log($"Enemy {enemyThatDied.name} has died.");
         Health healthInstance = enemyThatDied.GetComponent<Health>();

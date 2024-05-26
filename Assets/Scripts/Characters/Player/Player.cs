@@ -40,7 +40,7 @@ public class Player : MonoBehaviour
     private InputBuffer inputBuffer;
     private Grabber grabber;
     private GroundCheck groundCheck;
-    private float halfPlayerSizeX;
+    private ColorTweaker colorTweaker;
 
     [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
     [SerializeField] PlayerCharacter playerCharacter;
@@ -87,6 +87,7 @@ public class Player : MonoBehaviour
         this.GetComponentOrError(out inputBuffer);
         this.GetComponentInChildrenOrError(out grabber);
         this.GetComponentInChildrenOrError(out groundCheck);
+        this.GetComponentInChildrenOrError(out colorTweaker);
 
         foreach (var hb in GetComponentsInChildren<HurtBox>(true)) {
             hb.onHurt += damageInfo => {
@@ -187,6 +188,7 @@ public class Player : MonoBehaviour
     void NormalEnter()
     {
         anim.Play("Idle");
+        colorTweaker.RemoveAuraColor();
     }
 
     PlayerState NormalUpdate()
@@ -254,6 +256,8 @@ public class Player : MonoBehaviour
 
     void StrikeEnter(int strikeState)
     {
+        colorTweaker.SetAuraColor(AuraType.Strike);
+        
         // avoid reading inputs before we entered this state
         inputBuffer.ClearAction("gameplay/Strike");
 
@@ -301,11 +305,12 @@ public class Player : MonoBehaviour
     }
 
     void JumpStrikeEnter() {
+        colorTweaker.SetAuraColor(AuraType.JumpAtk);
         anim.Play("JumpStrike");
     }
 
     void PearryEnter() {
-        print("pearrying");
+        colorTweaker.SetAuraColor(AuraType.Pearry);
         anim.Play("Pearry");
     }
 
@@ -341,6 +346,7 @@ public class Player : MonoBehaviour
 
     void ThrowingEnter()
     {
+        colorTweaker.SetAuraColor(AuraType.Throw);
         grabber.ThrowItem(FacingLeft);
     }
     
