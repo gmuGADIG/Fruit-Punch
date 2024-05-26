@@ -13,7 +13,9 @@ public enum PlayerState
     Pearry,
     Grabbing, Throwing,
     // Apple specific
-    AppleStrike3
+    AppleStrike3,
+    // Banana specific
+    BananaJumpStrike
 }
 
 public enum PlayerCharacter
@@ -66,6 +68,11 @@ public class Player : MonoBehaviour
     float strike2Length = -1;
     float strike3Length = -1;
     float pearryLength = .6f;
+    float bananaJumpStrikeUptime = .1f;
+    float bananaJumpStrikeVertSpeed = 8f;
+    float bananaJumpStrikeFollowThruTime = .1f;
+    float timer = 0f;
+    bool timerStarted = false;
     
     /// <summary>
     /// True when the player can move on to the next part of the strike animation.
@@ -75,6 +82,10 @@ public class Player : MonoBehaviour
     /// True when the player hit something during their strike animation.
     /// </summary>
     bool hasHitSomething = false;
+    /// <summary>
+    /// Whether to apply gravity to the player
+    /// </summary>
+    bool applyGravity = true;
 
     private bool FacingLeft => transform.localEulerAngles.y > 90;
 
@@ -126,7 +137,8 @@ public class Player : MonoBehaviour
         // apple specific
         stateMachine.AddState(PlayerState.AppleStrike3, AppleStrikeEnter, AppleStrikeUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
-
+        // banana specific
+        stateMachine.AddState(PlayerState.BananaJumpStrike, BananaJumpStrikeEnter, BananaJumpStateUpdate, BananaJumpStateExit);
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
     }
 
@@ -139,7 +151,11 @@ public class Player : MonoBehaviour
     void Update()
     {
         stateMachine.Update();
-        rb.velocity += Vector3.down * (gravity * Time.deltaTime);
+        if (applyGravity)
+        {
+            rb.velocity += Vector3.down * (gravity * Time.deltaTime);
+        }
+        timer += Time.deltaTime;
     }
 
     void OnTriggerEnter(Collider other)
@@ -243,7 +259,14 @@ public class Player : MonoBehaviour
         if (playerInput.actions["gameplay/Strike"].triggered
             && stateMachine.currentState != PlayerState.JumpStrike) 
         {
-            return PlayerState.JumpStrike;
+            if (playerCharacter == PlayerCharacter.Banana)
+            {
+                return PlayerState.BananaJumpStrike;
+            }
+            else
+            {
+                return PlayerState.JumpStrike;
+            }
         }
         
         if (playerInput.actions["gameplay/Interact"].triggered)
@@ -393,5 +416,48 @@ public class Player : MonoBehaviour
         }
 
         return stateMachine.currentState;
+    }
+
+    void BananaJumpStrikeEnter()
+    {
+        print("banana jump strike");
+        anim.Play("JumpStrike");
+        rb.velocity = Vector3.zero;
+        applyGravity = false;
+        timerStarted = false;
+    }
+
+    PlayerState BananaJumpStateUpdate()
+    {
+        // while the player is in air
+        if (!groundCheck.IsGrounded())
+        {
+            // short vertical bump
+            if (stateMachine.timeInState <= bananaJumpStrikeUptime)
+            {
+                transform.Translate(bananaJumpStrikeVertSpeed * Time.deltaTime * Vector3.up);
+            }
+            else
+            {
+                transform.Translate(bananaJumpStrikeVertSpeed * Time.deltaTime * Vector3.down);
+            }
+        }
+        else if (!timerStarted)
+        {
+            // when player hits ground, start follow thru timer
+            timer = 0;
+            timerStarted = true;
+            applyGravity = true;
+        }
+        if (timerStarted && timer >= bananaJumpStrikeFollowThruTime)
+        {
+            return PlayerState.Normal;
+        }
+        return stateMachine.currentState;
+    }
+
+    void BananaJumpStateExit(PlayerState nextState)
+    {
+        applyGravity = true;
     }
 }
