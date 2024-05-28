@@ -37,6 +37,8 @@ public class Player : MonoBehaviour
     private Grabber grabber;
     private GroundCheck groundCheck;
     private float halfPlayerSizeX;
+    private PauseManager pauseManager;
+
 
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
@@ -118,6 +120,9 @@ public class Player : MonoBehaviour
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
 
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
+
+        // get the PauseManager script to allow player to pause the game
+        pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
     }
 
 
@@ -128,8 +133,13 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        stateMachine.Update();
-        rb.velocity += Vector3.down * (gravity * Time.deltaTime);
+        if (playerInput.actions["gameplay/Pause"].triggered) {
+            pauseManager.Pause();
+        }
+        else if (Time.timeScale != 0) {
+            stateMachine.Update();
+            rb.velocity += Vector3.down * (gravity * Time.deltaTime);
+        }
     }
 
     void OnTriggerEnter(Collider other)
