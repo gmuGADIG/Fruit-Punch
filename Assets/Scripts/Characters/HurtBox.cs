@@ -10,7 +10,6 @@ public struct HurtContext {
 
 /// <summary>
 /// Creates a hurt box, dealing damage to players or enemies when they collide with the attached Collider2D. <br/>
-/// The given <c>beltCharacter</c> is used for z-position checking. It may be attached to the same object or a (grand)parent. 
 /// </summary>
 public class HurtBox : MonoBehaviour
 {
@@ -19,7 +18,10 @@ public class HurtBox : MonoBehaviour
     
     [Tooltip("How much damage is dealt when an enemy is hit (assuming vulnerable aura)")]
     public float damage;
-    
+
+    [Tooltip("How much knockback this hurtbox does.")]
+    public float knockback = .1f;
+
     [Tooltip("For dealing knockback, the hurtbox checks if the parent is flipped in the x-axis (negative scale).")]
     public Transform parentTransform;
     
@@ -42,6 +44,7 @@ public class HurtBox : MonoBehaviour
     {
         var facingLeft = parentTransform.localScale.x < 0;
         var knockback = facingLeft ? Vector2.left : Vector2.right;
+        knockback *= this.knockback;
         return new DamageInfo(this.damage, knockback, this.aura);
     }
 }
