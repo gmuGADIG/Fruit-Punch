@@ -11,4 +11,6 @@ public static class SwitchScene
     public const string level1_1 = "Level1-1";
     public const string mainMenu = "MainMenu";
     public const string optionsMenu = "OptionsMenu";
+
+    public const string pauseMenu = "PauseScreen";
 }
