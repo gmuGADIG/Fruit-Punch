@@ -42,6 +42,9 @@ public class Player : MonoBehaviour
     private InputBuffer inputBuffer;
     private Grabber grabber;
     private GroundCheck groundCheck;
+
+    private PauseManager pauseManager;
+
     private ColorTweaker colorTweaker;
 
     [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
@@ -140,6 +143,9 @@ public class Player : MonoBehaviour
         // banana specific
         stateMachine.AddState(PlayerState.BananaJumpStrike, BananaJumpStrikeEnter, BananaJumpStateUpdate, BananaJumpStateExit);
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
+
+        // get the PauseManager script to allow player to pause the game
+        pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
     }
 
 
@@ -150,6 +156,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (playerInput.actions["gameplay/Pause"].triggered)
+		{
+            pauseManager.Pause();
+        }
+		if (Time.timeScale == 0)
+		{
+			return;
+		}
         stateMachine.Update();
         if (applyGravity)
         {
