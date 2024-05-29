@@ -4,7 +4,9 @@ using UnityEngine;
 
 /// <summary>
 /// Lets the play grab any nearby grabbables (items or enemies). <br/>
+/// Requires a trigger Collider component.
 /// </summary>
+[RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabber : MonoBehaviour
 {
     public event Action onForceRelease;
@@ -106,5 +108,21 @@ public class Grabber : MonoBehaviour
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         onForceRelease?.Invoke();
+    }
+
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out Grabbable grabbable)) {
+            grabbable.InGrabbingRange(this);
+
+            grabbable.disabled += () => {
+                grabbable.OutOfGrabbingRange(this);
+            };
+        }
+    }
+
+    void OnTriggerExit(Collider other) {
+        if (other.TryGetComponent(out Grabbable grabbable)) {
+            grabbable.OutOfGrabbingRange(this);
+        }
     }
 }
