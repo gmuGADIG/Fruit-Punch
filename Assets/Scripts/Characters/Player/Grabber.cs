@@ -9,10 +9,13 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabber : MonoBehaviour
 {
-    public event Action onForceRelease;
+    public event Action OnForceRelease;
     
     [Tooltip("The force (not speed) applied to thrown objects. Heavier objects will be slower.")]
     [SerializeField] float throwForce;
+
+    [Tooltip("Multiplier for the amount of damage done on landing.")]
+    [SerializeField] float throwDamageMultiplier = 1.0f;
 
     [Tooltip("The radius of which the player has the ability to grab an object.")]
     [SerializeField] float grabRadius = 1f;
@@ -42,6 +45,7 @@ public class Grabber : MonoBehaviour
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
+        item.GetComponent<Grabbable>().damageOnLandingMultiplier = throwDamageMultiplier;
     }
 
     public float grabCoolDown = 2f;
@@ -107,14 +111,14 @@ public class Grabber : MonoBehaviour
         var item = GetGrabbedItem();
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
-        onForceRelease?.Invoke();
+        OnForceRelease?.Invoke();
     }
 
     void OnTriggerEnter(Collider other) {
         if (other.TryGetComponent(out Grabbable grabbable)) {
             grabbable.InGrabbingRange(this);
 
-            grabbable.disabled += () => {
+            grabbable.Disabled += () => {
                 grabbable.OutOfGrabbingRange(this);
             };
         }

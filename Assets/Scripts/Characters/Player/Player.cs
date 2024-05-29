@@ -107,7 +107,7 @@ public class Player : MonoBehaviour
         }
         
         // subscribe events
-        grabber.onForceRelease += ForceReleaseCallback;
+        grabber.OnForceRelease += ForceReleaseCallback;
         
 
         // get animation lengths
@@ -145,7 +145,7 @@ public class Player : MonoBehaviour
 
     void OnDestroy()
     {
-        grabber.onForceRelease -= ForceReleaseCallback;
+        grabber.OnForceRelease -= ForceReleaseCallback;
     }
 
     void Update()
@@ -420,7 +420,6 @@ public class Player : MonoBehaviour
 
     void BananaJumpStrikeEnter()
     {
-        print("banana jump strike");
         anim.Play("JumpStrike");
         rb.velocity = Vector3.zero;
         applyGravity = false;
