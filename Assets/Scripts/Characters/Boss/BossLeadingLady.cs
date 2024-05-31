@@ -12,6 +12,8 @@ enum LeadingLadyState
     Punching,
     Spitting,
     BigJump,
+    Grabbed,
+    InAir,
 }
 
 public class BossLeadingLady : Boss
@@ -53,7 +55,14 @@ public class BossLeadingLady : Boss
         stateMachine.AddState(LeadingLadyState.Punching, PunchingEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.Spitting, SpittingEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.BigJump, BigJumpEnter, null, AttackStateExit);
+        stateMachine.AddState(LeadingLadyState.InAir, InAirEnter, InAirUpdate, InAirExit);
+        stateMachine.AddState(LeadingLadyState.Grabbed, GrabbedEnter, GrabbedUpdate, null);
         stateMachine.FinalizeAndSetState(LeadingLadyState.Aggressive);
+
+        grabbable.onGrab.AddListener(OnGrabCallback);
+        grabbable.onThrow.AddListener(OnThrowCallback);
+        grabbable.onForceRelease.AddListener(OnForceReleaseCallback);
+
     }
 
     void Update()
@@ -170,7 +179,69 @@ public class BossLeadingLady : Boss
         var proj =
             Instantiate(spitProjectilePrefab, spitEmitPoint.position, Quaternion.identity)
             .GetComponent<EnemyProjectile>();
-        proj.GetComponent<HurtBox>().parentTransform = this.transform;
+        //proj.GetComponent<HurtBox>().parentTransform = this.transform;
         proj.Setup(projectileDamage, transform.right * projectileSpeed);
+    }
+
+    //TODO: this is duplicated code from Enemy because state changes can't happen in the base Boss class. Extract throw and air state logic to a new class?
+    void InAirEnter() { }
+
+    LeadingLadyState InAirUpdate()
+    {
+        if (groundCheck.IsGrounded())
+        {
+            Debug.Log("Boss landed");
+            return LeadingLadyState.Aggressive;
+        }
+        return stateMachine.currentState;
+    }
+
+    void InAirExit(LeadingLadyState newState)
+    {
+        // make sure we're not being regrabbed, because then there shouldn't be
+        // any damage being taken
+        if (thrownDamageQueue && newState != LeadingLadyState.Grabbed)
+        {
+            thrownDamageQueue = false;
+            var dmg = throwBaseDamage * rb.mass;
+            health.Damage(new DamageInfo(dmg, Vector2.zero, AuraType.Throw));
+        }
+        navMesh.enabled = true;
+    }
+
+    void GrabbedEnter() {
+        navMesh.enabled = false;
+        if (activeCoroutine != null)
+        {
+            StopCoroutine(activeCoroutine);
+        }
+        //Apparently some animations have events tied to them, resetting anim state here
+        anim.Play("Idle");
+    }
+
+    LeadingLadyState GrabbedUpdate()
+    {
+        if (stateMachine.timeInState >= grabTimeToEscape)
+        {
+            grabbable.ForceRelease();
+            return LeadingLadyState.InAir;
+        }
+
+        return stateMachine.currentState;
+    }
+
+    protected void GrabbedExit(EnemyState newState) { }
+
+    void OnGrabCallback() => stateMachine.SetState(LeadingLadyState.Grabbed);
+
+    void OnThrowCallback()
+    {
+        thrownDamageQueue = true;
+        stateMachine.SetState(LeadingLadyState.InAir);
+    }
+
+    void OnForceReleaseCallback()
+    {
+        stateMachine.SetState(LeadingLadyState.InAir);
     }
 }
