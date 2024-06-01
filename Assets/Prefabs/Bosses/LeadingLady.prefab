@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4568686069766632697
 Transform:
   m_ObjectHideFlags: 0
@@ -89,7 +89,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7962285998389648205
 Transform:
   m_ObjectHideFlags: 0
@@ -257,7 +257,7 @@ PrefabInstance:
       addedObject: {fileID: 7962285998389648205}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3662827940676610809, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
-      insertIndex: -1
+      insertIndex: 1
       addedObject: {fileID: 3445619029656799348}
   m_SourcePrefab: {fileID: 100100000, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
 --- !u!1 &3468139317198361249 stripped
@@ -280,6 +280,7 @@ MonoBehaviour:
   throwBaseDamage: 20
   walkSpeed: 2
   timeBetweenAttacks: 2
+  gravity: 10
   jumpEndLag: 2
   punchDuration: 2
   spittingDuration: 2

@@ -60,8 +60,8 @@ public class Grabbable : MonoBehaviour
         currentlyGrabbed = false;
         onThrow?.Invoke();
         rb.isKinematic = false;
-        if(agent != null)
-            agent.enabled = true;
+        //if(agent != null)
+        //    agent.enabled = true;
 
         throwingHurtBox.gameObject.SetActive(true);
     }
@@ -71,8 +71,8 @@ public class Grabbable : MonoBehaviour
         currentlyGrabbed = false;
         onForceRelease?.Invoke();
         rb.isKinematic = false;
-        if(agent != null)
-            agent.enabled = true;
+        //if(agent != null)
+        //    agent.enabled = true;
     }
 
     /// <summary>

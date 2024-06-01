@@ -23,13 +23,16 @@ public class Boss : MonoBehaviour
     protected Rigidbody rb;
     protected NavMeshAgent navMesh;
     protected Health health;
+    protected GroundCheck groundCheck;
     protected Grabbable grabbable;
     protected void Start()
     {
         this.GetComponentOrError(out rb);
         this.GetComponentOrError(out navMesh);
         this.GetComponentOrError(out health);
+        this.GetComponentInChildrenOrError(out groundCheck);
         this.GetComponentOrError(out grabbable);
+
     }
 
     /// <summary>

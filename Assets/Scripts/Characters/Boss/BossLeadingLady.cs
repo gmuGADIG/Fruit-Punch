@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -19,12 +20,12 @@ enum LeadingLadyState
 public class BossLeadingLady : Boss
 {
     StateMachine<LeadingLadyState> stateMachine;
-    GroundCheck groundCheck;
     Animator anim;
 
     [SerializeField] float walkSpeed = 2f;
     [SerializeField] float timeBetweenAttacks = 2;
-    
+    [SerializeField] float gravity = 10f;
+
     [Header("Jumping")]
     [SerializeField] float jumpEndLag = 2;
     
@@ -48,7 +49,6 @@ public class BossLeadingLady : Boss
         ropePoints = GameObject.FindGameObjectsWithTag("Boss1RopePoint").Select(obj => obj.transform).ToList();
         
         this.GetComponentOrError(out anim);
-        this.GetComponentOrError(out groundCheck);
         
         stateMachine = new StateMachine<LeadingLadyState>();
         stateMachine.AddState(LeadingLadyState.Aggressive, null, AggressiveUpdate, null);
@@ -56,7 +56,7 @@ public class BossLeadingLady : Boss
         stateMachine.AddState(LeadingLadyState.Spitting, SpittingEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.BigJump, BigJumpEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.InAir, InAirEnter, InAirUpdate, InAirExit);
-        stateMachine.AddState(LeadingLadyState.Grabbed, GrabbedEnter, GrabbedUpdate, null);
+        stateMachine.AddState(LeadingLadyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
         stateMachine.FinalizeAndSetState(LeadingLadyState.Aggressive);
 
         grabbable.onGrab.AddListener(OnGrabCallback);
@@ -184,7 +184,9 @@ public class BossLeadingLady : Boss
     }
 
     //TODO: this is duplicated code from Enemy because state changes can't happen in the base Boss class. Extract throw and air state logic to a new class?
-    void InAirEnter() { }
+    void InAirEnter() {
+        navMesh.enabled = false;
+    }
 
     LeadingLadyState InAirUpdate()
     {
@@ -193,6 +195,7 @@ public class BossLeadingLady : Boss
             Debug.Log("Boss landed");
             return LeadingLadyState.Aggressive;
         }
+        if (rb.isKinematic == false) rb.velocity += Vector3.down * gravity * Time.deltaTime;
         return stateMachine.currentState;
     }
 
@@ -230,7 +233,7 @@ public class BossLeadingLady : Boss
         return stateMachine.currentState;
     }
 
-    protected void GrabbedExit(EnemyState newState) { }
+    void GrabbedExit(LeadingLadyState newState) { }
 
     void OnGrabCallback() => stateMachine.SetState(LeadingLadyState.Grabbed);
 
@@ -242,6 +245,7 @@ public class BossLeadingLady : Boss
 
     void OnForceReleaseCallback()
     {
+        Debug.Log("Force released");
         stateMachine.SetState(LeadingLadyState.InAir);
     }
 }
