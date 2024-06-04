@@ -42,6 +42,7 @@ public class Player : MonoBehaviour
     private InputBuffer inputBuffer;
     private Grabber grabber;
     private GroundCheck groundCheck;
+    private Health health;
 
     private PauseManager pauseManager;
 
@@ -70,7 +71,7 @@ public class Player : MonoBehaviour
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
-    float pearryLength = .6f;
+    float pearryLength = 5f;
     float bananaJumpStrikeUptime = .1f;
     float bananaJumpStrikeVertSpeed = 8f;
     float bananaJumpStrikeFollowThruTime = .1f;
@@ -102,6 +103,7 @@ public class Player : MonoBehaviour
         this.GetComponentInChildrenOrError(out grabber);
         this.GetComponentInChildrenOrError(out groundCheck);
         this.GetComponentInChildrenOrError(out colorTweaker);
+        this.GetComponentOrError(out health);
 
         foreach (var hb in GetComponentsInChildren<HurtBox>(true)) {
             hb.onHurt += damageInfo => {
@@ -134,7 +136,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
-        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
+        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, PearryExit);
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         // apple specific
@@ -348,6 +350,7 @@ public class Player : MonoBehaviour
 
     void PearryEnter() {
         colorTweaker.SetAuraColor(AuraType.Pearry);
+        health.Pearrying = true;
         anim.Play("Pearry");
     }
 
@@ -359,6 +362,11 @@ public class Player : MonoBehaviour
         }
 
         return stateMachine.currentState;
+    }
+
+    void PearryExit(PlayerState state)
+    {
+        health.Pearrying = false;
     }
 
     // subscribed to the grabber's onForceRelease event

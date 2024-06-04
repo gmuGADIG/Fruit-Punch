@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.InputSystem.LowLevel;
 
 /// <summary>
 /// This component allows an item or an enemy to be grabbed by a player. See also: <c>Grabber.cs</c> <br/>

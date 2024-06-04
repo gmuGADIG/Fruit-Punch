@@ -45,6 +45,6 @@ public class HurtBox : MonoBehaviour
         var facingLeft = parentTransform.localScale.x < 0;
         var knockback = facingLeft ? Vector2.left : Vector2.right;
         knockback *= this.knockback;
-        return new DamageInfo(this.damage, knockback, this.aura);
+        return new DamageInfo(gameObject, this.damage, knockback, this.aura);
     }
 }

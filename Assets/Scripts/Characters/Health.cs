@@ -35,6 +35,10 @@ public class Health : MonoBehaviour
     [Tooltip("How affected by knockback this entity is.")]
     public float knockbackMultiplier = 1f;
 
+    [SerializeField] float pearryDamage = 10f;
+    [SerializeField] float pearryKnockback = .1f;
+    public bool Pearrying { get; set; } = false;
+
     /// <summary>
     /// Invoked when this character's health reaches zero. <br/>
     /// (run after onHealthChange and onHurt)
@@ -85,10 +89,20 @@ public class Health : MonoBehaviour
     /// </summary>
     public void Damage(DamageInfo info)
     {
-        if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
+        if (currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
+            return;
+        }
+        if (Pearrying && info.source != null)
+        {
+            Health enemyHealth = info.source.GetComponentInParent<Health>();
+            if (enemyHealth != null)
+            {
+                Vector2 knockback = (info.source.transform.position - transform.position).normalized * pearryKnockback;
+                enemyHealth.Damage(new DamageInfo(gameObject, pearryDamage, knockback, AuraType.Pearry));
+            }
             return;
         }
         
