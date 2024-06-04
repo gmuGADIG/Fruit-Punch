@@ -15,7 +15,7 @@ public class KillThePlayers : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        DamageInfo damageInfo = new DamageInfo(100, Vector2.right, AuraType.Strike);
+        DamageInfo damageInfo = new DamageInfo(gameObject, 100, Vector2.right, AuraType.Strike);
 
         if (Input.GetKeyDown(KeyCode.J))
         {

@@ -20,12 +20,14 @@ public enum AuraType
 
 public struct DamageInfo
 {
+    public GameObject source;
     public float damage;
     public Vector2 knockback;
     public AuraType aura;
 
-    public DamageInfo(float damage, Vector2 knockback, AuraType aura)
+    public DamageInfo(GameObject source, float damage, Vector2 knockback, AuraType aura)
     {
+        this.source = source;
         this.damage = damage;
         this.knockback = knockback;
         this.aura = aura;

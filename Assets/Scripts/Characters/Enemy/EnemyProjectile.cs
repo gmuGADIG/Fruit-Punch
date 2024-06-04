@@ -5,6 +5,8 @@ using UnityEngine;
 class EnemyProjectile : MonoBehaviour
 {
     [SerializeField] float lifetime = 10;
+    public Vector3 Velocity => velocity;
+
     bool setupCalled = false;
     Vector3 velocity;
 

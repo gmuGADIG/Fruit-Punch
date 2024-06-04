@@ -42,6 +42,10 @@ public class Player : MonoBehaviour
     private InputBuffer inputBuffer;
     private Grabber grabber;
     private GroundCheck groundCheck;
+    private Health health;
+
+    private PauseManager pauseManager;
+
     private ColorTweaker colorTweaker;
 
     [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
@@ -101,6 +105,7 @@ public class Player : MonoBehaviour
         this.GetComponentInChildrenOrError(out grabber);
         this.GetComponentInChildrenOrError(out groundCheck);
         this.GetComponentInChildrenOrError(out colorTweaker);
+        this.GetComponentOrError(out health);
 
         foreach (var hb in GetComponentsInChildren<HurtBox>(true)) {
             hb.onHurt += damageInfo => {
@@ -133,7 +138,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
-        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
+        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, PearryExit);
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         // apple specific
@@ -142,6 +147,9 @@ public class Player : MonoBehaviour
         // banana specific
         stateMachine.AddState(PlayerState.BananaJumpStrike, BananaJumpStrikeEnter, BananaJumpStateUpdate, BananaJumpStateExit);
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
+
+        // get the PauseManager script to allow player to pause the game
+        pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
     }
 
 
@@ -152,6 +160,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (playerInput.actions["gameplay/Pause"].triggered)
+		{
+            pauseManager.Pause();
+        }
+		if (Time.timeScale == 0)
+		{
+			return;
+		}
         stateMachine.Update();
         if (applyGravity)
         {
@@ -336,6 +352,7 @@ public class Player : MonoBehaviour
 
     void PearryEnter() {
         colorTweaker.SetAuraColor(AuraType.Pearry);
+        health.Pearrying = true;
         anim.Play("Pearry");
     }
 
@@ -347,6 +364,11 @@ public class Player : MonoBehaviour
         }
 
         return stateMachine.currentState;
+    }
+
+    void PearryExit(PlayerState state)
+    {
+        health.Pearrying = false;
     }
 
     // subscribed to the grabber's onForceRelease event

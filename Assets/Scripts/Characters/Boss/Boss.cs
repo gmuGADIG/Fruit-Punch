@@ -14,13 +14,25 @@ using Vector3 = UnityEngine.Vector3;
 /// </summary>
 public class Boss : MonoBehaviour
 {
+
+    [Tooltip("This much damage multiplied by its mass is dealt on throw, both to itself and anything it hits.")]
+    [SerializeField] protected float throwBaseDamage = 20f;
+    protected const float grabTimeToEscape = 5f; // enemy will break out of a grab after this long
+    protected bool thrownDamageQueue = false;
+
     protected Rigidbody rb;
     protected NavMeshAgent navMesh;
-
+    protected Health health;
+    protected GroundCheck groundCheck;
+    protected Grabbable grabbable;
     protected void Start()
     {
         this.GetComponentOrError(out rb);
         this.GetComponentOrError(out navMesh);
+        this.GetComponentOrError(out health);
+        this.GetComponentInChildrenOrError(out groundCheck);
+        this.GetComponentOrError(out grabbable);
+
     }
 
     /// <summary>
