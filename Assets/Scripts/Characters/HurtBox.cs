@@ -42,7 +42,7 @@ public class HurtBox : MonoBehaviour
 
     public DamageInfo GetDamageInfo()
     {
-        Vector2 knockback = Vector2.right * this.knockback;
+        Vector2 knockback = transform.right * this.knockback;
         return new DamageInfo(this.damage, knockback, this.aura);
     }
 }
