@@ -47,4 +47,9 @@ public class HurtBox : MonoBehaviour
         knockback *= this.knockback;
         return new DamageInfo(gameObject, this.damage, knockback, this.aura);
     }
+
+    public void SetAura(AuraType aura)
+    {
+        this.aura = aura;
+    }
 }

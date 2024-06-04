@@ -71,7 +71,7 @@ public class Player : MonoBehaviour
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
-    float pearryLength = 5f;
+    float pearryLength = 1f;
     float bananaJumpStrikeUptime = .1f;
     float bananaJumpStrikeVertSpeed = 8f;
     float bananaJumpStrikeFollowThruTime = .1f;
