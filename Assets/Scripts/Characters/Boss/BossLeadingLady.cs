@@ -207,7 +207,7 @@ public class BossLeadingLady : Boss
         {
             thrownDamageQueue = false;
             var dmg = throwBaseDamage * rb.mass;
-            health.Damage(new DamageInfo(dmg, Vector2.zero, AuraType.Throw));
+            health.Damage(new DamageInfo(gameObject, dmg, Vector2.zero, AuraType.Throw));
         }
         navMesh.enabled = true;
     }
