@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -12,17 +13,19 @@ enum LeadingLadyState
     Punching,
     Spitting,
     BigJump,
+    Grabbed,
+    InAir,
 }
 
 public class BossLeadingLady : Boss
 {
     StateMachine<LeadingLadyState> stateMachine;
-    GroundCheck groundCheck;
     Animator anim;
 
     [SerializeField] float walkSpeed = 2f;
     [SerializeField] float timeBetweenAttacks = 2;
-    
+    [SerializeField] float gravity = 10f;
+
     [Header("Jumping")]
     [SerializeField] float jumpEndLag = 2;
     
@@ -46,14 +49,20 @@ public class BossLeadingLady : Boss
         ropePoints = GameObject.FindGameObjectsWithTag("Boss1RopePoint").Select(obj => obj.transform).ToList();
         
         this.GetComponentOrError(out anim);
-        this.GetComponentOrError(out groundCheck);
         
         stateMachine = new StateMachine<LeadingLadyState>();
         stateMachine.AddState(LeadingLadyState.Aggressive, null, AggressiveUpdate, null);
         stateMachine.AddState(LeadingLadyState.Punching, PunchingEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.Spitting, SpittingEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.BigJump, BigJumpEnter, null, AttackStateExit);
+        stateMachine.AddState(LeadingLadyState.InAir, InAirEnter, InAirUpdate, InAirExit);
+        stateMachine.AddState(LeadingLadyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
         stateMachine.FinalizeAndSetState(LeadingLadyState.Aggressive);
+
+        grabbable.onGrab.AddListener(OnGrabCallback);
+        grabbable.onThrow.AddListener(OnThrowCallback);
+        grabbable.onForceRelease.AddListener(OnForceReleaseCallback);
+
     }
 
     void Update()
@@ -170,7 +179,73 @@ public class BossLeadingLady : Boss
         var proj =
             Instantiate(spitProjectilePrefab, spitEmitPoint.position, Quaternion.identity)
             .GetComponent<EnemyProjectile>();
-        proj.GetComponent<HurtBox>().parentTransform = this.transform;
+        //proj.GetComponent<HurtBox>().parentTransform = this.transform;
         proj.Setup(projectileDamage, transform.right * projectileSpeed);
+    }
+
+    //TODO: this is duplicated code from Enemy because state changes can't happen in the base Boss class. Extract throw and air state logic to a new class?
+    void InAirEnter() {
+        navMesh.enabled = false;
+    }
+
+    LeadingLadyState InAirUpdate()
+    {
+        if (groundCheck.IsGrounded())
+        {
+            Debug.Log("Boss landed");
+            return LeadingLadyState.Aggressive;
+        }
+        if (rb.isKinematic == false) rb.velocity += Vector3.down * gravity * Time.deltaTime;
+        return stateMachine.currentState;
+    }
+
+    void InAirExit(LeadingLadyState newState)
+    {
+        // make sure we're not being regrabbed, because then there shouldn't be
+        // any damage being taken
+        if (thrownDamageQueue && newState != LeadingLadyState.Grabbed)
+        {
+            thrownDamageQueue = false;
+            var dmg = throwBaseDamage * rb.mass;
+            health.Damage(new DamageInfo(dmg, Vector2.zero, AuraType.Throw));
+        }
+        navMesh.enabled = true;
+    }
+
+    void GrabbedEnter() {
+        navMesh.enabled = false;
+        if (activeCoroutine != null)
+        {
+            StopCoroutine(activeCoroutine);
+        }
+        //Apparently some animations have events tied to them, resetting anim state here
+        anim.Play("Idle");
+    }
+
+    LeadingLadyState GrabbedUpdate()
+    {
+        if (stateMachine.timeInState >= grabTimeToEscape)
+        {
+            grabbable.ForceRelease();
+            return LeadingLadyState.InAir;
+        }
+
+        return stateMachine.currentState;
+    }
+
+    void GrabbedExit(LeadingLadyState newState) { }
+
+    void OnGrabCallback() => stateMachine.SetState(LeadingLadyState.Grabbed);
+
+    void OnThrowCallback()
+    {
+        thrownDamageQueue = true;
+        stateMachine.SetState(LeadingLadyState.InAir);
+    }
+
+    void OnForceReleaseCallback()
+    {
+        Debug.Log("Force released");
+        stateMachine.SetState(LeadingLadyState.InAir);
     }
 }
