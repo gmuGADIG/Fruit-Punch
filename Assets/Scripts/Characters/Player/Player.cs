@@ -62,12 +62,14 @@ public class Player : MonoBehaviour
     [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
     [SerializeField] float gravity = 16;
 
+    [Tooltip("Duration of the pearry state.")]
+    [SerializeField] float pearryLength = 1f;
+
     LayerMask collidingLayers;
 
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
-    float pearryLength = .6f;
     float bananaJumpStrikeUptime = .1f;
     float bananaJumpStrikeVertSpeed = 8f;
     float bananaJumpStrikeFollowThruTime = .1f;
