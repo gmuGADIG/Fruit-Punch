@@ -23,7 +23,7 @@ public class Hole : MonoBehaviour
             StartCoroutine(PlayerFallCoroutine(player));
         else if (other.TryGetComponent<Health>(out var enemyHealth))
         {
-            enemyHealth.Damage(new DamageInfo(10000000f, Vector2.zero, AuraType.Everything)); // is she hurt enough
+            enemyHealth.Damage(new DamageInfo(gameObject, 10000000f, Vector2.zero, AuraType.Everything)); // is she hurt enough
         }
     }
 
@@ -34,7 +34,7 @@ public class Hole : MonoBehaviour
         col.transform.position = respawnPoint.position;
             
         var health = col.GetComponent<Health>();
-        health.Damage(new DamageInfo(damage, Vector2.zero, AuraType.EnemyAtk));
+        health.Damage(new DamageInfo(gameObject, damage, Vector2.zero, AuraType.EnemyAtk));
 
         var rb = col.GetComponent<Rigidbody>();
         rb.velocity = Vector3.zero;

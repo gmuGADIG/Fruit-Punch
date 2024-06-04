@@ -135,6 +135,6 @@ public class BasicCutsceneCamera : MonoBehaviour
 
     void Skip(InputAction.CallbackContext _context)
     {
-        panelSkipped=true;
+        panelSkipped = true;
     }
 }

@@ -35,6 +35,10 @@ public class Health : MonoBehaviour
     [Tooltip("How affected by knockback this entity is.")]
     public float knockbackMultiplier = 1f;
 
+    [SerializeField] float pearryDamage = 10f;
+    [SerializeField] float pearryKnockback = .1f;
+    public bool Pearrying { get; set; } = false;
+
     /// <summary>
     /// Invoked when this character's health reaches zero. <br/>
     /// (run after onHealthChange and onHurt)
@@ -69,8 +73,9 @@ public class Health : MonoBehaviour
             var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
             if (hitsThisLayer) {
                 var info = hurtBox.GetDamageInfo();
-                Damage(info);
-                if (IsVulnerableTo(info.aura)) {
+                bool success = Damage(info);
+                if (success)
+                {
                     hurtBox.onHurt?.Invoke(info);
                 }
             }
@@ -83,13 +88,33 @@ public class Health : MonoBehaviour
     /// Doesn't do anything with knockback; that's up the player or enemy script. <br/>
     /// (onHealthChange, onHurt, and onDeath are invoked if applicable)
     /// </summary>
-    public void Damage(DamageInfo info)
+    public bool Damage(DamageInfo info)
     {
-        if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
+        if (currentHealth <= 0) return false; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
-            return;
+            return false;
+        }
+        if (Pearrying && info.source != null)
+        {
+            Health enemyHealth = info.source.GetComponentInParent<Health>();
+            if (enemyHealth != null)
+            {
+                Vector2 knockback = (info.source.transform.position - transform.position).normalized * pearryKnockback;
+                enemyHealth.Damage(new DamageInfo(gameObject, pearryDamage, knockback, AuraType.Pearry));
+            }
+            if (info.source.TryGetComponent(out EnemyProjectile proj))
+            {
+                proj.Setup(pearryDamage, -proj.Velocity);
+                HurtBox hurtBox = proj.GetComponent<HurtBox>();
+                if (hurtBox)
+                {
+                    hurtBox.hitLayers = LayerMask.GetMask("Enemy");
+                    hurtBox.SetAura(AuraType.Pearry);
+                }
+            }
+            return false;
         }
         
         currentHealth = Mathf.MoveTowards(currentHealth, 0, info.damage);
@@ -104,6 +129,7 @@ public class Health : MonoBehaviour
         transform.Translate(info.knockback * knockbackMultiplier);
         
         if (currentHealth <= 0) Die();
+        return true;
     }
 
     /// <summary>

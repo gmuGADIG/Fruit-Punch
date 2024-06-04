@@ -16,7 +16,7 @@ public class HealthEditor : Editor
             foreach (var obj in targets)
             {
                 (obj as Health).vulnerableTypes = (AuraType)(-1);
-                (obj as Health).Damage(new DamageInfo(float.MaxValue, Vector2.zero, (AuraType)(-1)));
+                (obj as Health).Damage(new DamageInfo(null, float.MaxValue, Vector2.zero, (AuraType)(-1)));
             }
         }
     }

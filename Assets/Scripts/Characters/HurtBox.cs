@@ -43,6 +43,11 @@ public class HurtBox : MonoBehaviour
     public DamageInfo GetDamageInfo()
     {
         Vector2 knockback = transform.right * this.knockback;
-        return new DamageInfo(this.damage, knockback, this.aura);
+        return new DamageInfo(gameObject, this.damage, knockback, this.aura);
+    }
+
+    public void SetAura(AuraType aura)
+    {
+        this.aura = aura;
     }
 }
