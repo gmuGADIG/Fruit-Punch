@@ -15,7 +15,7 @@ public class BramblesScript : MonoBehaviour
         {
             Debug.Log("Hit player");
             Vector2 knockAngle = (collision.transform.position - this.transform.position).normalized * knockbackForce;
-            DamageInfo brambleDamage = new DamageInfo(damageAmount, knockAngle, AuraType.Normal);
+            DamageInfo brambleDamage = new DamageInfo(gameObject, damageAmount, knockAngle, AuraType.Normal);
             collision.gameObject.GetComponent<Health>().Damage(brambleDamage);
             collision.gameObject.GetComponent<Rigidbody>().AddForce(knockAngle, ForceMode.Impulse);
         }

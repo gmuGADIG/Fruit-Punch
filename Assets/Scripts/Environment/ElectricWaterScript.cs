@@ -28,7 +28,7 @@ public class ElectricWaterScript : MonoBehaviour
 
     void Shock(GameObject player)
     {
-        DamageInfo shockInfo = new DamageInfo(damageAmount, Vector2.zero, AuraType.Normal);
+        DamageInfo shockInfo = new DamageInfo(gameObject, damageAmount, Vector2.zero, AuraType.Normal);
         player.GetComponent<Health>().Damage(shockInfo);
     }
 }

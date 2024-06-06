@@ -4,7 +4,6 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
-using UnityEngine.InputSystem.LowLevel;
 
 /// <summary>
 /// This component allows an item or an enemy to be grabbed by a player. See also: <c>Grabber.cs</c> <br/>
@@ -14,6 +13,12 @@ public class Grabbable : MonoBehaviour
 {
     [Tooltip("May be null. Otherwise, this item is enabled when a player is in grabbing range, and disabled when walking away.")]
     [SerializeField] GameObject grabIndicator;
+    public bool CurrentlyGrabbed { get; private set; } = false;
+
+    public event Action Disabled;
+
+    public float damageOnLandingMultiplier = 1.0f;
+
     /// <summary>
     /// Amount of Grabbers currently in grabbing range. grabIndicator should be visible when this != 0.
     /// </summary>
@@ -24,9 +29,7 @@ public class Grabbable : MonoBehaviour
 
     NavMeshAgent agent;
 
-    public bool currentlyGrabbed { get; private set; } = false;
 
-    public event Action disabled;
 
 
     [Tooltip("The hurtbox to be used when throwing an object")]
@@ -48,7 +51,7 @@ public class Grabbable : MonoBehaviour
     public void Grab()
     {
         if (grabIndicator != null) grabIndicator.SetActive(false);
-        currentlyGrabbed = true;
+        CurrentlyGrabbed = true;
         onGrab?.Invoke();
         rb.isKinematic = true;
         if (agent != null)
@@ -57,22 +60,23 @@ public class Grabbable : MonoBehaviour
 
     public void Throw()
     {
-        currentlyGrabbed = false;
+        CurrentlyGrabbed = false;
         onThrow?.Invoke();
         rb.isKinematic = false;
-        if(agent != null)
-            agent.enabled = true;
+        //if(agent != null)
+        //    agent.enabled = true;
 
         throwingHurtBox.gameObject.SetActive(true);
+        throwingHurtBox.damage *= damageOnLandingMultiplier;
     }
 
     public void ForceRelease()
     {
-        currentlyGrabbed = false;
+        CurrentlyGrabbed = false;
         onForceRelease?.Invoke();
         rb.isKinematic = false;
-        if(agent != null)
-            agent.enabled = true;
+        //if(agent != null)
+        //    agent.enabled = true;
     }
 
     /// <summary>
@@ -99,7 +103,7 @@ public class Grabbable : MonoBehaviour
     }
 
     void OnDisable() {
-        disabled?.Invoke();
+        Disabled?.Invoke();
     }
 
     void OnCollisionEnter(Collision collision) {

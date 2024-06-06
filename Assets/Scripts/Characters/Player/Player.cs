@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Animations;
-using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
 public enum PlayerState
@@ -14,7 +11,16 @@ public enum PlayerState
     Strike1, Strike2, Strike3,
     JumpStrike,
     Pearry,
-    Grabbing, Throwing
+    Grabbing, Throwing,
+    // Apple specific
+    AppleStrike3,
+    // Banana specific
+    BananaJumpStrike
+}
+
+public enum PlayerCharacter
+{
+    Apple, Banana, Watermelon, Grape
 }
 
 /// <summary>
@@ -36,7 +42,14 @@ public class Player : MonoBehaviour
     private InputBuffer inputBuffer;
     private Grabber grabber;
     private GroundCheck groundCheck;
-    private float halfPlayerSizeX;
+    private Health health;
+
+    private PauseManager pauseManager;
+
+    private ColorTweaker colorTweaker;
+
+    [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
+    [SerializeField] PlayerCharacter playerCharacter;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
@@ -53,12 +66,19 @@ public class Player : MonoBehaviour
     [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
     [SerializeField] float gravity = 16;
 
+    [Tooltip("Duration of the pearry state.")]
+    [SerializeField] float pearryLength = 1f;
+
     LayerMask collidingLayers;
 
     float strike1Length = -1;
     float strike2Length = -1;
     float strike3Length = -1;
-    float pearryLength = .6f;
+    float bananaJumpStrikeUptime = .1f;
+    float bananaJumpStrikeVertSpeed = 8f;
+    float bananaJumpStrikeFollowThruTime = .1f;
+    float timer = 0f;
+    bool timerStarted = false;
     
     /// <summary>
     /// True when the player can move on to the next part of the strike animation.
@@ -68,6 +88,10 @@ public class Player : MonoBehaviour
     /// True when the player hit something during their strike animation.
     /// </summary>
     bool hasHitSomething = false;
+    /// <summary>
+    /// Whether to apply gravity to the player
+    /// </summary>
+    bool applyGravity = true;
 
     private bool FacingLeft => transform.localEulerAngles.y > 90;
 
@@ -80,6 +104,8 @@ public class Player : MonoBehaviour
         this.GetComponentOrError(out inputBuffer);
         this.GetComponentInChildrenOrError(out grabber);
         this.GetComponentInChildrenOrError(out groundCheck);
+        this.GetComponentInChildrenOrError(out colorTweaker);
+        this.GetComponentOrError(out health);
 
         foreach (var hb in GetComponentsInChildren<HurtBox>(true)) {
             hb.onHurt += damageInfo => {
@@ -88,7 +114,7 @@ public class Player : MonoBehaviour
         }
         
         // subscribe events
-        grabber.onForceRelease += ForceReleaseCallback;
+        grabber.OnForceRelease += ForceReleaseCallback;
         
 
         // get animation lengths
@@ -112,24 +138,42 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
-        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, null);
+        stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, PearryExit);
         stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
+        // apple specific
+        stateMachine.AddState(PlayerState.AppleStrike3, AppleStrikeEnter, AppleStrikeUpdate, null);
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
-
+        // banana specific
+        stateMachine.AddState(PlayerState.BananaJumpStrike, BananaJumpStrikeEnter, BananaJumpStateUpdate, BananaJumpStateExit);
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
+
+        // get the PauseManager script to allow player to pause the game
+        pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
     }
 
 
     void OnDestroy()
     {
-        grabber.onForceRelease -= ForceReleaseCallback;
+        grabber.OnForceRelease -= ForceReleaseCallback;
     }
 
     void Update()
     {
+        if (playerInput.actions["gameplay/Pause"].triggered)
+		{
+            pauseManager.Pause();
+        }
+		if (Time.timeScale == 0)
+		{
+			return;
+		}
         stateMachine.Update();
-        rb.velocity += Vector3.down * (gravity * Time.deltaTime);
+        if (applyGravity)
+        {
+            rb.velocity += Vector3.down * (gravity * Time.deltaTime);
+        }
+        timer += Time.deltaTime;
     }
 
     void OnTriggerEnter(Collider other)
@@ -162,7 +206,6 @@ public class Player : MonoBehaviour
             }
         }
 
-
         targetVel.y = rb.velocity.y;
         rb.velocity = Vector3.MoveTowards(
             rb.velocity,
@@ -176,26 +219,10 @@ public class Player : MonoBehaviour
         else if (targetVel.x > 0) transform.localRotation = Quaternion.identity;
     }
 
-    // bool IsGrounded()
-    // {
-    //     // overlap a box below the player to see if it's grounded
-    //     // uses the hitbox's x and z size, with an arbitrary height
-    //     var hitBox = GetComponent<BoxCollider>();
-    //     const float groundBoxHeight = 0.05f;
-    //     
-    //     var overlaps = Physics.OverlapBox(
-    //         transform.position, 
-    //         new Vector3(hitBox.size.x, groundBoxHeight, hitBox.size.z),
-    //         Quaternion.identity,
-    //         collidingLayers
-    //     );
-    //
-    //     return overlaps.Length > 0;
-    // }
-
     void NormalEnter()
     {
         anim.Play("Idle");
+        colorTweaker.RemoveAuraColor();
     }
 
     PlayerState NormalUpdate()
@@ -250,7 +277,14 @@ public class Player : MonoBehaviour
         if (playerInput.actions["gameplay/Strike"].triggered
             && stateMachine.currentState != PlayerState.JumpStrike) 
         {
-            return PlayerState.JumpStrike;
+            if (playerCharacter == PlayerCharacter.Banana)
+            {
+                return PlayerState.BananaJumpStrike;
+            }
+            else
+            {
+                return PlayerState.JumpStrike;
+            }
         }
         
         if (playerInput.actions["gameplay/Interact"].triggered)
@@ -263,6 +297,8 @@ public class Player : MonoBehaviour
 
     void StrikeEnter(int strikeState)
     {
+        colorTweaker.SetAuraColor(AuraType.Strike);
+        
         // avoid reading inputs before we entered this state
         inputBuffer.ClearAction("gameplay/Strike");
 
@@ -286,7 +322,17 @@ public class Player : MonoBehaviour
         if (strikeAnimationOver && hasHitSomething && inputBuffer.CheckAction("gameplay/Strike"))
         {
             if (strikeState == 1) return PlayerState.Strike2;
-            if (strikeState == 2) return PlayerState.Strike3;
+            if (strikeState == 2)
+            {
+                if (playerCharacter == PlayerCharacter.Apple)
+                {
+                    return PlayerState.AppleStrike3;
+                }
+                else
+                {
+                    return PlayerState.Strike3;
+                }
+            }
         }
 
         var animLengths = new[] { strike1Length, strike2Length, strike3Length };
@@ -300,11 +346,13 @@ public class Player : MonoBehaviour
     }
 
     void JumpStrikeEnter() {
+        colorTweaker.SetAuraColor(AuraType.JumpAtk);
         anim.Play("JumpStrike");
     }
 
     void PearryEnter() {
-        print("pearrying");
+        colorTweaker.SetAuraColor(AuraType.Pearry);
+        health.Pearrying = true;
         anim.Play("Pearry");
     }
 
@@ -316,6 +364,11 @@ public class Player : MonoBehaviour
         }
 
         return stateMachine.currentState;
+    }
+
+    void PearryExit(PlayerState state)
+    {
+        health.Pearrying = false;
     }
 
     // subscribed to the grabber's onForceRelease event
@@ -340,6 +393,7 @@ public class Player : MonoBehaviour
 
     void ThrowingEnter()
     {
+        colorTweaker.SetAuraColor(AuraType.Throw);
         grabber.ThrowItem(FacingLeft);
     }
     
@@ -360,5 +414,73 @@ public class Player : MonoBehaviour
     /// </summary>
     public void OnStrikeAnimationOver() {
         strikeAnimationOver = true;
+    }
+
+    void AppleStrikeEnter()
+    {
+        // avoid reading inputs before we entered this state
+        inputBuffer.ClearAction("gameplay/Strike");
+
+        // make sure we only move onto the next strike animation when we're ready
+        strikeAnimationOver = false;
+        hasHitSomething = true; // TEMP
+
+        anim.Play("Strike3"); // e.g. "Strike1", "Strike2", "Strike3"
+        SoundManager.Instance.PlaySoundAtPosition("HitHeavy", transform.position);
+    }
+
+    PlayerState AppleStrikeUpdate()
+    {
+        rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
+
+        var thisAnimLength = strike3Length;
+        if (stateMachine.timeInState >= thisAnimLength || !groundCheck.IsGrounded())
+        {
+            return PlayerState.Normal;
+        }
+
+        return stateMachine.currentState;
+    }
+
+    void BananaJumpStrikeEnter()
+    {
+        anim.Play("JumpStrike");
+        rb.velocity = Vector3.zero;
+        applyGravity = false;
+        timerStarted = false;
+    }
+
+    PlayerState BananaJumpStateUpdate()
+    {
+        // while the player is in air
+        if (!groundCheck.IsGrounded())
+        {
+            // short vertical bump
+            if (stateMachine.timeInState <= bananaJumpStrikeUptime)
+            {
+                transform.Translate(bananaJumpStrikeVertSpeed * Time.deltaTime * Vector3.up);
+            }
+            else
+            {
+                transform.Translate(bananaJumpStrikeVertSpeed * Time.deltaTime * Vector3.down);
+            }
+        }
+        else if (!timerStarted)
+        {
+            // when player hits ground, start follow thru timer
+            timer = 0;
+            timerStarted = true;
+            applyGravity = true;
+        }
+        if (timerStarted && timer >= bananaJumpStrikeFollowThruTime)
+        {
+            return PlayerState.Normal;
+        }
+        return stateMachine.currentState;
+    }
+
+    void BananaJumpStateExit(PlayerState nextState)
+    {
+        applyGravity = true;
     }
 }

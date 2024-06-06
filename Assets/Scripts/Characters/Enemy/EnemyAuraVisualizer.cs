@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete("No longer needed; see ColorTweaker.cs")]
 public class EnemyAuraVisualizer : MonoBehaviour
 {
 /// <summary>
