@@ -60,6 +60,8 @@ public class Health : MonoBehaviour
     public event Action<DamageInfo> onDamageImmune;
 
     public event Action<AuraType> onAuraChange;
+
+    public event Action OnPearry;
     
     void Start()
     {
@@ -114,6 +116,7 @@ public class Health : MonoBehaviour
                     hurtBox.SetAura(AuraType.Pearry);
                 }
             }
+            OnPearry?.Invoke();
             return false;
         }
         
@@ -163,7 +166,7 @@ public class Health : MonoBehaviour
         var score = fatalDamage.source.GetComponentInParent<PlayerScore>();
         if (score != null)
         {
-            score.AddScore(10);
+            score.AddScore(PlayerScore.pointsPerKill);
         }
         onDeath?.Invoke();
     }

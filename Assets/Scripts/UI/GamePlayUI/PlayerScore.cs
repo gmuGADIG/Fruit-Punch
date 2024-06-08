@@ -5,6 +5,9 @@ using UnityEngine;
 
 public class PlayerScore : MonoBehaviour
 {
+    public static int pointsPerKill = 10;
+    public static int pointsPerPearry = 5;
+
     public event Action OnUpdateScoreAndRank;
 
     [SerializeField]
@@ -20,6 +23,11 @@ public class PlayerScore : MonoBehaviour
 
     [Tooltip("Top rank at index 0, descending Order")]
     public RankLevels[] rankList;
+
+    void Start()
+    {
+        GetComponent<Health>().OnPearry += () => AddScore(pointsPerPearry);
+    }
 
     public void AddScore(int points)
     {
@@ -63,9 +71,4 @@ public class PlayerScore : MonoBehaviour
         return tempRankSprite;
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //updateScoreAndRank();
-    }
 }
