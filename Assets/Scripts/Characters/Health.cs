@@ -128,7 +128,7 @@ public class Health : MonoBehaviour
         // apply knockback
         transform.Translate(info.knockback * knockbackMultiplier);
         
-        if (currentHealth <= 0) Die();
+        if (currentHealth <= 0) Die(info);
         return true;
     }
 
@@ -154,6 +154,17 @@ public class Health : MonoBehaviour
 
     public void Die()
     {
+        onDeath?.Invoke();
+    }
+
+    public void Die(DamageInfo fatalDamage)
+    {
+        print(fatalDamage.source);
+        var score = fatalDamage.source.GetComponentInParent<PlayerScore>();
+        if (score != null)
+        {
+            score.AddScore(10);
+        }
         onDeath?.Invoke();
     }
 
