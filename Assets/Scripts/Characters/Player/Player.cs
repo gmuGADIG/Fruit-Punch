@@ -139,7 +139,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
         stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
         stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, PearryExit);
-        stateMachine.AddState(PlayerState.Grabbing, null, GrabbingUpdate, null);
+        stateMachine.AddState(PlayerState.Grabbing, GrabbingEnter, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
         // apple specific
         stateMachine.AddState(PlayerState.AppleStrike3, AppleStrikeEnter, AppleStrikeUpdate, null);
@@ -377,6 +377,11 @@ public class Player : MonoBehaviour
         stateMachine.SetState(PlayerState.Normal);
     }
     
+    void GrabbingEnter()
+    {
+        anim.Play("Grab");
+    }
+
     PlayerState GrabbingUpdate()
     {
         Debug.Assert(grabber.IsGrabbing);
@@ -395,6 +400,7 @@ public class Player : MonoBehaviour
     {
         colorTweaker.SetAuraColor(AuraType.Throw);
         grabber.ThrowItem(FacingLeft);
+        anim.Play("Throw");
     }
     
     PlayerState ThrowingUpdate()
