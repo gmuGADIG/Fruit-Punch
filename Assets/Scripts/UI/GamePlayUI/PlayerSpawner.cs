@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField] PlayerHealthBarSpawner barSpawner;
+    [SerializeField] PlayerHealthBarHolder barSpawner;
     [SerializeField] GameObject[] playerPrefabs;
     [SerializeField] Transform playerOneSpawnPoint;
     [SerializeField] Transform playerTwoSpawnPoint;
@@ -24,7 +24,9 @@ public class PlayerSpawner : MonoBehaviour
         if (playerCount == 0) // debug spawn 
         {
             if (Application.isEditor == false) Debug.LogError("Debug spawn should not be used in a build!");
-            SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
+            var player = SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
+            PlayerHealthBarHolder.SetHealthBar(0, player.GetComponent<Player>());
+            PlayerHealthBarHolder.SetPlayerTwoVisible(false);
         }
         else // normal spawn
         { 
@@ -34,8 +36,14 @@ public class PlayerSpawner : MonoBehaviour
                 var controlScheme = PlayerInfo.playerControlSchemes[i];
                 var inputDevice = PlayerInfo.playerInputDevices[i];
                 var spawnPoint = (i == 0) ? playerOneSpawnPoint : playerTwoSpawnPoint;
-                SpawnPlayer(character, controlScheme, inputDevice, spawnPoint);
+                
+                var player = SpawnPlayer(character, controlScheme, inputDevice, spawnPoint);
+
+                // trigger UI
+                PlayerHealthBarHolder.SetHealthBar(i, player.GetComponent<Player>());
             }
+            
+            PlayerHealthBarHolder.SetPlayerTwoVisible(PlayerInfo.PlayerCount() == 2);
         }
     }
 
@@ -48,7 +56,7 @@ public class PlayerSpawner : MonoBehaviour
         ).gameObject;
         
         player.transform.position = spawnPoint.position;
-        
+
         return player;
     }
 
