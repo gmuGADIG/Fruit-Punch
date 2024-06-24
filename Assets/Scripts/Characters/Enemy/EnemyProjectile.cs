@@ -1,35 +1,33 @@
-using System.Collections;
 using UnityEngine;
 
-[RequireComponent(typeof(HurtBox))]
-class EnemyProjectile : MonoBehaviour
+[RequireComponent(typeof(HurtBox), typeof(Lifetime))]
+public class EnemyProjectile : MonoBehaviour
 {
-    [SerializeField] float lifetime = 10;
-    public Vector3 Velocity => velocity;
+    [HideInInspector] public Vector3 velocity;
 
     bool setupCalled = false;
-    Vector3 velocity;
 
-    public void Setup(float damage, Vector3 velocity) {
+    /// <summary>
+    /// Sets up the enemy projectile, including the velocity and damage.
+    /// </summary>
+    public virtual void Setup(float damage, Vector3 velocity) {
         var hurtBox = GetComponent<HurtBox>();
-        hurtBox.damage = damage;
         hurtBox.onHurt += (_d) => Destroy(gameObject);
 
+        hurtBox.damage = damage;
+
         this.velocity = velocity;
-    
+
         setupCalled = true;
     }
 
-    void Start() {
+    protected virtual void Start() {
         if (!setupCalled) {
-            Debug.LogError("EnemyProjectile.Setup not called!");
+            throw new System.Exception("EnemyProjectile.Setup not called!");
         }
-        
-        // destroy after lifetime expires
-        Destroy(gameObject, lifetime);
     }
 
-    public void Update() {
+    protected virtual void Update() {
         transform.position += Time.deltaTime * (Vector3)velocity;
     }
 }

@@ -68,6 +68,7 @@ public class Grabber : MonoBehaviour
             Grabbable grabbed = hits
                 .Select(hit => hit.GetComponent<Grabbable>())
                 .Where(hit => hit != null)
+                .Where(hit => hit.enabled)
                 .OrderBy(grab => Vector3.Distance(this.transform.position, grab.transform.position))
                 .FirstOrDefault();
 
