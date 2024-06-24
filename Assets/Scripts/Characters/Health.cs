@@ -106,7 +106,7 @@ public class Health : MonoBehaviour
             }
             if (info.source.TryGetComponent(out EnemyProjectile proj))
             {
-                proj.Setup(pearryDamage, -proj.Velocity);
+                proj.Setup(pearryDamage, -proj.velocity);
                 HurtBox hurtBox = proj.GetComponent<HurtBox>();
                 if (hurtBox)
                 {
