@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 public enum PlayerState
 {
+    Dead,
     Normal,
     Jump,
     Strike1, Strike2, Strike3,
@@ -18,10 +19,6 @@ public enum PlayerState
     BananaJumpStrike
 }
 
-public enum PlayerCharacter
-{
-    Apple, Banana, Watermelon, Grape
-}
 
 /// <summary>
 /// Playable character script. <br/>
@@ -49,7 +46,7 @@ public class Player : MonoBehaviour
     private ColorTweaker colorTweaker;
 
     [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
-    [SerializeField] PlayerCharacter playerCharacter;
+    public Character playerCharacter;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
@@ -141,15 +138,18 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, PearryExit);
         stateMachine.AddState(PlayerState.Grabbing, GrabbingEnter, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
-        // apple specific
-        stateMachine.AddState(PlayerState.AppleStrike3, AppleStrikeEnter, AppleStrikeUpdate, null);
+        stateMachine.AddState(PlayerState.Dead, DeadEnter, null, null);
+        stateMachine.AddState(PlayerState.AppleStrike3, AppleStrikeEnter, AppleStrikeUpdate, null); // apple specific
+        stateMachine.AddState(PlayerState.BananaJumpStrike, BananaJumpStrikeEnter, BananaJumpStateUpdate, BananaJumpStateExit); // banana specific
+        
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
-        // banana specific
-        stateMachine.AddState(PlayerState.BananaJumpStrike, BananaJumpStrikeEnter, BananaJumpStateUpdate, BananaJumpStateExit);
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
 
         // get the PauseManager script to allow player to pause the game
         pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
+        
+        // attach death state to health component's events
+        health.onDeath += () => stateMachine.SetState(PlayerState.Dead);
     }
 
 
@@ -277,7 +277,7 @@ public class Player : MonoBehaviour
         if (playerInput.actions["gameplay/Strike"].triggered
             && stateMachine.currentState != PlayerState.JumpStrike) 
         {
-            if (playerCharacter == PlayerCharacter.Banana)
+            if (playerCharacter == Character.Banana)
             {
                 return PlayerState.BananaJumpStrike;
             }
@@ -324,7 +324,7 @@ public class Player : MonoBehaviour
             if (strikeState == 1) return PlayerState.Strike2;
             if (strikeState == 2)
             {
-                if (playerCharacter == PlayerCharacter.Apple)
+                if (playerCharacter == Character.Apple)
                 {
                     return PlayerState.AppleStrike3;
                 }
@@ -379,13 +379,15 @@ public class Player : MonoBehaviour
     
     void GrabbingEnter()
     {
+        colorTweaker.SetAuraColor(AuraType.Throw);
         anim.Play("Grab");
     }
 
     PlayerState GrabbingUpdate()
     {
         Debug.Assert(grabber.IsGrabbing);
-        rb.velocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
+        var newVelocity = Vector3.MoveTowards(rb.velocity, Vector3.zero, runAccel * Time.deltaTime);
+        rb.velocity = new Vector3(newVelocity.x, rb.velocity.y, newVelocity.z);
         ApplyDirectionalMovement(0);
         
         if (playerInput.actions["gameplay/Interact"].triggered)
@@ -488,5 +490,27 @@ public class Player : MonoBehaviour
     void BananaJumpStateExit(PlayerState nextState)
     {
         applyGravity = true;
+    }
+
+    void DeadEnter()
+    {
+        StartCoroutine(Coroutine());
+
+        IEnumerator Coroutine()
+        {
+            rb.velocity = Vector3.zero;
+            anim.Play("Dead");
+            
+            yield return new WaitForSeconds(1f);
+            // at this point, the player is invisible and can be moved around if needed
+
+            yield return new WaitForSeconds(1f);
+            // at this point, the player has reappeared
+            health.Heal(health.MaxHealth);
+            
+            yield return new WaitForSeconds(0.2f);
+            // animation did it's little flicker thing at the end. return to normal state
+            stateMachine.SetState(PlayerState.Normal);
+        }
     }
 }
