@@ -80,6 +80,9 @@ MonoBehaviour:
   vulnerableTypes: 15
   maxHealth: 100
   currentHealth: 0
+  knockbackMultiplier: 1
+  pearryDamage: 10
+  pearryKnockback: 0.1
 --- !u!114 &5016492621456270024
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -159,6 +162,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabIndicator: {fileID: 0}
+  damageOnLandingMultiplier: 1
   throwingHurtBox: {fileID: 6266006870267423042}
   onGrab:
     m_PersistentCalls:
@@ -390,7 +394,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 2048
   damage: 30
-  parentTransform: {fileID: 7169455098568493955}
+  knockback: 0.1
   aura: 2
 --- !u!1 &6318401676271287573
 GameObject:
@@ -420,7 +424,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.35, z: 0}
-  m_LocalScale: {x: 1, y: 1.4142135, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 7169455098568493955}
