@@ -66,6 +66,9 @@ public class Player : MonoBehaviour
     [Tooltip("Duration of the pearry state.")]
     [SerializeField] float pearryLength = 1f;
 
+    [Tooltip("Name of the sound effect to play on combo finish")]
+    [SerializeField] string comboSoundEffect;
+
     LayerMask collidingLayers;
 
     float strike1Length = -1;
@@ -303,8 +306,8 @@ public class Player : MonoBehaviour
         inputBuffer.ClearAction("gameplay/Strike");
 
         // make sure we only move onto the next strike animation when we're ready
+        hasHitSomething = false;
         strikeAnimationOver = false;
-        hasHitSomething = true; // TEMP
         
         if (strikeState is <= 0 or > 3) throw new Exception($"Invalid strike state {strikeState}!");
         anim.Play($"Strike{strikeState}"); // e.g. "Strike1", "Strike2", "Strike3"
@@ -312,6 +315,10 @@ public class Player : MonoBehaviour
             (strikeState == 3)  ? "HitHeavy"  : "Hit",
             transform.position
         );
+
+        if (strikeState == 3) {
+            SoundManager.Instance.PlaySoundGlobal(comboSoundEffect);
+        }
     }
 
     PlayerState StrikeUpdate(int strikeState)
@@ -431,7 +438,6 @@ public class Player : MonoBehaviour
 
         // make sure we only move onto the next strike animation when we're ready
         strikeAnimationOver = false;
-        hasHitSomething = true; // TEMP
 
         anim.Play("Strike3"); // e.g. "Strike1", "Strike2", "Strike3"
         SoundManager.Instance.PlaySoundAtPosition("HitHeavy", transform.position);
