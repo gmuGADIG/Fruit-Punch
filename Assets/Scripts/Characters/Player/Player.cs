@@ -19,10 +19,6 @@ public enum PlayerState
     BananaJumpStrike
 }
 
-public enum PlayerCharacter
-{
-    Apple, Banana, Watermelon, Grape
-}
 
 /// <summary>
 /// Playable character script. <br/>
@@ -50,7 +46,7 @@ public class Player : MonoBehaviour
     private ColorTweaker colorTweaker;
 
     [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
-    [SerializeField] PlayerCharacter playerCharacter;
+    public Character playerCharacter;
 
     [Tooltip("Maximum speed the player can move (m/s).")]
     [SerializeField] float maxSpeed = 2f;
@@ -281,7 +277,7 @@ public class Player : MonoBehaviour
         if (playerInput.actions["gameplay/Strike"].triggered
             && stateMachine.currentState != PlayerState.JumpStrike) 
         {
-            if (playerCharacter == PlayerCharacter.Banana)
+            if (playerCharacter == Character.Banana)
             {
                 return PlayerState.BananaJumpStrike;
             }
@@ -328,7 +324,7 @@ public class Player : MonoBehaviour
             if (strikeState == 1) return PlayerState.Strike2;
             if (strikeState == 2)
             {
-                if (playerCharacter == PlayerCharacter.Apple)
+                if (playerCharacter == Character.Apple)
                 {
                     return PlayerState.AppleStrike3;
                 }

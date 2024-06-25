@@ -9,14 +9,13 @@ using UnityEngine.Events;
 public class PlayerHealthBar : MonoBehaviour
 {
     //public PlayerHealth playerHealth;
-    [SerializeField] TMP_Text healthUI;
-    [SerializeField] Image maxHealthBar;
-    [SerializeField] Image currentHealthBar;
+    [SerializeField] TMP_Text hpText;
+    [SerializeField] Image hpFill;
+    [SerializeField] SpriteRenderer characterPortrait;
+    [SerializeField] Sprite[] portraits;
 
     float maxHealth;
 
-    [SerializeField]
-    private Sprite[] CharacterPortraits;
     
     // Attaches the health bar to the player's health and adjusts all necessary UI to fit the player.
     // Called by PlayerHealthBarHolder
@@ -25,11 +24,13 @@ public class PlayerHealthBar : MonoBehaviour
         var health = player.GetComponent<Health>();
         this.maxHealth = health.MaxHealth;
         health.onHealthChange += UIUpdate;
+
+        characterPortrait.sprite = portraits[(int)player.playerCharacter];
     }
 
     void UIUpdate(HealthChange healthChange)
     {
-        healthUI.text = healthChange.newHealthValue + "/" + maxHealth;
-        currentHealthBar.fillAmount = healthChange.newHealthValue / maxHealth;
+        hpText.text = healthChange.newHealthValue + "/" + maxHealth;
+        hpFill.fillAmount = healthChange.newHealthValue / maxHealth;
     }
 }
