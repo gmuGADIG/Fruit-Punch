@@ -106,9 +106,7 @@ public class ScreenSpawner : MonoBehaviour
     /// If a timer is active for a new spawn.
     /// </summary>
     private bool isCurrentlySpawning;
-
-    private bool spawningComplete => enemiesLeft <= 0 && auraEnemiesLeft <= 0 && enemiesOnScreen.Count == 0;
-
+    
     private float spawnTimer;
 
 
@@ -225,7 +223,11 @@ public class ScreenSpawner : MonoBehaviour
             auraEnemiesOnScreen--;
         }
         enemiesOnScreen.Remove(enemyThatDied);
-        if (spawningComplete)
+
+        var noLongerSpawning = enemiesOnScreen.Count == 0;
+        var liveEnemyCount = FindObjectsOfType<Enemy>().Length + FindObjectsOfType<Boss>().Length;
+        var waveDone = noLongerSpawning && liveEnemyCount == 0
+        if (waveDone)
         {
             onWaveComplete?.Invoke();
             Debug.Log("Wave Complete");
