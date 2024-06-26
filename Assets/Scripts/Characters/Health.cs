@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 
 /*
@@ -60,6 +61,11 @@ public class Health : MonoBehaviour
     public event Action<DamageInfo> onDamageImmune;
 
     public event Action<AuraType> onAuraChange;
+
+    /// <summary>
+    /// Same as onDeath but static.
+    /// </summary>
+    public static event Action<GameObject> OnAnyDeath;
     
     void Start()
     {
@@ -155,6 +161,7 @@ public class Health : MonoBehaviour
     public void Die()
     {
         onDeath?.Invoke();
+        OnAnyDeath?.Invoke(this.gameObject);
     }
 
     public bool HasAura()

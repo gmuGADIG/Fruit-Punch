@@ -123,6 +123,12 @@ public class Enemy : MonoBehaviour
         else if (rb.velocity.x > 0) transform.localEulerAngles = Vector3.zero;
 
         state = stateMachine.currentState;
+
+        if (transform.position.y < -1000)
+        {
+            Debug.LogError($"Enemy ({name}) fell to the death plane! This should never happen.");
+            health.Damage(new DamageInfo(this.gameObject, 1000000, Vector2.zero, AuraType.Everything));
+        }
     }
 
     /// <summary>
