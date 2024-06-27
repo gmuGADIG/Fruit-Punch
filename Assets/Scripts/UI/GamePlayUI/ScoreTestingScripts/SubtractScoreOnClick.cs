@@ -8,7 +8,7 @@ public class SubtractScoreOnClick : MonoBehaviour
     public int points = 5;
     private void OnMouseDown()
     {
-        playerScore.subtractScore(points);
+        playerScore.SubtractScore(points);
         Debug.Log("Subtracted");
     }
 

@@ -26,6 +26,8 @@ public class PlayerSpawner : MonoBehaviour
             var player = SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
             PlayerHealthBarHolder.SetHealthBar(0, player.GetComponent<Player>());
             PlayerHealthBarHolder.SetPlayerTwoVisible(false);
+            PlayerScoreHolder.SetupPlayerScore(0, player.GetComponent<Player>());
+            PlayerScoreHolder.SetPlayerTwoVisible(false);
         }
         else // normal spawn
         { 
@@ -36,13 +38,16 @@ public class PlayerSpawner : MonoBehaviour
                 var inputDevice = PlayerInfo.playerInputDevices[i];
                 var spawnPoint = (i == 0) ? playerOneSpawnPoint : playerTwoSpawnPoint;
                 
-                var player = SpawnPlayer(character, controlScheme, inputDevice, spawnPoint);
+                var playerGO = SpawnPlayer(character, controlScheme, inputDevice, spawnPoint);
 
                 // trigger UI
-                PlayerHealthBarHolder.SetHealthBar(i, player.GetComponent<Player>());
+                var player = playerGO.GetComponent<Player>();
+                PlayerHealthBarHolder.SetHealthBar(i, player);
+                PlayerScoreHolder.SetupPlayerScore(i, player);
             }
             
             PlayerHealthBarHolder.SetPlayerTwoVisible(PlayerInfo.PlayerCount() == 2);
+            PlayerScoreHolder.SetPlayerTwoVisible(PlayerInfo.PlayerCount() == 2);
         }
     }
 

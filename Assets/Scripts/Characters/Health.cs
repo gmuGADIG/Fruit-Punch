@@ -62,6 +62,7 @@ public class Health : MonoBehaviour
 
     public event Action<AuraType> onAuraChange;
 
+    public event Action OnPearry;
     /// <summary>
     /// Same as onDeath but static.
     /// </summary>
@@ -120,6 +121,7 @@ public class Health : MonoBehaviour
                     hurtBox.SetAura(AuraType.Pearry);
                 }
             }
+            OnPearry?.Invoke();
             return false;
         }
         
@@ -134,7 +136,7 @@ public class Health : MonoBehaviour
         // apply knockback
         transform.Translate(info.knockback * knockbackMultiplier);
         
-        if (currentHealth <= 0) Die();
+        if (currentHealth <= 0) Die(info);
         return true;
     }
 
@@ -162,6 +164,18 @@ public class Health : MonoBehaviour
     {
         onDeath?.Invoke();
         OnAnyDeath?.Invoke(this.gameObject);
+    }
+
+    public void Die(DamageInfo fatalDamage)
+    {
+        print(fatalDamage.source);
+        var score = fatalDamage.source.GetComponentInParent<PlayerScore>();
+        if (score != null)
+        {
+            score.AddScore(PlayerScore.pointsPerKill);
+        }
+        OnAnyDeath?.Invoke(this.gameObject);
+        onDeath?.Invoke();
     }
 
     public bool HasAura()

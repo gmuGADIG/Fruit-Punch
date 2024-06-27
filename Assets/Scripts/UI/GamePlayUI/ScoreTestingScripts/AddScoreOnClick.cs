@@ -8,7 +8,7 @@ public class AddScoreOnClick : MonoBehaviour
     public int points = 5;
     private void OnMouseDown()
     {
-        playerScore.addScore(points);
+        playerScore.AddScore(points);
         Debug.Log("Added");
     }
 }
