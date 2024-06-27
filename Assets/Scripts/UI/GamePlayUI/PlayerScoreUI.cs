@@ -20,7 +20,7 @@ public class PlayerScoreUI : MonoBehaviour
         playerScore = player.GetComponent<PlayerScore>();
         playerScore.OnUpdateScoreAndRank += UpdateScore;
         scoreText.color = defaultColor;
-        scoreText.text = playerScore.GetScore().ToString();
+        scoreText.text = playerScore.GetScore().ToString() + " pts";
         currentScore = playerScore.GetScore();
     }
 
@@ -51,7 +51,7 @@ public class PlayerScoreUI : MonoBehaviour
             {
                 currentScore += 1;
             }
-            scoreText.text = currentScore.ToString();
+            scoreText.text = currentScore.ToString() + " pts";
         }
         scoreText.color = defaultColor;
     }

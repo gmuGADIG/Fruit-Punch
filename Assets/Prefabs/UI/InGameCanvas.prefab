@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 1311724838961290118}
   - component: {fileID: 4812870620940566978}
   - component: {fileID: 5540186842511115429}
-  - component: {fileID: 1582941277304463961}
   m_Layer: 5
   m_Name: InGameCanvas
   m_TagString: Untagged
@@ -50,7 +49,7 @@ Canvas:
   m_GameObject: {fileID: 809287129218004174}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 1
   m_PixelPerfect: 1
@@ -104,18 +103,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &1582941277304463961
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 809287129218004174}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb4a3476b6c852546b19710d2842ba9a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1301115704578651601
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -204,17 +191,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6112909508961475648, guid: 45f99f502b3ed7849a8c876f7d09c4ec, type: 3}
-      propertyPath: m_SortingLayer
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7255691827682575704, guid: 45f99f502b3ed7849a8c876f7d09c4ec, type: 3}
       propertyPath: m_Name
       value: PlayerHealthBars
-      objectReference: {fileID: 0}
-    - target: {fileID: 7610062499810278431, guid: 45f99f502b3ed7849a8c876f7d09c4ec, type: 3}
-      propertyPath: m_SortingLayer
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
