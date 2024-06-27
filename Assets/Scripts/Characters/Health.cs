@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.UI;
 using UnityEngine;
 
 /*
@@ -62,6 +63,10 @@ public class Health : MonoBehaviour
     public event Action<AuraType> onAuraChange;
 
     public event Action OnPearry;
+    /// <summary>
+    /// Same as onDeath but static.
+    /// </summary>
+    public static event Action<GameObject> OnAnyDeath;
     
     void Start()
     {
@@ -108,7 +113,7 @@ public class Health : MonoBehaviour
             }
             if (info.source.TryGetComponent(out EnemyProjectile proj))
             {
-                proj.Setup(pearryDamage, -proj.Velocity);
+                proj.Setup(pearryDamage, -proj.velocity);
                 HurtBox hurtBox = proj.GetComponent<HurtBox>();
                 if (hurtBox)
                 {
@@ -158,6 +163,7 @@ public class Health : MonoBehaviour
     public void Die()
     {
         onDeath?.Invoke();
+        OnAnyDeath?.Invoke(this.gameObject);
     }
 
     public void Die(DamageInfo fatalDamage)

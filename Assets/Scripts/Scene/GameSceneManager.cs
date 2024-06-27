@@ -69,10 +69,12 @@ public class GameSceneManager : MonoBehaviour
         currentState = CameraState.frozen;
         frozenPos = pos;
         if (currentScene.spawner == null) Debug.LogError($"screen {currentSceneNumber} has null spawner!");
-        else
+        else if (currentScene.spawner.gameObject.activeInHierarchy)
         {
             currentScene.spawner.StartSpawning();
             currentScene.spawner.onWaveComplete.AddListener(UnfreezeCamera);
+        } else {
+            UnfreezeCamera();
         }
     }
 
@@ -150,7 +152,9 @@ public class GameSceneManager : MonoBehaviour
             if (Vector3.Distance(mainCamera.transform.position,frozenPos)>0.001) {
                 mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, frozenPos, cameraSmoothSpeed);
             }
-            if (Input.GetKey("space"))
+            
+            // Debug advance
+            if (Application.isEditor && Input.GetKey(KeyCode.Tilde))
             {
                 UnfreezeCamera();
             }

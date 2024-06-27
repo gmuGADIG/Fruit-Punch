@@ -51,7 +51,7 @@ MonoBehaviour:
     m_Bits: 2560
   damage: 20
   knockback: 0.1
-  aura: 1
+  aura: 4
 --- !u!65 &8048582515855249639
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -163,6 +163,10 @@ PrefabInstance:
     - target: {fileID: 8739996444928741994, guid: 77356f5dddf51224a84256c013603b72, type: 3}
       propertyPath: playerCharacter
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8739996444928741994, guid: 77356f5dddf51224a84256c013603b72, type: 3}
+      propertyPath: comboSoundEffect
+      value: BananaCombo
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
