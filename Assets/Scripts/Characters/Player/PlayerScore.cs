@@ -9,6 +9,7 @@ public class PlayerScore : MonoBehaviour
     public static int pointsPerPearry = 5;
     public static float pointsPerDamageTakenMultiplier = .5f;
     public static int pointsLostOnDeath = 50;
+    public static float timePointLossInterval = 5f; // player loses point every x seconds
 
     public event Action OnUpdateScoreAndRank;
 
@@ -32,6 +33,7 @@ public class PlayerScore : MonoBehaviour
         health.OnPearry += () => AddScore(pointsPerPearry);
         health.onHurt += (DamageInfo damage) => SubtractScore((int)(damage.damage * pointsPerDamageTakenMultiplier));
         health.onDeath += () => SubtractScore(pointsLostOnDeath);
+        StartCoroutine(TimeScoreSubtraction());
     }
 
     public void AddScore(int points)
@@ -74,6 +76,15 @@ public class PlayerScore : MonoBehaviour
             if (playerScore > rankList[i].pointThreshold) { tempRankSprite = rankList[i].rankImage; }
         }
         return tempRankSprite;
+    }
+
+    IEnumerator TimeScoreSubtraction()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(timePointLossInterval);
+            SubtractScore(1);
+        }
     }
 
 }
