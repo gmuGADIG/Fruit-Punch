@@ -174,6 +174,7 @@ public class Health : MonoBehaviour
         {
             score.AddScore(PlayerScore.pointsPerKill);
         }
+        OnAnyDeath?.Invoke(this.gameObject);
         onDeath?.Invoke();
     }
 
