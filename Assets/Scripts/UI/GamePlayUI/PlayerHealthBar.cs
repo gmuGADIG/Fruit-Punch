@@ -11,7 +11,7 @@ public class PlayerHealthBar : MonoBehaviour
     //public PlayerHealth playerHealth;
     [SerializeField] TMP_Text hpText;
     [SerializeField] Image hpFill;
-    [SerializeField] SpriteRenderer characterPortrait;
+    [SerializeField] Image characterPortrait;
     [SerializeField] Sprite[] portraits;
 
     float maxHealth;

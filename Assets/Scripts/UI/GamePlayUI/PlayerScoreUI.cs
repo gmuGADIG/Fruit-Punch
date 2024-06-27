@@ -18,6 +18,6 @@ public class PlayerScoreUI : MonoBehaviour
 
     private void UpdateScore()
     {
-        scoreText.text = playerScore.GetScore().ToString();
+        scoreText.text = playerScore.GetScore().ToString() + "pts";
     }
 }
