@@ -81,9 +81,9 @@ public class GameSceneManager : MonoBehaviour
     public void UnfreezeCamera()
     {
         currentSceneNumber++;
-        if (currentSceneNumber >= scenes.Length) // final screen; move to next stage
+        if (currentSceneNumber >= scenes.Length) // final screen; open final results menu
         {
-            SceneManager.LoadScene(nextStage);
+            FindAnyObjectByType<EndLevelResultsUI>().ShowMenu();
             return;
         }
 
@@ -161,5 +161,8 @@ public class GameSceneManager : MonoBehaviour
         }
     }
 
-
+    public void GoToNextScene()
+    {
+        SceneManager.LoadScene(nextStage);
+    }
 }

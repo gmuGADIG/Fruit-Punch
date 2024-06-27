@@ -23,10 +23,12 @@ public class PlayerSpawner : MonoBehaviour
         if (playerCount == 0) // debug spawn 
         {
             if (Application.isEditor == false) Debug.LogError("Debug spawn should not be used in a build!");
-            var player = SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
-            PlayerHealthBarHolder.SetHealthBar(0, player.GetComponent<Player>());
+            var playerGO = SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
+            Player player = playerGO.GetComponent<Player>();
+            player.PlayerNum = 1;
+            PlayerHealthBarHolder.SetHealthBar(0, player);
             PlayerHealthBarHolder.SetPlayerTwoVisible(false);
-            PlayerScoreHolder.SetupPlayerScore(0, player.GetComponent<Player>());
+            PlayerScoreHolder.SetupPlayerScore(0, player);
             PlayerScoreHolder.SetPlayerTwoVisible(false);
         }
         else // normal spawn
@@ -44,6 +46,7 @@ public class PlayerSpawner : MonoBehaviour
                 var player = playerGO.GetComponent<Player>();
                 PlayerHealthBarHolder.SetHealthBar(i, player);
                 PlayerScoreHolder.SetupPlayerScore(i, player);
+                player.PlayerNum = i + 1;
             }
             
             PlayerHealthBarHolder.SetPlayerTwoVisible(PlayerInfo.PlayerCount() == 2);

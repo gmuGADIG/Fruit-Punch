@@ -31,6 +31,7 @@ public class Player : MonoBehaviour
 {
     public PlayerState CurrentState => stateMachine.currentState;
     public event Action<PlayerState> OnPlayerStateChange;
+    public int PlayerNum { get; set; }
 
     private StateMachine<PlayerState> stateMachine;
     private Rigidbody rb;
