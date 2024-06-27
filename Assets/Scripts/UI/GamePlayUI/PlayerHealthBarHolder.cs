@@ -4,7 +4,7 @@ public class PlayerHealthBarHolder : MonoBehaviour
 {
     static PlayerHealthBarHolder instance;
 
-    PlayerHealthBarHolder()
+    void Awake()
     {
         instance = this;
     }
