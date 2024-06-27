@@ -7,6 +7,7 @@ public class PlayerScore : MonoBehaviour
 {
     public static int pointsPerKill = 10;
     public static int pointsPerPearry = 5;
+    public static float pointsPerDamageTaken = .5f;
 
     public event Action OnUpdateScoreAndRank;
 
@@ -26,7 +27,9 @@ public class PlayerScore : MonoBehaviour
 
     void Start()
     {
-        GetComponent<Health>().OnPearry += () => AddScore(pointsPerPearry);
+        Health health = GetComponent<Health>();
+        health.OnPearry += () => AddScore(pointsPerPearry);
+        health.onHurt += (DamageInfo damage) => SubtractScore((int)(damage.damage * pointsPerDamageTaken));
     }
 
     public void AddScore(int points)
