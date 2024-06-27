@@ -37,7 +37,7 @@ public class EnemyDeathScript : MonoBehaviour
     /// </summary>
     private void DeathSequence()
     {
-        enemyAI.enabled = false;
+        Destroy(enemyAI);
         rb.velocity = Vector3.zero;
 
         //Add Death anim trigger here

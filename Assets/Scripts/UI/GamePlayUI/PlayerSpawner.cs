@@ -6,7 +6,6 @@ using UnityEngine.InputSystem;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    [SerializeField] PlayerHealthBarHolder barSpawner;
     [SerializeField] GameObject[] playerPrefabs;
     [SerializeField] Transform playerOneSpawnPoint;
     [SerializeField] Transform playerTwoSpawnPoint;

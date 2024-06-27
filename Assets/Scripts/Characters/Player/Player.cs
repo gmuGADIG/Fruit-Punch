@@ -441,6 +441,7 @@ public class Player : MonoBehaviour
 
         anim.Play("Strike3"); // e.g. "Strike1", "Strike2", "Strike3"
         SoundManager.Instance.PlaySoundAtPosition("HitHeavy", transform.position);
+        SoundManager.Instance.PlaySoundGlobal(comboSoundEffect);
     }
 
     PlayerState AppleStrikeUpdate()
