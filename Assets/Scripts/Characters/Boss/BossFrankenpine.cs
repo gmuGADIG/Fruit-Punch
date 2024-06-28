@@ -130,7 +130,7 @@ public class BossFrankenpine : Boss
         animator.Play(WanderVars.AnimationName);
         WanderVars.timeLeft = wanderInterval;
 
-        rb.isKinematic = true;
+        rb.isKinematic = false;
         grabbable.enabled = true;
 
         StartCoroutine(WanderCoroutine());
