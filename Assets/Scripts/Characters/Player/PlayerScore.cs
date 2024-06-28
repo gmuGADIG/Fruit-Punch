@@ -78,6 +78,11 @@ public class PlayerScore : MonoBehaviour
         return tempRankSprite;
     }
 
+    public void StopScoreCountdown()
+    {
+        StopCoroutine(TimeScoreSubtraction());
+    }
+
     IEnumerator TimeScoreSubtraction()
     {
         while (true)

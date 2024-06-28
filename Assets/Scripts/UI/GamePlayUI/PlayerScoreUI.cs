@@ -27,7 +27,10 @@ public class PlayerScoreUI : MonoBehaviour
     private void UpdateScore()
     {
         targetScore = playerScore.GetScore();
-        StartCoroutine(UpdateScoreCoroutine());
+        if (gameObject.activeInHierarchy)
+        {
+            StartCoroutine(UpdateScoreCoroutine());
+        }
     }
 
     IEnumerator UpdateScoreCoroutine()

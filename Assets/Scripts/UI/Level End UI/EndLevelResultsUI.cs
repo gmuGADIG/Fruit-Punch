@@ -18,6 +18,11 @@ public class EndLevelResultsUI : MonoBehaviour
 
     public void ShowMenu()
     {
+        var playerScores = FindObjectsOfType<PlayerScore>();
+        foreach (var score in playerScores)
+        {
+            score.StopScoreCountdown();
+        }
         StartCoroutine(ShowMenuCoroutine());
     }
 

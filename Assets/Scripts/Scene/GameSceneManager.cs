@@ -163,6 +163,6 @@ public class GameSceneManager : MonoBehaviour
 
     public void GoToNextScene()
     {
-        SceneManager.LoadScene(nextStage);
+        FindAnyObjectByType<FadeOutUI>().FadeOutToNextScene(nextStage);
     }
 }

@@ -40,14 +40,17 @@ public class PlayerScoreResultsUI : MonoBehaviour
         scoreNumber.gameObject.SetActive(true);
         scoreNumber.text = "0";
         int startingScore = 0;
-        while (startingScore != playerScore.GetScore())
+        if (playerScore != null)
         {
-            startingScore += 1;
-            yield return new WaitForSeconds(scoreCountUpDelay);
-            scoreNumber.text = startingScore.ToString();
+            while (startingScore != playerScore.GetScore())
+            {
+                startingScore += 1;
+                yield return new WaitForSeconds(scoreCountUpDelay);
+                scoreNumber.text = startingScore.ToString();
+            }
+            yield return new WaitForSeconds(rankingDelay);
+            ranking.gameObject.SetActive(true);
+            ranking.text = playerScore.GetRank();
         }
-        yield return new WaitForSeconds(rankingDelay);
-        ranking.gameObject.SetActive(true);
-        ranking.text = playerScore.GetRank();
     }
 }
