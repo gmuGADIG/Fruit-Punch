@@ -1,8 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEditor.UI;
 using UnityEngine;
+
+#if UNITY_EDITOR
+using UnityEditor.UI;
+#endif
 
 /*
 Our current goal is to create a generalized script describing enemy health.
