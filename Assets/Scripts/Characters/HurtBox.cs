@@ -32,6 +32,11 @@ public class HurtBox : MonoBehaviour
     /// Invoked when this hurt box hurts something.
     /// </summary>
     public Action<DamageInfo> onHurt;
+
+    /// <summary>
+    /// Invoked when this hurt box tries to hurt something, but is pearried.
+    /// </summary>
+    public Action<DamageInfo> onPearried;
     
     void Start()
     {
