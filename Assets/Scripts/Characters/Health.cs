@@ -140,7 +140,7 @@ public class Health : MonoBehaviour
         onHurt?.Invoke(info);
 
         // apply knockback
-        transform.Translate(info.knockback * knockbackMultiplier);
+        transform.position += (Vector3)info.knockback * knockbackMultiplier;
         
         if (currentHealth <= 0) Die(info);
         return true;
