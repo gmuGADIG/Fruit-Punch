@@ -137,4 +137,12 @@ public static class Utils
             Mathf.Abs(v.z)
         );
     }
+
+    public static Vector3 x0y(this Vector2 v) {
+        return new(
+            v.x,
+            0,
+            v.y
+        );
+    }
 }

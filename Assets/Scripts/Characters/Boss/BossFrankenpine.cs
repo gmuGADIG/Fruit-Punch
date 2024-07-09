@@ -168,11 +168,13 @@ public class BossFrankenpine : Boss
 
     void GrabbedEnter() {
         rb.isKinematic = false;
+        animator.speed = 0;
     }
 
     void GrabbedExit(BossFrankenpineState _newState) {
         rb.isKinematic = true;
         grabbable.enabled = false;
+        animator.speed = 1;
     }
     
 

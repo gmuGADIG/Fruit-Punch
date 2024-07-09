@@ -88,6 +88,10 @@ public class Health : MonoBehaviour
                 {
                     hurtBox.onHurt?.Invoke(info);
                 }
+
+                if (Pearrying) {
+                    hurtBox.onPearried?.Invoke(info);
+                }
             }
         }
     }
@@ -116,8 +120,7 @@ public class Health : MonoBehaviour
             }
             if (info.source.TryGetComponent(out EnemyProjectile proj))
             {
-                proj.Setup(pearryDamage, -proj.velocity);
-                HurtBox hurtBox = proj.GetComponent<HurtBox>();
+                proj.Setup(pearryDamage, -proj.velocity); HurtBox hurtBox = proj.GetComponent<HurtBox>();
                 if (hurtBox)
                 {
                     hurtBox.hitLayers = LayerMask.GetMask("Enemy");

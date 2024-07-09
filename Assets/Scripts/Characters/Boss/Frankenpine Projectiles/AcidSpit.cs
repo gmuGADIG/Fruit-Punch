@@ -34,7 +34,5 @@ public class AcidSpit : MonoBehaviour {
         gravity = Vector3.zero;
 
         animator.Play("AcidSpitSplat");
-
-        print("Hello, world!");
     }
 }
