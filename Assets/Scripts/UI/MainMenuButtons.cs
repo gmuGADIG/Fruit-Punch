@@ -23,7 +23,7 @@ public class MainMenuButtons : MonoBehaviour
     /// </summary>
     public void Options()
     {
-        SceneManager.LoadSceneAsync(SwitchScene.optionsMenu);
+        SceneManager.LoadSceneAsync(SwitchScene.optionsMenu, LoadSceneMode.Additive);
     }
     /// <summary>
     /// Goes to the Codex
