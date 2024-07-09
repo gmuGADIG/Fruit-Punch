@@ -46,14 +46,24 @@ public class StayInCamera : MonoBehaviour
         float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - rightExtent;
 
         var isOutsideBounds =
-            position.x <= leftBorder  && rb.velocity.x < 0 || 
-            position.x >= rightBorder && rb.velocity.x > 0;
+            position.x < leftBorder ||  // && rb.velocity.x < 0 || 
+            position.x > rightBorder; // && rb.velocity.x > 0;
 
         if (isOutsideBounds)
         {
             var vel = rb.velocity;
             vel.x *= -1 * bounceFactor; // flip and dampen
             rb.velocity = vel;
+
+            // also put the thing on the border
+            var toLeft = leftBorder - position.x;
+            var toRight = rightBorder - position.x;
+
+            if (Mathf.Abs(toLeft) < Mathf.Abs(toRight)) {
+                position.x = leftBorder;
+            } else {
+                position.x = rightBorder;
+            }
         }
 
             // position.x = Mathf.Clamp(position.x, leftBorder, rightBorder);

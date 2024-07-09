@@ -88,12 +88,12 @@ public class BossFrankenpine : Boss
         base.Start();
         animator = GetComponent<Animator>();
         
-        stateMachine.AddState(BossFrankenpineState.Wander, WanderEnter, WanderUpdate, WanderExit);
-        stateMachine.AddState(BossFrankenpineState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
-        stateMachine.AddState(BossFrankenpineState.Thrown, ThrownEnter, ThrownUpdate, ThrownExit);
+        stateMachine.AddState(BossFrankenpineState.Wander, WanderEnter, null, WanderExit);
+        stateMachine.AddState(BossFrankenpineState.Grabbed, GrabbedEnter, null, GrabbedExit);
+        stateMachine.AddState(BossFrankenpineState.Thrown, ThrownEnter, null, ThrownExit);
         stateMachine.AddState(BossFrankenpineState.JunkThrow, JunkThrowEnter, JunkThrowUpdate, JunkThrowExit);
-        stateMachine.AddState(BossFrankenpineState.SummonMinions, SummonMinionsEnter, SummonMinionsUpdate, SummonMinionsExit);
-        stateMachine.AddState(BossFrankenpineState.AcidSpit, AcidSpitEnter, AcidSpitUpdate, AcidSpitExit);
+        stateMachine.AddState(BossFrankenpineState.SummonMinions, SummonMinionsEnter, SummonMinionsUpdate, null);
+        stateMachine.AddState(BossFrankenpineState.AcidSpit, AcidSpitEnter, AcidSpitUpdate, null);
 
         stateMachine.FinalizeAndSetState(BossFrankenpineState.Wander);
 
@@ -130,7 +130,7 @@ public class BossFrankenpine : Boss
         animator.Play(WanderVars.AnimationName);
         WanderVars.timeLeft = wanderInterval;
 
-        rb.isKinematic = true;
+        rb.isKinematic = false;
         grabbable.enabled = true;
 
         StartCoroutine(WanderCoroutine());
@@ -159,11 +159,6 @@ public class BossFrankenpine : Boss
         stateMachine.SetState(GetRandomAttackState());
     }
 
-    BossFrankenpineState WanderUpdate() {
-        /* no-op */
-        return stateMachine.currentState;
-    }
-
     void WanderExit(BossFrankenpineState _newState) {
         if (_newState != BossFrankenpineState.Grabbed) {
             grabbable.enabled = false;
@@ -173,27 +168,19 @@ public class BossFrankenpine : Boss
 
     void GrabbedEnter() {
         rb.isKinematic = false;
-    }
-
-    BossFrankenpineState GrabbedUpdate() {
-        /* no-op */
-        return stateMachine.currentState;
+        animator.speed = 0;
     }
 
     void GrabbedExit(BossFrankenpineState _newState) {
         rb.isKinematic = true;
         grabbable.enabled = false;
+        animator.speed = 1;
     }
     
 
     void ThrownEnter() {
         rb.isKinematic = false;
         grabbable.enabled = false;
-    }
-
-    BossFrankenpineState ThrownUpdate() {
-        /* no-op */
-        return stateMachine.currentState;
     }
 
     void ThrownExit(BossFrankenpineState _newState) {
@@ -321,9 +308,6 @@ public class BossFrankenpine : Boss
         return stateMachine.currentState;
     }
 
-    void SummonMinionsExit(BossFrankenpineState _newState) {}
-
-
     void AcidSpitEnter() {
         AcidSpitVars.firstSpitFired = false;
         AcidSpitVars.secondSpitFired = !isPhaseTwo;
@@ -377,6 +361,4 @@ public class BossFrankenpine : Boss
 
         return stateMachine.currentState;
     }
-
-    void AcidSpitExit(BossFrankenpineState _newState) {}
 }
