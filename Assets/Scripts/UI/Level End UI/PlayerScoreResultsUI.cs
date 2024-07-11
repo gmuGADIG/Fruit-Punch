@@ -9,7 +9,7 @@ public class PlayerScoreResultsUI : MonoBehaviour
     [SerializeField] TMP_Text ranking;
     [SerializeField] int playerNum = 0;
     [Header("Animation Params")]
-    [SerializeField] float initialDelay = 1;
+    // [SerializeField] float initialDelay = 1;
     [SerializeField] float scoreCountUpDelay = .1f;
     [SerializeField] float rankingDelay = 2f;
 

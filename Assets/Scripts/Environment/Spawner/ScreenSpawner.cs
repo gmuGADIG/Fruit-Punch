@@ -38,6 +38,10 @@ public class ScreenSpawner : MonoBehaviour
     [SerializeField]
     private List<EnemySpawnData> enemiesToSpawn;
 
+    /// <summary>
+    /// Event that is called when the first enemy is spawned.
+    /// </summary>
+    public UnityEvent onWaveStart;
     
     /// <summary>
     /// Event that is called when the final enemy is defeated.
@@ -108,6 +112,7 @@ public class ScreenSpawner : MonoBehaviour
     {
         Debug.Log("Spawning Enemies...");
         spawningActivated = true;
+        onWaveStart.Invoke();
         for (int i = 0; i < enemyOnScreen; i++)
         {
             DoSpawn();
