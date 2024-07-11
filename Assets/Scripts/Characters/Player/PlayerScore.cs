@@ -75,7 +75,7 @@ public class PlayerScore : MonoBehaviour
         string tempRank = null;
         for(int i = rankList.Length - 1; i >= 0; i--)
         {
-            if(playerScore > rankList[i].pointThreshold) { tempRank = rankList[i].rankName;}
+            if(playerScore >= rankList[i].pointThreshold) { tempRank = rankList[i].rankName;}
         }
         return tempRank;
     }
