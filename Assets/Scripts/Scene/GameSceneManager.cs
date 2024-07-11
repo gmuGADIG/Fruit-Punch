@@ -32,7 +32,7 @@ public class GameSceneManager : MonoBehaviour
     private int currentSceneNumber;
     private Scene currentScene;
     
-    private bool areEnemiesPresent = false; // Boolean to track if enemies are present
+    // private bool areEnemiesPresent = false; // Boolean to track if enemies are present
     private Vector3 frozenPos;
     
     private GameObject mainCamera;

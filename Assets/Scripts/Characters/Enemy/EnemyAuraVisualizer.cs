@@ -21,6 +21,7 @@ public class EnemyAuraVisualizer : MonoBehaviour
     SpriteRenderer auraSprite;
     Health parentHealth;
 
+    #pragma warning disable CS0067
     public static event Action auraChange; //Not sure if aura changes but this should allow another script to change it if needed
     
     private void OnEnable()

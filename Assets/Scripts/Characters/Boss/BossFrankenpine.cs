@@ -71,7 +71,7 @@ public class BossFrankenpine : Boss
     [SerializeField] float postJunkThrowWaitTime = .5f;
 
     [SerializeField] float spawnInterval = .5f;
-    [SerializeField] float postSpawnTimer = .5f;
+    // [SerializeField] float postSpawnTimer = .5f;
     [SerializeField] GameObject projectileEnemyPrefab;
     [SerializeField] GameObject basicEnemyPrefab;
 
