@@ -83,7 +83,13 @@ public class GameSceneManager : MonoBehaviour
         currentSceneNumber++;
         if (currentSceneNumber >= scenes.Length) // final screen; open final results menu
         {
-            FindAnyObjectByType<EndLevelResultsUI>().ShowMenu();
+            var ui = FindAnyObjectByType<EndLevelResultsUI>();
+            if (ui != null) {
+                ui.ShowMenu();
+            } else {
+                GoToNextScene();
+            }
+            
             return;
         }
 

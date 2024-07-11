@@ -11,7 +11,11 @@ public class PlayerScore : MonoBehaviour
     public static int pointsLostOnDeath = 50;
     public static float timePointLossInterval = 5f; // player loses point every x seconds
 
-    public event Action OnUpdateScoreAndRank;
+    // <summary>
+    // Invoked when the score changes. Parameter indicates whether the score 
+    // should be animated to it's new value or not.
+    // </summary>
+    public event Action<bool> OnUpdateScoreAndRank;
 
     [SerializeField]
     private int playerScore;
@@ -34,19 +38,27 @@ public class PlayerScore : MonoBehaviour
         health.onHurt += (DamageInfo damage) => SubtractScore((int)(damage.damage * pointsPerDamageTakenMultiplier));
         health.onDeath += () => SubtractScore(pointsLostOnDeath);
         StartCoroutine(TimeScoreSubtraction());
+
+        ScorePersister.Instance.HydrateScore(this);
     }
 
     public void AddScore(int points)
     {
         playerScore += points;
-        OnUpdateScoreAndRank?.Invoke();
+        OnUpdateScoreAndRank?.Invoke(true);
     }
 
     public void SubtractScore(int points)
     {
         playerScore -= points;
         if(playerScore < 0) { playerScore = 0; }
-        OnUpdateScoreAndRank?.Invoke();
+        OnUpdateScoreAndRank?.Invoke(true);
+    }
+
+    // TODO: just make `playerScore` a public property at this point
+    public void SetScore(int newScore, bool animate) {
+        playerScore = newScore;
+        OnUpdateScoreAndRank?.Invoke(animate);
     }
 
     public int GetScore()
@@ -63,7 +75,7 @@ public class PlayerScore : MonoBehaviour
         string tempRank = null;
         for(int i = rankList.Length - 1; i >= 0; i--)
         {
-            if(playerScore > rankList[i].pointThreshold) { tempRank = rankList[i].rankName;}
+            if(playerScore >= rankList[i].pointThreshold) { tempRank = rankList[i].rankName;}
         }
         return tempRank;
     }

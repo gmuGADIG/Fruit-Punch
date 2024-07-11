@@ -20,21 +20,28 @@ public class ButtonDisplay : MonoBehaviour
     
     Image image;
     int index;
+
+    List<Sprite> images = new();
     
     void Start()
     {
         image = gameObject.GetComponentInChildren<Image>();
+
+        if (keyboardSchemes.Contains("keyboardLeft")) images.Add(keyboardLeftImage);
+        if (keyboardSchemes.Contains("keyboardRight")) images.Add(keyboardRightImage);
+        if (keyboardSchemes.Contains("controller")) images.Add(controllerImage);
     }
 
     void Update()
     {
-        var images = new List<Sprite>();
-        if (keyboardSchemes.Contains("keyboardLeft")) images.Add(keyboardLeftImage);
-        if (keyboardSchemes.Contains("keyboardRight")) images.Add(keyboardRightImage);
-        if (keyboardSchemes.Contains("controller")) images.Add(controllerImage);
-        
+        Debug.Log("hai :3", this);
+
         var imageIndex = (int)Time.time % images.Count;
         image.sprite = images[imageIndex];
+
+        Debug.Log("images.Count = " + images.Count, this);
+        Debug.Log("imageIndex = " + imageIndex, this);
+        Debug.Log("image.sprite = " + image.sprite, this);
     }
 
 
