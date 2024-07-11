@@ -24,12 +24,17 @@ public class PlayerScoreUI : MonoBehaviour
         currentScore = playerScore.GetScore();
     }
 
-    private void UpdateScore()
+    private void UpdateScore(bool animate)
     {
         targetScore = playerScore.GetScore();
         if (gameObject.activeInHierarchy)
         {
-            StartCoroutine(UpdateScoreCoroutine());
+            if (animate) {
+                StartCoroutine(UpdateScoreCoroutine());
+            } else {
+                currentScore = targetScore;
+                scoreText.text = currentScore.ToString() + " pts";
+            }
         }
     }
 

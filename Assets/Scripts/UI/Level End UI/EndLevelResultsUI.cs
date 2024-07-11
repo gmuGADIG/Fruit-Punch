@@ -19,6 +19,9 @@ public class EndLevelResultsUI : MonoBehaviour
     public void ShowMenu()
     {
         var playerScores = FindObjectsOfType<PlayerScore>();
+
+        ScorePersister.Instance.Clear(); // reset the scores after showing
+
         foreach (var score in playerScores)
         {
             score.StopScoreCountdown();

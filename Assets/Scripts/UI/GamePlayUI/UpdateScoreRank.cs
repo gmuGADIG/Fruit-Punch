@@ -16,12 +16,12 @@ public class UpdateScoreRank : MonoBehaviour
         myPlayerScore.OnUpdateScoreAndRank += updateRank;
     }
 
-    void updateScore()
+    void updateScore(bool _animate)
     {
         scoreText.text = myPlayerScore.GetScore().ToString();
     }
 
-    void updateRank()
+    void updateRank(bool _animate)
     {
         rankText.text = myPlayerScore.GetRank();   
     }
