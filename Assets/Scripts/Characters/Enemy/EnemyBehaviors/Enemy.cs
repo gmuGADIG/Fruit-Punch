@@ -41,11 +41,6 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] float gravity = 10f;
 
-    // New field: weight
-    [Tooltip("Enemy will have less velocity/distance and more damage with this many kilograms.")]
-    [SerializeField]
-    float weight = 1f;
-
     [Tooltip("This much damage multiplied by its mass is dealt on throw, both to itself and anything it hits.")]
     [SerializeField] float throwBaseDamage = 20f;
     
@@ -115,6 +110,7 @@ public class Enemy : MonoBehaviour
     }
 
     protected virtual void OnHurt(DamageInfo damageInfo) {
+        SoundManager.Instance.PlaySoundAtPosition("EnemyHurt", transform.position);
         stateMachine.SetState(EnemyState.Hurt);
     }
 
@@ -127,6 +123,12 @@ public class Enemy : MonoBehaviour
         else if (rb.velocity.x > 0) transform.localEulerAngles = Vector3.zero;
 
         state = stateMachine.currentState;
+
+        if (transform.position.y < -1000)
+        {
+            Debug.LogError($"Enemy ({name}) fell to the death plane! This should never happen.");
+            health.Damage(new DamageInfo(this.gameObject, 1000000, Vector2.zero, AuraType.Everything));
+        }
     }
 
     /// <summary>
@@ -325,13 +327,15 @@ public class Enemy : MonoBehaviour
         return stateMachine.currentState;
     }
 
-    protected virtual void InAirExit(EnemyState _newState)
+    protected virtual void InAirExit(EnemyState newState)
     {
-        if (thrownDamageQueue)
+        // make sure we're not being regrabbed, because then there shouldn't be
+        // any damage being taken
+        if (thrownDamageQueue && newState != EnemyState.Grabbed)
         {
             thrownDamageQueue = false;
             var dmg = throwBaseDamage * rb.mass;
-            health.Damage(new DamageInfo(dmg, Vector2.zero, AuraType.Throw));
+            health.Damage(new DamageInfo(gameObject, dmg, Vector2.zero, AuraType.Throw));
         }
     }
 

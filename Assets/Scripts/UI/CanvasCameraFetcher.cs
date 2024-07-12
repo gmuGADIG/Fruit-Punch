@@ -7,12 +7,10 @@ using UnityEngine;
 /// Assigns the canvas's "render camera" field to the main camera. <br/>
 /// Motivation: this allows the canvas to be in its own prefab without having to manually assign to camera of every instance.
 /// </summary>
-[ExecuteAlways]
 public class CanvasCameraFetcher : MonoBehaviour
 {
-    void OnValidate()
+    void Start()
     {
-        var canvas = GetComponent<Canvas>();
-        canvas.worldCamera = Camera.main;
+        GetComponent<Canvas>().worldCamera = Camera.main;
     }
 }

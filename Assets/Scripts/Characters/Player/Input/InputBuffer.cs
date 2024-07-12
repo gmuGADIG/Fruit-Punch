@@ -65,7 +65,7 @@ public class InputBuffer : MonoBehaviour
     public bool PeekAction(string actionName, out ActionContext? context) {
         try {
             var _ignored = input.actions[actionName];
-        } catch (KeyNotFoundException e) {
+        } catch (KeyNotFoundException) {
             Debug.LogWarning($"Cound not find action {actionName} in PlayerInput.");
         }
 

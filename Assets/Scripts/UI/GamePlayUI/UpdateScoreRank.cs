@@ -12,18 +12,18 @@ public class UpdateScoreRank : MonoBehaviour
 
     private void OnEnable()
     {
-        myPlayerScore.updateScoreAndRank += updateScore;
-        myPlayerScore.updateScoreAndRank += updateRank;
+        myPlayerScore.OnUpdateScoreAndRank += updateScore;
+        myPlayerScore.OnUpdateScoreAndRank += updateRank;
     }
 
-    void updateScore()
+    void updateScore(bool _animate)
     {
-        scoreText.text = myPlayerScore.getScore().ToString();
+        scoreText.text = myPlayerScore.GetScore().ToString();
     }
 
-    void updateRank()
+    void updateRank(bool _animate)
     {
-        rankText.text = myPlayerScore.getRank();   
+        rankText.text = myPlayerScore.GetRank();   
     }
 
 }

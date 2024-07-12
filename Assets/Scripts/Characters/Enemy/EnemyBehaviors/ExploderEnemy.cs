@@ -70,6 +70,6 @@ public class ExploderEnemy : Enemy
     protected override void AttackingEnter()
     {
         Instantiate(explosionPrefab, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        GetComponent<Health>().Die();
     }
 }

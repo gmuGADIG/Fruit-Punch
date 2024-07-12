@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -25,8 +26,13 @@ public class StayInCamera : MonoBehaviour
         if (TryGetComponent<Collider>(out var col))
         {
             // get the bounds of the collider, relative to the center
-            leftExtent = col.bounds.min.x - transform.position.x;
-            rightExtent = col.bounds.max.x - transform.position.x;
+
+            // NOTE: hopefully the collider is centered
+            // you cant use Collider.bounds here because sometimes it's in world space
+            // sometimes not
+
+            leftExtent = col.bounds.size.x / -2;
+            rightExtent = col.bounds.size.x / 2;
         }
     }
 
@@ -40,18 +46,53 @@ public class StayInCamera : MonoBehaviour
         float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - rightExtent;
 
         var isOutsideBounds =
-            position.x <= leftBorder  && rb.velocity.x < 0 || 
-            position.x >= rightBorder && rb.velocity.x > 0;
+            position.x < leftBorder ||  // && rb.velocity.x < 0 || 
+            position.x > rightBorder; // && rb.velocity.x > 0;
 
         if (isOutsideBounds)
         {
             var vel = rb.velocity;
             vel.x *= -1 * bounceFactor; // flip and dampen
             rb.velocity = vel;
+
+            // also put the thing on the border
+            var toLeft = leftBorder - position.x;
+            var toRight = rightBorder - position.x;
+
+            if (Mathf.Abs(toLeft) < Mathf.Abs(toRight)) {
+                position.x = leftBorder;
+            } else {
+                position.x = rightBorder;
+            }
         }
 
             // position.x = Mathf.Clamp(position.x, leftBorder, rightBorder);
 
         transform.position = position;
+    }
+
+    // draw gizmos for where the player is bounded
+    void OnDrawGizmos() {
+        Gizmos.color = Color.yellow;
+
+        float distance = 0f;
+        float leftBorder = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, distance)).x - leftExtent;
+        float rightBorder = Camera.main.ViewportToWorldPoint(new Vector3(1, 0, distance)).x - rightExtent;
+
+        var l = transform.position;
+        l.x = leftBorder;
+
+        var r = transform.position;
+        r.x = rightBorder;
+
+        Gizmos.DrawLine(
+            l - (Vector3.up * 10),
+            l - (Vector3.down * 10)
+        );
+
+        Gizmos.DrawLine(
+            r - (Vector3.up * 10),
+            r - (Vector3.down * 10)
+        );
     }
 }

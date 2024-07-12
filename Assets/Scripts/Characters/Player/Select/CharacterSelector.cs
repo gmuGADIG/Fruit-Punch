@@ -1,6 +1,9 @@
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public enum Character
@@ -14,64 +17,56 @@ public enum Character
 
 public class CharacterSelector : MonoBehaviour
 {
-    public static CharacterSelectorManager manager;
-
-    //images used for each character that the player can select, index = (int)Character
-    [SerializeField]
-    public Sprite[] images;
-    [SerializeField]
-    public StatsInfo[] stats;
-
-    [SerializeField]
-    public Sprite starFull;
-    [SerializeField]
-    public Sprite starEmpty;
-
-    [SerializeField]
-    private Image characterImage;
-    [SerializeField]
-    private TextMeshProUGUI text;
-    private int numCharacters;
+    [Header("Stats")]
+    // index = (int) Character
+    [SerializeField] StatsInfo[] stats;
     
-    [SerializeField]
-    public Transform healthStars;
-    [SerializeField]
-    public Transform damageStars;
-    [SerializeField]
-    public Transform speedStars;
-    [SerializeField]
-    public GameObject buttonImage;
+    [FormerlySerializedAs("images")]
+    [Header("Sprites")]
+    //images used for each character that the player can select, index = (int)Character
+    [SerializeField] Sprite[] characterPreviews;
 
-    public Character character;
-    public bool characterSelected;
-    public bool isPlayerOne;
+    [SerializeField] Sprite starFull;
+    [SerializeField] Sprite starEmpty;
+
+    [Header("Child References")]
+    [SerializeField] Image characterImage;
+    [SerializeField] TextMeshProUGUI text;
+
+    [SerializeField] Transform healthStars;
+    [SerializeField] Transform damageStars;
+    [SerializeField] Transform speedStars;
+    [SerializeField] ButtonDisplay buttonDisplay;
+
+    int playerIndex;
+    Character character;
+    bool characterSelected;
+    int numCharacters;
+
+    public static int selectorCount = 0;
+    public static int selectorsLockedIn = 0;
+    public static event Action<CharacterSelector> onSelectCharacter;
+    public static event Action<CharacterSelector> onUnselectCharacter;
+    public static HashSet<Character> selectedCharacters = new();
 
     private void Start()
     {
-        //trys to finds manager if manager isnt assigned
-        if (manager == null)
-            manager = GameObject.Find("Manager").GetComponent<CharacterSelectorManager>();
+        // get names of characters
+        numCharacters = Enum.GetNames(typeof(Character)).Length-1;
+        Utils.Assert(numCharacters == characterPreviews.Length);
 
-        //trys to finds characterImage if characterImage isnt assigned
-        if (characterImage == null)
-            characterImage = transform.Find("Character Image").gameObject.GetComponent<Image>();
-        
-        //trys to finds text if text isnt assigned
-        if(text == null)
-            text = transform.Find("Confirm Text").gameObject.GetComponent<TextMeshProUGUI>();
+        // set default character
+        character = (Character) playerIndex;
+        UpdateDisplay();
+    }
 
-        //
-        numCharacters = Character.GetNames(typeof(Character)).Length-1;
-        if (numCharacters != images.Length)
-            Debug.LogWarning("TestPlayerSelector.cs: The player enum and images provided do not have equivilent length.");
-        
-        character = Character.Apple;
-        characterImage.sprite = images[0];
-        SetStars();
+    void OnDestroy()
+    {
+        selectorCount -= 1;
     }
 
     /// <summary>
-    /// changes the character that would be selected
+    /// Change to next character (or does nothing if already selected).
     /// </summary>
     void OnRight()
     {
@@ -82,82 +77,13 @@ public class CharacterSelector : MonoBehaviour
 
         //loops back if character index would be out of bounds 
         if ((int)character >= numCharacters)
-            character = (Character)0;
-        characterImage.sprite = images[(int)character];
-        SetStars();
-
+            character = (Character) 0;
+        
+        UpdateDisplay();
     }
-
-    public void SetStars()
-    {
-        switch (stats[(int)character].health)
-        {
-            case StatValue.Low:
-                healthStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                healthStars.transform.GetChild(1).GetComponent<Image>().sprite = starEmpty;
-                healthStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
-                break;
-            case StatValue.Mid:
-                healthStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                healthStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
-                healthStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
-                break;
-            case StatValue.High:
-                healthStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                healthStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
-                healthStars.transform.GetChild(2).GetComponent<Image>().sprite = starFull;
-                break;
-            default:
-                break;
-        }
-
-        switch (stats[(int)character].damage)
-        {
-            case StatValue.Low:
-                damageStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                damageStars.transform.GetChild(1).GetComponent<Image>().sprite = starEmpty;
-                damageStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
-                break;
-            case StatValue.Mid:
-                damageStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                damageStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
-                damageStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
-                break;
-            case StatValue.High:
-                damageStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                damageStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
-                damageStars.transform.GetChild(2).GetComponent<Image>().sprite = starFull;
-                break;
-            default:
-                break;
-        }
-
-        switch (stats[(int)character].speed)
-        {
-            case StatValue.Low:
-                speedStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                speedStars.transform.GetChild(1).GetComponent<Image>().sprite = starEmpty;
-                speedStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
-                break;
-            case StatValue.Mid:
-                speedStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                speedStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
-                speedStars.transform.GetChild(2).GetComponent<Image>().sprite = starEmpty;
-                break;
-            case StatValue.High:
-                speedStars.transform.GetChild(0).GetComponent<Image>().sprite = starFull;
-                speedStars.transform.GetChild(1).GetComponent<Image>().sprite = starFull;
-                speedStars.transform.GetChild(2).GetComponent<Image>().sprite = starFull;
-                break;
-            default:
-                break;
-        }
-
-    }
-
-
+    
     /// <summary>
-    /// changes the character that would be selected
+    /// Change to the previous character (or does nothing if already selected).
     /// </summary>
     void OnLeft()
     {
@@ -165,69 +91,111 @@ public class CharacterSelector : MonoBehaviour
             return;
 
         character--;
-        //loops back if character index would be out of bounds 
+        // loops back if character index would be out of bounds 
         if (character < 0)
             character = (Character)(numCharacters-1);
-        characterImage.sprite = images[(int)character];
-        SetStars();
+
+        UpdateDisplay();
     }
+
+    void UpdateDisplay()
+    {
+        // set character sprite
+        characterImage.sprite = characterPreviews[(int) character];
+        
+        // display stats
+        var characterStats = stats[(int) character];
+        SetStars(healthStars, characterStats.health);
+        SetStars(damageStars, characterStats.damage);
+        SetStars(speedStars, characterStats.speed);
+    }
+
+    void SetStars(Transform parent, StatValue statsValue)
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            var starImage = parent.GetChild(i).GetComponent<Image>();
+            var filled = i < (int)statsValue;
+            starImage.sprite = filled ? starFull : starEmpty;
+        }
+    }
+
+    public void Setup(JoinContext joinContext)
+    {
+        playerIndex = selectorCount;
+        selectorCount += 1;
+        
+        PlayerInfo.playerControlSchemes[playerIndex] = joinContext.ControlScheme;
+        PlayerInfo.playerInputDevices[playerIndex] = joinContext.InputDevice;
+        buttonDisplay.keyboardSchemes = new[] { joinContext.ControlScheme };
+    }
+    
 
     /// <summary>
     /// on first press it locks in the character selected, on second press, if all players are ready it loads the next scene.
     /// </summary>
     void OnConfirm()
     {
-        if (characterSelected) //if a character has been chosen
+        if (characterSelected) // if a character has been chosen
         {
-            //check if players have selected thier characters
-            if (manager.GetPlayersReady())
+            if (selectorsLockedIn == selectorCount) // Start Game
             {
-                //Start Game
-                SceneManager.LoadScene(SwitchScene.switchScene.PostCharSelect); 
-                Debug.Log("Characters Selected");
+                Debug.Log("Starting game!");
+                SceneManager.LoadScene(SwitchScene.cutscene01);
             }
+            else Debug.Log($"Not everyone's selected! ({selectorsLockedIn} out of {selectorCount} locked in)");
         }
-        else //if a character hadn't been chosen, store the selected character
+        else // if a character hadn't been chosen, store the selected character
         {
-            Character other = manager.GetOtherCharacter();
-            if (other == Character.None || other != character) //checks if no character has been selected or if the character that has been slected isnt the one this player is trying to select.
+            if (selectedCharacters.Contains(this.character))
             {
-                if (isPlayerOne)
-                    GameManager.gameManager.playerOne = character;
-                else
-                    GameManager.gameManager.playerTwo = character;
-
-                //updates text for selector
-                text.text = "Press\r\n\r\n\r\nto start";
-                characterSelected = true;
+                print("Already been selected!");
+            }
+            else
+            {
+                print("Character selected.");
+                CommitSelection();
             }
         }
     }
 
+    void CommitSelection()
+    {
+        selectorsLockedIn += 1;
+        selectedCharacters.Add(this.character);
+        
+        PlayerInfo.characters[playerIndex] = character;
+        text.text = "Press\r\n\r\n\r\nto start";
+        characterSelected = true;
+        
+        onSelectCharacter?.Invoke(this);
+    }
+
+    void UndoSelection()
+    {
+        selectorsLockedIn -= 1;
+        selectedCharacters.Remove(this.character);
+        
+        characterSelected = false;
+        text.text = "Press\r\n\r\n\r\nto select";
+        
+        onUnselectCharacter?.Invoke(this);
+    }
+
     /// <summary>
-    /// unselects the character a player had preiously selected. if no characters had been selected it goes to the previous scene. 
-    /// IMPORANT: previous scene may not be the right scene. 
+    /// unselects the character a player had previously selected. if no characters had been selected it goes to the main menu.
     /// </summary>
     void OnBack()
     {
         if (characterSelected)
         {
-            characterSelected = false;
-            text.text = "Press\r\n\r\n\r\nto select";
-            if (isPlayerOne)
-                GameManager.gameManager.playerOne = Character.None;
-            else
-                GameManager.gameManager.playerTwo = Character.None;
+            UndoSelection();
         }
         else
         {
-            //FIXME: temporary solution because the edge cases of character leave would be terrible.
-            //Uncreate Character
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene(SwitchScene.mainMenu);
         }
     }
-
-
 
 
 }

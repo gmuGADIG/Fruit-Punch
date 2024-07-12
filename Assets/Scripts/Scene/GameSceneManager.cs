@@ -1,44 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.InputSystem.Processors;
+using UnityEngine.SceneManagement;
 
 public class GameSceneManager : MonoBehaviour
 {   
     [System.Serializable]//The camera moves between scenes using a serializable object
     public class Scene
     {
-        public enum Transition
-        {
-            Soft,
-            Hard, //Note: enemy spawns are currently ignored on hard transition
-            End
-        }
-        
-        public Transition transitionType;
         public Vector3 transitionLocation;
         public ScreenSpawner spawner;
-
     }
-
-    public GameObject mainCamera;
+    
     [SerializeField]
     float cameraFreezeThreshold = 1.0f; //The distance from the freeze location before it triggers the start.
     [SerializeField]
     public float cameraSmoothSpeed = 0.125f; // Smoothness of camera movement
-    [SerializeField]
-    public Vector3 startPosition = new Vector3(0f, 2f); // Adjust as needed
     [SerializeField]
     public Vector3 cameraOffset = new Vector3(0f, 2f); // Adjust as needed
 
     [SerializeField]
     public Scene[] scenes;
 
+    [Tooltip("When the final battle is finished, the scene with this name will be loaded.")]
+    public string nextStage;
+
     private int currentSceneNumber;
     private Scene currentScene;
     
-    private bool areEnemiesPresent = false; // Boolean to track if enemies are present
+    // private bool areEnemiesPresent = false; // Boolean to track if enemies are present
     private Vector3 frozenPos;
+    
+    private GameObject mainCamera;
 
     public enum CameraState
     {
@@ -63,72 +60,92 @@ public class GameSceneManager : MonoBehaviour
             currentSceneNumber = 0;
             currentScene = scenes[0];
         }
-        mainCamera.transform.position = startPosition;
+
         currentState = CameraState.follow;
-        players = FindObjectsOfType<Player>().ToList();
     }
+
     public void FreezeCamera(Vector3 pos)
     {
         currentState = CameraState.frozen;
         frozenPos = pos;
-        Debug.Log("Spawner exits?");
-        if (currentScene.spawner != null)
+        if (currentScene.spawner == null) Debug.LogError($"screen {currentSceneNumber} has null spawner!");
+        else if (currentScene.spawner.gameObject.activeInHierarchy)
         {
-            Debug.Log("Yes!!");
             currentScene.spawner.StartSpawning();
+            currentScene.spawner.onWaveComplete.AddListener(UnfreezeCamera);
+        } else {
+            UnfreezeCamera();
         }
     }
 
     public void UnfreezeCamera()
     {
         currentSceneNumber++;
-        if (currentSceneNumber >= scenes.Length)
+        if (currentSceneNumber >= scenes.Length) // final screen; open final results menu
         {
-            Debug.LogWarning("GameSceneManager: Out of scenes, recycling last scene");//TODO: remove the recycle for when there is a proper end to the level
-            currentSceneNumber--;
+            var ui = FindAnyObjectByType<EndLevelResultsUI>();
+            if (ui != null) {
+                ui.ShowMenu();
+            } else {
+                GoToNextScene();
+            }
+            
+            return;
         }
 
         currentScene = scenes[currentSceneNumber];
-
-        if (currentScene.transitionType==Scene.Transition.Soft) {
-            currentState = CameraState.follow;
-        }
-        else
-        {
-            currentState = CameraState.follow;
-            HardTransition();
-        }
+        currentState = CameraState.follow;
     }
 
-    public void HardTransition()
-    {
-        Vector3 oldCameraLocation = mainCamera.transform.position;
-        foreach (Player p in players)
+    /// <summary>
+    /// Gets the average player position offset by cameraOffset and the z component set to mainCamera's z position.
+    /// </summary>
+    /// <returns>Definitely the average player position.</returns>
+    Vector3 GetAveragePlayerPosition() {
+        Vector3 averagePos = Vector3.zero;
+        for (int i = 0; i < players.Count; i++)
         {
-            Vector3 playerOffset = p.transform.position - (oldCameraLocation-cameraOffset);
-            p.transform.position = currentScene.transitionLocation+ playerOffset;
+            averagePos += players[i].transform.position;
         }
-        mainCamera.transform.position = currentScene.transitionLocation+cameraOffset;
-        UnfreezeCamera();
+        averagePos /= players.Count;
+        averagePos += cameraOffset;
+        averagePos.z = mainCamera.transform.position.z;
+
+        return averagePos;
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (players.Count == 0)
+        {
+            players = FindObjectsOfType<Player>().ToList();
+        }
+        
         // Move the camera to follow the player if conditions are met
         if (currentState == CameraState.follow)
         {
-            Vector3 averagePos = Vector3.zero;
-            for (int i = 0; i < players.Count; i++)
-            {
-                averagePos += players[i].transform.position;
-            }
-            averagePos /= players.Count;
-            averagePos += cameraOffset;
-            averagePos.z = mainCamera.transform.position.z;
-            Vector3 smoothedPosition = Vector3.Lerp(mainCamera.transform.position, averagePos, cameraSmoothSpeed);
-            smoothedPosition.y = cameraOffset.y;
-            mainCamera.transform.position = smoothedPosition;
+            Vector3 averagePos = GetAveragePlayerPosition();
+
+            Camera cam = Camera.main;
+            float height = 2f * cam.orthographicSize;
+            float width = height * cam.aspect;
+            var halfWidth = width * .5f;
+
+            var x = Mathf.Clamp(
+                mainCamera.transform.position.x,
+                averagePos.x - halfWidth * .3f,
+                mainCamera.transform.position.x
+                //averagePos.x + halfWidth * .8f
+            );
+
+            var newPos = mainCamera.transform.position;
+            newPos.x = x;
+            mainCamera.transform.position = newPos;
+
+            // Vector3 smoothedPosition = Vector3.Lerp(mainCamera.transform.position, averagePos, cameraSmoothSpeed);
+            // smoothedPosition.y = Mathf.Round(cameraOffset.y);
+            // mainCamera.transform.position = smoothedPosition;
 
             //Detects if the player is close enough to the next scene
             if (Vector3.Distance(mainCamera.transform.position-cameraOffset,currentScene.transitionLocation)<cameraFreezeThreshold)
@@ -141,12 +158,17 @@ public class GameSceneManager : MonoBehaviour
             if (Vector3.Distance(mainCamera.transform.position,frozenPos)>0.001) {
                 mainCamera.transform.position = Vector3.Lerp(mainCamera.transform.position, frozenPos, cameraSmoothSpeed);
             }
-            if (Input.GetKey("space"))
+            
+            // Debug advance
+            if (Application.isEditor && Input.GetKey(KeyCode.Tilde))
             {
                 UnfreezeCamera();
             }
         }
     }
 
-
+    public void GoToNextScene()
+    {
+        FindAnyObjectByType<FadeOutUI>().FadeOutToNextScene(nextStage);
+    }
 }

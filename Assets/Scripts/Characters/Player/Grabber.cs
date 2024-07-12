@@ -1,8 +1,5 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 /// <summary>
@@ -12,12 +9,16 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody), typeof(Collider))]
 public class Grabber : MonoBehaviour
 {
-    public event Action onForceRelease;
+    public event Action OnForceRelease;
     
     [Tooltip("The force (not speed) applied to thrown objects. Heavier objects will be slower.")]
     [SerializeField] float throwForce;
-    
-    List<Grabbable> currentOverlaps = new();
+
+    [Tooltip("Multiplier for the amount of damage done on landing.")]
+    [SerializeField] float throwDamageMultiplier = 1.0f;
+
+    [Tooltip("The radius of which the player has the ability to grab an object.")]
+    [SerializeField] float grabRadius = 1f;
     
     public bool IsGrabbing => this.transform.childCount > 0;
     Grabbable GetGrabbedItem() => this.transform.GetChild(0).GetComponent<Grabbable>();
@@ -37,14 +38,19 @@ public class Grabber : MonoBehaviour
     {
         var throwDir = new Vector3(1, 1f, 0);
         if (facingLeft) throwDir.x *= -1;
+
         var item = GetGrabbedItem();
+
         item.Throw();
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
+        item.GetComponent<Grabbable>().damageOnLandingMultiplier = throwDamageMultiplier;
     }
 
-    
+    public float grabCoolDown = 2f;
+    public float currentTime;
+
     /// <summary>
     /// Attempts to grab nearby grabbables. Returns false if nothing can be grabbed. <br/>
     /// Otherwise, re-parents the grabbable and invokes its relevant events.
@@ -52,22 +58,49 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        if (currentOverlaps.Count == 0) return false;
+        if (currentTime <= 0.0f) {
+            //currentOverlaps.Clear();
+            
+            // Perform a shape cast
+            // Find all the grabbables in the shape cast
+            // Pick the one closest to the player
+            Collider[] hits = Physics.OverlapSphere(transform.position, grabRadius);
+            Grabbable grabbed = hits
+                .Select(hit => hit.GetComponent<Grabbable>())
+                .Where(hit => hit != null)
+                .Where(hit => hit.enabled)
+                .OrderBy(grab => Vector3.Distance(this.transform.position, grab.transform.position))
+                .FirstOrDefault();
 
-        var item = currentOverlaps[0];
+            if (grabbed == null) {
+                // bail early, because we didn't find anything to grab
+                return false;
+            }
 
-        // If the item has a health component and its aura isn't vulnerable to throw attacks, cancel grab.
-        // todo: this also cancels the grab even if another vulnerable enemy is within range. might be worth a fix.
-        if (item.TryGetComponent<Health>(out var health))
-        {
-            if (!health.IsVulnerableTo(AuraType.Throw)) return false;
+            // item = currentOverlaps[0];
+
+            //Checks for Health component
+            if (grabbed.TryGetComponent(out Health health))
+            {
+                // Don't grab things that can't be grabbed
+                if (!health.IsVulnerableTo(AuraType.Throw)) return false;
+                // Don't grab dead things
+                if (health.CurrentHealth <= 0) return false;
+            }
+
+            grabbed.Grab();
+            grabbed.transform.SetParent(this.transform);
+            grabbed.transform.position = this.transform.position;
+            grabbed.onForceRelease.AddListener(ForceReleaseCallback);
+            SoundManager.Instance.PlaySoundAtPosition("Pickup", this.transform.position);
+
+            return true;
         }
-
-        item.Grab();
-        item.transform.SetParent(this.transform);
-        item.transform.position = this.transform.position;
-        item.onForceRelease.AddListener(ForceReleaseCallback);
-        return true;
+        else
+        {
+            currentTime -= Time.deltaTime;
+            return false;
+        }
     }
 
     /// <summary>
@@ -79,33 +112,22 @@ public class Grabber : MonoBehaviour
         var item = GetGrabbedItem();
         item.transform.SetParent(null);
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
-        onForceRelease?.Invoke();
+        OnForceRelease?.Invoke();
     }
 
-    void OnTriggerEnter(Collider other)
-    {
-        var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null && grabbable.enabled)
-        {
-            currentOverlaps.Add(grabbable);
-            currentOverlaps = currentOverlaps.OrderBy(g => Vector3.Distance(this.transform.position, g.transform.position)).ToList();
-            grabbable.InGrabbingRange();
+    void OnTriggerEnter(Collider other) {
+        if (other.TryGetComponent(out Grabbable grabbable)) {
+            grabbable.InGrabbingRange(this);
 
-            grabbable.disabled += () => {
-                if (currentOverlaps.Remove(grabbable)) {
-                    grabbable.OutOfGrabbingRange();
-                }
+            grabbable.Disabled += () => {
+                grabbable.OutOfGrabbingRange(this);
             };
         }
-    }   
+    }
 
-    void OnTriggerExit(Collider other)
-    {
-        var grabbable = other.GetComponentInParent<Grabbable>();
-        if (grabbable != null && grabbable.enabled)
-        {
-            grabbable.OutOfGrabbingRange();
-            currentOverlaps.Remove(grabbable);
+    void OnTriggerExit(Collider other) {
+        if (other.TryGetComponent(out Grabbable grabbable)) {
+            grabbable.OutOfGrabbingRange(this);
         }
     }
 }

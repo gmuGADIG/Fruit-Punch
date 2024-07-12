@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor.UI;
+#endif
+
 /*
 Our current goal is to create a generalized script describing enemy health.
 
@@ -16,7 +20,6 @@ Max Health, Current Health, Decrease and Increase health functions.
 Magic of Events Implemented by Justin from designed code. 
 
 */
-[RequireComponent(typeof(Rigidbody))]
 public class Health : MonoBehaviour
 {
     public AuraType vulnerableTypes;
@@ -32,6 +35,14 @@ public class Health : MonoBehaviour
     [SerializeField]
     private float currentHealth;
     public float CurrentHealth => currentHealth;
+
+    [Tooltip("How affected by knockback this entity is.")]
+    public float knockbackMultiplier = 1f;
+
+    [SerializeField] float pearryDamage = 10f;
+    [SerializeField] float pearryKnockback = .1f;
+    public bool Pearrying { get; set; } = false;
+
     /// <summary>
     /// Invoked when this character's health reaches zero. <br/>
     /// (run after onHealthChange and onHurt)
@@ -51,6 +62,14 @@ public class Health : MonoBehaviour
     public event Action<HealthChange> onHealthChange;
 
     public event Action<DamageInfo> onDamageImmune;
+
+    public event Action<AuraType> onAuraChange;
+
+    public event Action OnPearry;
+    /// <summary>
+    /// Same as onDeath but static.
+    /// </summary>
+    public static event Action<GameObject> OnAnyDeath;
     
     void Start()
     {
@@ -64,9 +83,14 @@ public class Health : MonoBehaviour
             var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
             if (hitsThisLayer) {
                 var info = hurtBox.GetDamageInfo();
-                this.Damage(info);
-                if (IsVulnerableTo(info.aura)) {
+                bool success = Damage(info);
+                if (success)
+                {
                     hurtBox.onHurt?.Invoke(info);
+                }
+
+                if (Pearrying) {
+                    hurtBox.onPearried?.Invoke(info);
                 }
             }
         }
@@ -78,13 +102,33 @@ public class Health : MonoBehaviour
     /// Doesn't do anything with knockback; that's up the player or enemy script. <br/>
     /// (onHealthChange, onHurt, and onDeath are invoked if applicable)
     /// </summary>
-    public void Damage(DamageInfo info)
+    public bool Damage(DamageInfo info)
     {
-        if (this.currentHealth <= 0) return; // don't die twice. probably gonna be convenient later.
+        if (currentHealth <= 0) return false; // don't die twice. probably gonna be convenient later.
         if (!IsVulnerableTo(info.aura))
         {
             onDamageImmune?.Invoke(info);
-            return;
+            return false;
+        }
+        if (Pearrying && info.source != null)
+        {
+            Health enemyHealth = info.source.GetComponentInParent<Health>();
+            if (enemyHealth != null)
+            {
+                Vector2 knockback = (info.source.transform.position - transform.position).normalized * pearryKnockback;
+                enemyHealth.Damage(new DamageInfo(gameObject, pearryDamage, knockback, AuraType.Pearry));
+            }
+            if (info.source.TryGetComponent(out EnemyProjectile proj))
+            {
+                proj.Setup(pearryDamage, -proj.velocity); HurtBox hurtBox = proj.GetComponent<HurtBox>();
+                if (hurtBox)
+                {
+                    hurtBox.hitLayers = LayerMask.GetMask("Enemy");
+                    hurtBox.SetAura(AuraType.Pearry);
+                }
+            }
+            OnPearry?.Invoke();
+            return false;
         }
         
         currentHealth = Mathf.MoveTowards(currentHealth, 0, info.damage);
@@ -94,12 +138,12 @@ public class Health : MonoBehaviour
         
         onHealthChange?.Invoke(new HealthChange(currentHealth));
         onHurt?.Invoke(info);
+
+        // apply knockback
+        transform.position += (Vector3)info.knockback * knockbackMultiplier;
         
-        
-        if (currentHealth <= 0) Die();
-        
-        // throw new Exception("oww!");
-        print("oww");
+        if (currentHealth <= 0) Die(info);
+        return true;
     }
 
     /// <summary>
@@ -122,8 +166,21 @@ public class Health : MonoBehaviour
         onHealthChange?.Invoke(new HealthChange(currentHealth));
     }
 
-    private void Die()
+    public void Die()
     {
+        onDeath?.Invoke();
+        OnAnyDeath?.Invoke(this.gameObject);
+    }
+
+    public void Die(DamageInfo fatalDamage)
+    {
+        print(fatalDamage.source);
+        var score = fatalDamage.source.GetComponentInParent<PlayerScore>();
+        if (score != null)
+        {
+            score.AddScore(PlayerScore.pointsPerKill);
+        }
+        OnAnyDeath?.Invoke(this.gameObject);
         onDeath?.Invoke();
     }
 
@@ -138,6 +195,7 @@ public class Health : MonoBehaviour
     public void AuraBreak()
     {
         this.vulnerableTypes = AuraType.Everything;
+        onAuraChange?.Invoke(vulnerableTypes);
     }
 }
 

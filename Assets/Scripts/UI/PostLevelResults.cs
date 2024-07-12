@@ -20,9 +20,9 @@ public class PostLevelResults : MonoBehaviour
     {
         playerScore = player.GetComponent<PlayerScore>();
 
-        scoreText.text = playerScore.getScore().ToString();
-        rankText.text = playerScore.getRank();
-        rankImages.sprite = playerScore.getRankImage();
+        scoreText.text = playerScore.GetScore().ToString();
+        rankText.text = playerScore.GetRank();
+        rankImages.sprite = playerScore.GetRankImage();
         characterImage.sprite = player.GetComponentInChildren<SpriteRenderer>().sprite;
     }
 

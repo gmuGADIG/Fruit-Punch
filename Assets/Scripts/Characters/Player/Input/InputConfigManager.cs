@@ -68,6 +68,7 @@ public class InputConfigManager : MonoBehaviour
     /// <param name="input">The PlayerInput in question.</param>
     /// <param name="actionId">The action to rebind.</param>
     /// <param name="afterRebinding">Callback for after the action has been rebound.</param>
+    #nullable enable
     public static void StartRebinding(
             PlayerInput input, 
             Guid actionId,

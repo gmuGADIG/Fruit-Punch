@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete("No longer needed; see ColorTweaker.cs")]
 public class EnemyAuraVisualizer : MonoBehaviour
 {
 /// <summary>
@@ -20,6 +21,7 @@ public class EnemyAuraVisualizer : MonoBehaviour
     SpriteRenderer auraSprite;
     Health parentHealth;
 
+    #pragma warning disable CS0067
     public static event Action auraChange; //Not sure if aura changes but this should allow another script to change it if needed
     
     private void OnEnable()
@@ -40,25 +42,14 @@ public class EnemyAuraVisualizer : MonoBehaviour
     void setAuraColor()
     {
         AuraType newAura = parentHealth.vulnerableTypes;
-        switch (newAura)
+        auraSprite.color = newAura switch
         {
-            case AuraType.Strike:
-                auraSprite.color = strikeColor;
-                break;
-            case AuraType.Throw:
-                auraSprite.color = throwColor;
-                break;
-            case AuraType.JumpAtk:
-                auraSprite.color = jumpColor;
-                break;
-            case AuraType.Pearry:
-                auraSprite.color = peariesColor;
-                break;
-            default:
-                auraSprite.color = noAuraColor;
-                break;
-        }
-
+            AuraType.Strike => strikeColor,
+            AuraType.Throw => throwColor,
+            AuraType.JumpAtk => jumpColor,
+            AuraType.Pearry => peariesColor,
+            _ => noAuraColor
+        };
     }
 
 }

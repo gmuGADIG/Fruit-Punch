@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public class AnyInput : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class AnyInput : MonoBehaviour
 
     public Action<InputAction.CallbackContext> performed;
     public bool triggered => action.action.triggered;
+    [SerializeField] UnityEvent onPerformed;
 
     void Start() {
         foreach (Gamepad gamepad in Gamepad.all) {
@@ -21,7 +23,7 @@ public class AnyInput : MonoBehaviour
             playerInput.PlayerInputActionOfActionId(action.action.id).performed += (c) => performed?.Invoke(c);
         }
         
-        foreach (string scheme in new string[] {"KeyboardLeft", "KeyboardRight"}) {
+        foreach (string scheme in new string[] { "keyboardLeft", "keyboardRight" }) {
             var playerInput = PlayerInput.Instantiate(
                 inputSensorPrefab, 
                 controlScheme: scheme,
@@ -29,5 +31,7 @@ public class AnyInput : MonoBehaviour
             );
             playerInput.PlayerInputActionOfActionId(action.action.id).performed += (c) => performed?.Invoke(c);
         }
+
+        performed += _context => onPerformed.Invoke();
     }
 }

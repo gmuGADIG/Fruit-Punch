@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1649278108347242269}
   - component: {fileID: 8091393318765199267}
   - component: {fileID: 1521532438421154156}
+  - component: {fileID: 5799303749374440577}
   m_Layer: 0
   m_Name: Boss1Projectile
   m_TagString: Untagged
@@ -65,6 +66,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17396a98c38d4404eb7ef90846bc469c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lifetime: 10
 --- !u!65 &1521532438421154156
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -86,6 +88,19 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.17965831, y: 0.17965831, z: 0.17965831}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &5799303749374440577
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4009673977994042145}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1210cdf09245955d0994fed398fa3b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lifetime: 10
 --- !u!1 &8886919550589385527
 GameObject:
   m_ObjectHideFlags: 0

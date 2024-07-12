@@ -11,11 +11,10 @@ public class SoundManager : MonoBehaviour
 
     public AudioMixerGroup mixerGroup;
 
-    [SerializeField]
-    private Sound[] sounds;
-
     private Queue<PositionalAudioSource> positionalSources = new Queue<PositionalAudioSource>();
     private List<AudioSource> toUnpause = new List<AudioSource>();
+
+    Sound[] sounds = {};
 
     void Awake()
     {
@@ -28,6 +27,9 @@ public class SoundManager : MonoBehaviour
             Instance = this;
             //DontDestroyOnLoad(gameObject);
         }
+
+        sounds = Resources.LoadAll<Sound>("Sounds");
+
         foreach (Sound s in sounds)
         {
             s.source = gameObject.AddComponent<AudioSource>();

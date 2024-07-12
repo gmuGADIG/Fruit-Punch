@@ -15,7 +15,16 @@ public class SpriteFixer : MonoBehaviour
     void OnValidate()
     {
         if (Camera.main == null) return; // sometimes happens when the project loads
-        
+        FixSprite();
+    }
+
+    void Start()
+    {
+        FixSprite();
+    }
+
+    void FixSprite()
+    {
         var xRotation = transform.eulerAngles.x;
         var rotationFromCam = xRotation - Camera.main.transform.eulerAngles.x;
         var adjustedScale = Mathf.Abs(1 / Mathf.Cos(Mathf.Deg2Rad * rotationFromCam));
