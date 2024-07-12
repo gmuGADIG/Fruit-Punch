@@ -24,6 +24,8 @@ class ProjectileEnemy : Enemy {
 
     DebugMarker aggressiveMarker;
 
+    [SerializeField] Transform shootPoint;
+
     protected override EnemyState AggressiveUpdate()
     {
         var pos = transform.position - aggressiveCurrentTarget.position;
@@ -81,27 +83,28 @@ class ProjectileEnemy : Enemy {
 
     protected override void AttackingEnter()
     {
+        // TODO: probably should cache this
+        GetComponent<Animator>().Play("Shoot");
+
         currentAttackDuration = attackDuration;
 
-        var deltaX = Mathf.Abs(transform.position.x - aggressiveCurrentTarget.position.x);
-        var signX = transform.position.x - aggressiveCurrentTarget.position.x / deltaX;
-
-        Instantiate(
-            bulletPrefab,
-            transform.position + Vector3.up * .5f,
-            Quaternion.identity
-        ).GetComponent<EnemyProjectile>()
-        .Setup(projectileDamage, signX * projectileSpeed * Vector2.left);
     }
 
-    protected override EnemyState AttackingUpdate()
-    {
-        currentAttackDuration -= Time.deltaTime;
-        
-        if (currentAttackDuration > 0) {
-            return stateMachine.currentState;
-        } else {
-            return EnemyState.Wandering;
-        }
+    void ShootProjectile() {
+        Instantiate(
+            bulletPrefab,
+            shootPoint.position,
+            Quaternion.identity
+        ).GetComponent<EnemyProjectile>()
+        .Setup(projectileDamage, transform.rotation * Vector3.right * projectileSpeed);
+    }
+
+    void AttackingAnimationOver() {
+        stateMachine.SetState(EnemyState.Wandering);
+    }
+
+    protected override void AttackingExit(EnemyState _newState) {
+        // TODO: probably should cache this
+        GetComponent<Animator>().Play("Wander");
     }
 }
