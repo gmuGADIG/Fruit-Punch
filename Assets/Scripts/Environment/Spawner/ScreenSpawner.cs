@@ -119,17 +119,20 @@ public class ScreenSpawner : MonoBehaviour
         }
     }
 
-    int CountLiveEnemies()
+    int CountEnemies()
     {
         var enemies = FindObjectsOfType<Enemy>().Concat<MonoBehaviour>(FindObjectsOfType<Boss>());
-        var liveEnemies = enemies.Where(e => e.GetComponent<Health>().CurrentHealth != 0);
-        return liveEnemies.Count();
+        var persistingEnemies = 
+            enemies.Where(e => e.GetComponent<Health>().CurrentHealth != 0)
+            .Concat<MonoBehaviour>(FindObjectsOfType<DeadEnemy>().Where(de => de.ShouldPersistWave));
+        
+        return persistingEnemies.Count();
     }
 
     private void DoSpawn()
     {
         if (enemySpawnQueue.Count == 0) return; // nothing left to spawn
-        if (CountLiveEnemies() >= enemyOnScreen) return; // too many enemies already on-screen
+        if (CountEnemies() >= enemyOnScreen) return; // too many enemies already on-screen
         
         var spawnData = enemySpawnQueue.Dequeue();
         spawnData.spawnpoint.SpawnEnemy(spawnData.enemyPrefab, spawnData.aura);
@@ -148,12 +151,18 @@ public class ScreenSpawner : MonoBehaviour
     {
         if (!spawningActivated) return;
         
-        var doneSpawning = enemySpawnQueue.Count == 0;
-        var allDead = CountLiveEnemies() == 0;
-        if (doneSpawning && allDead) {
-            onWaveComplete?.Invoke();
-            Debug.Log("Wave Complete");
-            Destroy(this.gameObject);
+        IEnumerator Coroutine() {
+            yield return null; // we wait a frame here since spawning the dead enemy takes a frame
+            var doneSpawning = enemySpawnQueue.Count == 0;
+            var allDead = CountEnemies() == 0;
+
+            if (doneSpawning && allDead) {
+                onWaveComplete?.Invoke();
+                Debug.Log("Wave Complete");
+                Destroy(this.gameObject);
+            }
         }
+
+        StartCoroutine(Coroutine());
     }
 }

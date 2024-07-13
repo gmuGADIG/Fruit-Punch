@@ -178,7 +178,21 @@ public class Enemy : MonoBehaviour
     protected virtual void WanderingEnter()
     {
         wanderingTimeTillAttack = Random.Range(wanderingTimeMin, wanderingTimeMax);
-        wanderingToPosition = transform.position;
+        
+        // TODO: ensure point is on screen
+        wanderingToPosition = new Vector3(
+            transform.position.x + Random.Range(-wanderXDistance, +wanderXDistance),
+            transform.position.y,
+            Random.Range(wanderZMin, wanderZMax)
+        );
+    
+        // draw editor-only debug point
+        if (Application.isEditor) {
+            if (wanderingMarker != null) {
+                Destroy(wanderingMarker.gameObject);
+            }
+            wanderingMarker = DebugMarker.Instantiate(debugMarkerPrefab, wanderingToPosition, Color.blue);
+        }
     }
     
     protected virtual EnemyState WanderingUpdate()
@@ -188,7 +202,7 @@ public class Enemy : MonoBehaviour
         // print($"enemy status ({gameObject.name}): wandering, to {wanderingToPosition}, re-wandering in {wanderingTimeTillWander}, attacking in {wanderingTimeTillAttack}");
         // changing to aggressive state after waiting some time
         wanderingTimeTillAttack -= Time.deltaTime;
-        if (wanderingTimeTillAttack <= 0)
+        if (wanderingTimeTillAttack <= 0 || Vector3.Distance(transform.position, wanderingToPosition) < .3f)
         {
             if (currentAttackingEnemies < MaxSimultaneousAttackers) // TODO: multiply by player count
             {
@@ -198,27 +212,6 @@ public class Enemy : MonoBehaviour
         
         // approach randomly set wander point
         WalkTowards(wanderingToPosition, walkingSpeed);
-        
-        // calculate new wander point after some time has passed
-        if (wanderingTimeTillWander < 0)
-        {
-            wanderingToPosition = new Vector3(
-                transform.position.x + Random.Range(-wanderXDistance, +wanderXDistance),
-                transform.position.y,
-                Random.Range(wanderZMin, wanderZMax)
-            );
-            wanderingTimeTillWander = wanderTimeBetweenSteps;
-
-            // draw editor-only debug point
-            if (Application.isEditor) {
-                if (wanderingMarker != null) {
-                    Destroy(wanderingMarker.gameObject);
-                }
-                wanderingMarker = DebugMarker.Instantiate(debugMarkerPrefab, wanderingToPosition, Color.blue);
-            }
-        }
-
-        wanderingTimeTillWander -= Time.deltaTime;
         
         return stateMachine.currentState;
     }
