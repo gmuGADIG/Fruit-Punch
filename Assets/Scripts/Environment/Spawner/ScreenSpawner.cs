@@ -74,6 +74,13 @@ public class ScreenSpawner : MonoBehaviour
 
     #endregion
 
+    private bool beingDestroyed = false;
+
+    void DestroyThyself() {
+        beingDestroyed = true;
+        Destroy(gameObject);
+    }
+
     void Start()
     {
         Health.OnAnyDeath += OnAnyDeath;
@@ -156,10 +163,12 @@ public class ScreenSpawner : MonoBehaviour
             var doneSpawning = enemySpawnQueue.Count == 0;
             var allDead = CountEnemies() == 0;
 
-            if (doneSpawning && allDead) {
+            // because we waited a frame, there is the possibility that several enemies died last frame.
+            // we better not fire this event more than once this frame.
+            if (doneSpawning && allDead && !beingDestroyed) {
                 onWaveComplete?.Invoke();
                 Debug.Log("Wave Complete");
-                Destroy(this.gameObject);
+                DestroyThyself();
             }
         }
 
