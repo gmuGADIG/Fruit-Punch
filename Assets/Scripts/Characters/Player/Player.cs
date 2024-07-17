@@ -233,7 +233,7 @@ public class Player : MonoBehaviour
     {
         ApplyDirectionalMovement();
 
-        if (playerInput.actions["gameplay/Jump"].triggered)
+        if (playerInput.actions["gameplay/Jump"].triggered && groundCheck.IsGrounded())
         {
             return PlayerState.Jump;
         }
