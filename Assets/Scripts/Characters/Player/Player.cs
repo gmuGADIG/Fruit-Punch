@@ -16,9 +16,38 @@ public enum PlayerState
     // Apple specific
     AppleStrike3,
     // Banana specific
-    BananaJumpStrike
+    BananaJumpStrike,
+
+    Cutscene,
 }
 
+[Serializable]
+public struct CutsceneSounds {
+    public string LeadingLadyIntro;
+    public string LeadingLadyOutro;
+
+    public string FrankenpineIntro;
+    public string FrankenpineOutro;
+
+    public string PhantomatoIntro;
+    public string PhantomatoOutro;
+
+    public string GetIntroSound(string boss) {
+        return boss.ToLower() switch {
+            "leadinglady" => LeadingLadyIntro,
+            "frankenpine" => FrankenpineIntro,
+            "phantomato" => PhantomatoIntro
+        };
+    }
+
+    public string GetOutroSound(string boss) {
+        return boss.ToLower() switch {
+            "leadinglady" => LeadingLadyOutro,
+            "frankenpine" => FrankenpineOutro,
+            "phantomato" => PhantomatoOutro
+        };
+    }
+}
 
 /// <summary>
 /// Playable character script. <br/>
@@ -96,6 +125,9 @@ public class Player : MonoBehaviour
 
     private bool FacingLeft => transform.localEulerAngles.y > 90;
 
+    [SerializeField] CutsceneSounds cutsceneSounds;
+    public CutsceneSounds CutsceneSounds => cutsceneSounds;
+
     void Start()
     {
         // get components
@@ -145,6 +177,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Dead, DeadEnter, null, null);
         stateMachine.AddState(PlayerState.AppleStrike3, AppleStrikeEnter, AppleStrikeUpdate, null); // apple specific
         stateMachine.AddState(PlayerState.BananaJumpStrike, BananaJumpStrikeEnter, BananaJumpStateUpdate, BananaJumpStateExit); // banana specific
+        stateMachine.AddState(PlayerState.Cutscene, null, null, null);
         
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
@@ -154,12 +187,26 @@ public class Player : MonoBehaviour
         
         // attach death state to health component's events
         health.onDeath += () => stateMachine.SetState(PlayerState.Dead);
+
+        Boss.CutsceneStarting += OnCutsceneStarting;
+        Boss.IntroCutsceneOver += OnIntroCutsceneOver;
     }
 
+    void OnCutsceneStarting() {
+            rb.velocity = Vector3.zero;
+            stateMachine.SetState(PlayerState.Normal);
+            stateMachine.SetState(PlayerState.Cutscene);
+    }
 
-    void OnDestroy()
-    {
+    void OnIntroCutsceneOver() {
+        stateMachine.SetState(PlayerState.Normal);
+    }
+
+    void OnDestroy() {
         grabber.OnForceRelease -= ForceReleaseCallback;
+
+        Boss.CutsceneStarting -= OnCutsceneStarting;
+        Boss.CutsceneStarting -= OnIntroCutsceneOver;
     }
 
     void Update()

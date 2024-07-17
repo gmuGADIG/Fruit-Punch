@@ -25,6 +25,15 @@ public class Boss : MonoBehaviour
     protected Health health;
     protected GroundCheck groundCheck;
     protected Grabbable grabbable;
+
+    public static event Action CutsceneStarting;
+    public static event Action IntroCutsceneOver;
+    public static event Action OutroCutsceneOver;
+
+    [SerializeField] string bossName;
+    [SerializeField] string introCutsceneSound;
+    [SerializeField] string outroCutsceneSound;
+
     protected void Start()
     {
         this.GetComponentOrError(out rb);
@@ -33,6 +42,7 @@ public class Boss : MonoBehaviour
         this.GetComponentInChildrenOrError(out groundCheck);
         this.GetComponentOrError(out grabbable);
 
+        CutsceneStarting?.Invoke();
     }
 
     /// <summary>
@@ -90,5 +100,42 @@ public class Boss : MonoBehaviour
     {
         if (velocity.x < 0) transform.localEulerAngles = new Vector3(0, 180, 0);
         else if (velocity.x > 0) transform.localEulerAngles = Vector3.zero;
+    }
+
+
+    protected IEnumerator IntroCutscene() {
+        CutsceneStarting?.Invoke();
+
+        var source = SoundManager.Instance.PlaySoundGlobal(introCutsceneSound);
+        while (source.isPlaying) yield return null;
+
+        source = SoundManager.Instance.PlaySoundGlobal(
+                FindObjectsOfType<Player>()
+                    .OrderBy(_p => UnityEngine.Random.Range(0f, 1f))
+                    .First()
+                    .CutsceneSounds
+                    .GetIntroSound(bossName)
+        );
+        while (source.isPlaying) yield return null;
+
+        IntroCutsceneOver?.Invoke();
+    }
+
+    protected IEnumerator OutroCutscene() {
+        CutsceneStarting?.Invoke();
+
+        var source = SoundManager.Instance.PlaySoundGlobal(outroCutsceneSound);
+        while (source.isPlaying) yield return null;
+
+        source = SoundManager.Instance.PlaySoundGlobal(
+                FindObjectsOfType<Player>()
+                    .OrderBy(_p => UnityEngine.Random.Range(0f, 1f))
+                    .First()
+                    .CutsceneSounds
+                    .GetOutroSound(bossName)
+        );
+        while (source.isPlaying) yield return null;
+
+        OutroCutsceneOver?.Invoke();
     }
 }

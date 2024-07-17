@@ -8,7 +8,9 @@ enum BossFrankenpineState {
 
     Grabbed, Thrown,
 
-    JunkThrow, SummonMinions, AcidSpit
+    JunkThrow, SummonMinions, AcidSpit,
+
+    OpeningCutscene
 }
 
 [System.Serializable]
@@ -94,8 +96,9 @@ public class BossFrankenpine : Boss
         stateMachine.AddState(BossFrankenpineState.JunkThrow, JunkThrowEnter, JunkThrowUpdate, JunkThrowExit);
         stateMachine.AddState(BossFrankenpineState.SummonMinions, SummonMinionsEnter, SummonMinionsUpdate, null);
         stateMachine.AddState(BossFrankenpineState.AcidSpit, AcidSpitEnter, AcidSpitUpdate, null);
+        stateMachine.AddState(BossFrankenpineState.OpeningCutscene, OpeningCutsceneEnter, null, null);
 
-        stateMachine.FinalizeAndSetState(BossFrankenpineState.Wander);
+        stateMachine.FinalizeAndSetState(BossFrankenpineState.OpeningCutscene);
 
 #if UNITY_EDITOR
         stateMachine.OnStateChange += s => this.state = s;
@@ -108,6 +111,8 @@ public class BossFrankenpine : Boss
         });
         grabbable.onGrab.AddListener(() => stateMachine.SetState(BossFrankenpineState.Grabbed));
         grabbable.onThrow.AddListener(() => stateMachine.SetState(BossFrankenpineState.Thrown));
+
+        Boss.IntroCutsceneOver += () => stateMachine.SetState(BossFrankenpineState.Wander);
     }
 
     BossFrankenpineState GetRandomAttackState() {
@@ -360,5 +365,9 @@ public class BossFrankenpine : Boss
         }
 
         return stateMachine.currentState;
+    }
+
+    void OpeningCutsceneEnter() {
+        StartCoroutine(IntroCutscene());
     }
 }

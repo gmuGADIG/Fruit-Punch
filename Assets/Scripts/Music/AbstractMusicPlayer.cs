@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Audio;
 
 public abstract class AbstractMusicPlayer : MonoBehaviour, System.IEquatable<AbstractMusicPlayer> {
-    [Range(0f, 2f)]
+    [Range(0f, 1f)]
     [SerializeField] protected float volume = 1f;
 
     [SerializeField] protected AudioMixerGroup mixerGroup;

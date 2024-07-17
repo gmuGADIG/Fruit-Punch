@@ -10,7 +10,10 @@ public enum BossPhantomatoState {
 
     VineErupt,
     VineWhip,
-    VineCurtain
+    VineCurtain,
+
+    IntroCutscene,
+    Dead,
 }
 
 public struct Rect2 {
@@ -78,6 +81,8 @@ public class BossPhantomato : Boss {
         stateMachine.AddState(BossPhantomatoState.VineErupt, VineEruptEnter, null, null);
         stateMachine.AddState(BossPhantomatoState.VineWhip, VineWhipEnter, null, null);
         // stateMachine.AddState(BossPhantomatoState.VineCurtain, vineCurtain.Attack, null, null);
+        
+        stateMachine.AddState(BossPhantomatoState.IntroCutscene, IntroCutsceneEnter, null, null);
 
         groundCheck.GroundHit.AddListener(() => {
             if (stateMachine.currentState == BossPhantomatoState.Thrown) {
@@ -87,9 +92,14 @@ public class BossPhantomato : Boss {
         grabbable.onGrab.AddListener(() => stateMachine.SetState(BossPhantomatoState.Grabbed));
         grabbable.onThrow.AddListener(() => stateMachine.SetState(BossPhantomatoState.Thrown));
 
+        IntroCutsceneOver += () => stateMachine.SetState(BossPhantomatoState.Wander);
+        OutroCutsceneOver += () => {
+            // TODO:
+        };
+
         // vineCurtain.AttackFinished += () => stateMachine.SetState(BossPhantomatoState.Wander);
 
-        stateMachine.FinalizeAndSetState(BossPhantomatoState.Wander);
+        stateMachine.FinalizeAndSetState(BossPhantomatoState.IntroCutscene);
     }
 
     BossPhantomatoState GetRandomAttackState() {
@@ -226,5 +236,13 @@ public class BossPhantomato : Boss {
 
     void ExitVineWhipState() {
         stateMachine.SetState(BossPhantomatoState.Wander);
+    }
+
+    void IntroCutsceneEnter() {
+        StartCoroutine(IntroCutscene());
+    }
+
+    void DeadEnter() {
+        StartCoroutine(OutroCutscene());
     }
 }

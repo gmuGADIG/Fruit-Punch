@@ -15,6 +15,7 @@ enum LeadingLadyState
     BigJump,
     Grabbed,
     InAir,
+    OpeningCutscene,
 }
 
 public class BossLeadingLady : Boss
@@ -57,12 +58,14 @@ public class BossLeadingLady : Boss
         stateMachine.AddState(LeadingLadyState.BigJump, BigJumpEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.InAir, InAirEnter, InAirUpdate, InAirExit);
         stateMachine.AddState(LeadingLadyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
-        stateMachine.FinalizeAndSetState(LeadingLadyState.Aggressive);
+        stateMachine.AddState(LeadingLadyState.OpeningCutscene, OpeningCutsceneEnter, null, null);
+        stateMachine.FinalizeAndSetState(LeadingLadyState.OpeningCutscene);
 
         grabbable.onGrab.AddListener(OnGrabCallback);
         grabbable.onThrow.AddListener(OnThrowCallback);
         grabbable.onForceRelease.AddListener(OnForceReleaseCallback);
 
+        Boss.IntroCutsceneOver += () => stateMachine.SetState(LeadingLadyState.Aggressive);
     }
 
     void Update()
@@ -247,5 +250,9 @@ public class BossLeadingLady : Boss
     {
         Debug.Log("Force released");
         stateMachine.SetState(LeadingLadyState.InAir);
+    }
+
+    void OpeningCutsceneEnter() {
+        StartCoroutine(IntroCutscene());
     }
 }
