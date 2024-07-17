@@ -39,7 +39,7 @@ public class Health : MonoBehaviour
     [Tooltip("How affected by knockback this entity is.")]
     public float knockbackMultiplier = 1f;
 
-    [SerializeField] float pearryDamage = 10f;
+    [SerializeField] float pearryDamage = 50f;
     [SerializeField] float pearryKnockback = .1f;
     public bool Pearrying { get; set; } = false;
 
@@ -120,7 +120,8 @@ public class Health : MonoBehaviour
             }
             if (info.source.TryGetComponent(out EnemyProjectile proj))
             {
-                proj.Setup(pearryDamage, -proj.velocity); HurtBox hurtBox = proj.GetComponent<HurtBox>();
+                proj.Setup(pearryDamage, -proj.velocity);
+                HurtBox hurtBox = proj.GetComponent<HurtBox>();
                 if (hurtBox)
                 {
                     hurtBox.hitLayers = LayerMask.GetMask("Enemy");
