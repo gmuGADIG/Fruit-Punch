@@ -70,6 +70,7 @@ GameObject:
   - component: {fileID: 4565213841127429882}
   - component: {fileID: 2260842132138531553}
   - component: {fileID: 310560876578420295}
+  - component: {fileID: 342176836303639710}
   m_Layer: 11
   m_Name: Frankenpine
   m_TagString: Untagged
@@ -112,7 +113,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vulnerableTypes: 15
-  maxHealth: 1000
+  maxHealth: 1200
   currentHealth: 0
   knockbackMultiplier: 1
   pearryDamage: 10
@@ -282,6 +283,19 @@ MonoBehaviour:
   spitInterval: 0.5
   spitDamage: 10
   state: 0
+--- !u!114 &342176836303639710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3662827940676610809}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8faa2d135cd2a024d87ccf668dd1d24c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossName: Frankenpine
 --- !u!1 &3672997285935298499
 GameObject:
   m_ObjectHideFlags: 0
