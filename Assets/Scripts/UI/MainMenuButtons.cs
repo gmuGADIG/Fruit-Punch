@@ -32,6 +32,15 @@ public class MainMenuButtons : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(SwitchScene.codex);
     }
+
+    /// <summary>
+    /// Goes to Credits Scene
+    /// </summary>
+    public void Credits()
+    {
+        SceneManager.LoadScene(SwitchScene.credits);
+    }
+
     /// <summary>
     /// Quits the game
     /// </summary>
