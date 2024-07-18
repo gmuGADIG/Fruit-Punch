@@ -16,7 +16,10 @@ public class Destructible : MonoBehaviour
 
     void DestroyObject()
     {
-        if (spawnOnDeath != null) Instantiate(spawnOnDeath, transform.position, transform.rotation, transform.parent);
+        if (spawnOnDeath != null)
+        {
+            Instantiate(spawnOnDeath, transform.position, transform.rotation, transform.parent);
+        }
         Destroy(gameObject);
     }
 }
