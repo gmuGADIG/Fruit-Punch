@@ -199,6 +199,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: bf09dd0675357fd4984a0d991b802206, type: 2}
+    - target: {fileID: 2838227829393383091, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: maxHealth
+      value: 1000
+      objectReference: {fileID: 0}
     - target: {fileID: 3662827940676610809, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
       propertyPath: m_Name
       value: LeadingLady
@@ -259,6 +263,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3662827940676610809, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
       insertIndex: 1
       addedObject: {fileID: 3445619029656799348}
+    - targetCorrespondingSourceObject: {fileID: 3662827940676610809, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9391161693534056}
   m_SourcePrefab: {fileID: 100100000, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
 --- !u!1 &3468139317198361249 stripped
 GameObject:
@@ -288,6 +295,19 @@ MonoBehaviour:
   projectileDamage: 10
   spitEmitPoint: {fileID: 7436066720225871218}
   spitProjectilePrefab: {fileID: 4009673977994042145, guid: 6fc8a0e3ab816a04d9f4195538fe26bc, type: 3}
+--- !u!114 &9391161693534056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3468139317198361249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8faa2d135cd2a024d87ccf668dd1d24c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossName: Julianate
 --- !u!4 &4496561619757763352 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4364914062528230208, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
