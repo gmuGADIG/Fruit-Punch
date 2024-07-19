@@ -251,6 +251,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 415726515}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &337235727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 337235729}
+  - component: {fileID: 337235728}
+  m_Layer: 0
+  m_Name: PlayerMover
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &337235728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 337235727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3524fe99378971d70837713e1ab48a2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Position1: {fileID: 1206233429}
+  Position2: {fileID: 1206233428}
+  BossPosition: {fileID: 1114925325}
+--- !u!4 &337235729
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 337235727}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.37500086, y: -3.9865673, z: 6.306783}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &398324833
 GameObject:
   m_ObjectHideFlags: 0
@@ -1471,6 +1518,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bde682432814564d8e42a9fd0401d1e, type: 3}
+--- !u!4 &1206233428 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5002579757224491082, guid: 8bde682432814564d8e42a9fd0401d1e, type: 3}
+  m_PrefabInstance: {fileID: 1206233427}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1206233429 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4402273665447830380, guid: 8bde682432814564d8e42a9fd0401d1e, type: 3}
+  m_PrefabInstance: {fileID: 1206233427}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1246421411
 GameObject:
   m_ObjectHideFlags: 0
@@ -2733,3 +2790,4 @@ SceneRoots:
   - {fileID: 1010047832}
   - {fileID: 1679902563}
   - {fileID: 6456545890598550269}
+  - {fileID: 337235729}

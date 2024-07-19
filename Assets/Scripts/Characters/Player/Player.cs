@@ -128,6 +128,9 @@ public class Player : MonoBehaviour
     [SerializeField] CutsceneSounds cutsceneSounds;
     public CutsceneSounds CutsceneSounds => cutsceneSounds;
 
+    #nullable enable
+    [HideInInspector] public AudioSource? ComboSoundSource = null;
+
     void Start()
     {
         // get components
@@ -206,7 +209,7 @@ public class Player : MonoBehaviour
         grabber.OnForceRelease -= ForceReleaseCallback;
 
         Boss.CutsceneStarting -= OnCutsceneStarting;
-        Boss.CutsceneStarting -= OnIntroCutsceneOver;
+        Boss.IntroCutsceneOver -= OnIntroCutsceneOver;
     }
 
     void Update()
@@ -364,8 +367,8 @@ public class Player : MonoBehaviour
             transform.position
         );
 
-        if (strikeState == 3) {
-            SoundManager.Instance.PlaySoundGlobal(comboSoundEffect);
+        if (strikeState == 3 && (ComboSoundSource == null || !ComboSoundSource.isPlaying)) {
+            ComboSoundSource = SoundManager.Instance.PlaySoundGlobal(comboSoundEffect);
         }
     }
 

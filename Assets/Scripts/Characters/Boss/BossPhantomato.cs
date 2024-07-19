@@ -83,6 +83,7 @@ public class BossPhantomato : Boss {
         // stateMachine.AddState(BossPhantomatoState.VineCurtain, vineCurtain.Attack, null, null);
         
         stateMachine.AddState(BossPhantomatoState.IntroCutscene, IntroCutsceneEnter, null, null);
+        stateMachine.AddState(BossPhantomatoState.Dead, DeadEnter, null, null);
 
         groundCheck.GroundHit.AddListener(() => {
             if (stateMachine.currentState == BossPhantomatoState.Thrown) {
@@ -92,14 +93,26 @@ public class BossPhantomato : Boss {
         grabbable.onGrab.AddListener(() => stateMachine.SetState(BossPhantomatoState.Grabbed));
         grabbable.onThrow.AddListener(() => stateMachine.SetState(BossPhantomatoState.Thrown));
 
-        IntroCutsceneOver += () => stateMachine.SetState(BossPhantomatoState.Wander);
-        OutroCutsceneOver += () => {
-            // TODO:
-        };
+        IntroCutsceneOver += OnIntroCutsceneOver;
+        OutroCutsceneOver += OnOutroCutsceneOver;
 
         // vineCurtain.AttackFinished += () => stateMachine.SetState(BossPhantomatoState.Wander);
+        health.onDeath += () => stateMachine.SetState(BossPhantomatoState.Dead);
 
         stateMachine.FinalizeAndSetState(BossPhantomatoState.IntroCutscene);
+    }
+
+    void OnDestroy() {
+        IntroCutsceneOver -= OnIntroCutsceneOver;
+        OutroCutsceneOver -= OnOutroCutsceneOver;
+    }
+
+    void OnOutroCutsceneOver() {
+        animator.Play("Dead");
+    }
+
+    void OnIntroCutsceneOver() {
+        stateMachine.SetState(BossPhantomatoState.Wander);
     }
 
     BossPhantomatoState GetRandomAttackState() {
@@ -243,6 +256,7 @@ public class BossPhantomato : Boss {
     }
 
     void DeadEnter() {
+        animator.Play(WanderVars.AnimationName);
         StartCoroutine(OutroCutscene());
     }
 }

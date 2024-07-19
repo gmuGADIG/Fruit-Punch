@@ -10,7 +10,7 @@ enum BossFrankenpineState {
 
     JunkThrow, SummonMinions, AcidSpit,
 
-    OpeningCutscene
+    OpeningCutscene, Dead
 }
 
 [System.Serializable]
@@ -97,6 +97,7 @@ public class BossFrankenpine : Boss
         stateMachine.AddState(BossFrankenpineState.SummonMinions, SummonMinionsEnter, SummonMinionsUpdate, null);
         stateMachine.AddState(BossFrankenpineState.AcidSpit, AcidSpitEnter, AcidSpitUpdate, null);
         stateMachine.AddState(BossFrankenpineState.OpeningCutscene, OpeningCutsceneEnter, null, null);
+        stateMachine.AddState(BossFrankenpineState.Dead, DeadEnter, null, null);
 
         stateMachine.FinalizeAndSetState(BossFrankenpineState.OpeningCutscene);
 
@@ -112,7 +113,18 @@ public class BossFrankenpine : Boss
         grabbable.onGrab.AddListener(() => stateMachine.SetState(BossFrankenpineState.Grabbed));
         grabbable.onThrow.AddListener(() => stateMachine.SetState(BossFrankenpineState.Thrown));
 
-        Boss.IntroCutsceneOver += () => stateMachine.SetState(BossFrankenpineState.Wander);
+        Boss.IntroCutsceneOver += OnIntroCutsceneOver;
+        Boss.OutroCutsceneOver += OnOutroCutsceneOver;
+        health.onDeath += () => stateMachine.SetState(BossFrankenpineState.Dead);
+    }
+
+    void OnIntroCutsceneOver() {
+        stateMachine.SetState(BossFrankenpineState.Wander);
+    }
+
+    void OnDestroy() {
+        Boss.OutroCutsceneOver -= OnOutroCutsceneOver;
+        Boss.IntroCutsceneOver -= OnIntroCutsceneOver;
     }
 
     BossFrankenpineState GetRandomAttackState() {
@@ -369,5 +381,18 @@ public class BossFrankenpine : Boss
 
     void OpeningCutsceneEnter() {
         StartCoroutine(IntroCutscene());
+    }
+
+    void OnOutroCutsceneOver() {
+        animator.Play("Dead");
+    }
+
+    void DeadEnter() {
+        animator.Play(WanderVars.AnimationName);
+        foreach (var health in FindObjectsOfType<Enemy>().Select(e => e.GetComponent<Health>())) {
+            health.Die();
+        }
+
+        StartCoroutine(OutroCutscene());
     }
 }

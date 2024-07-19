@@ -34,6 +34,12 @@ public class Boss : MonoBehaviour
     [SerializeField] string introCutsceneSound;
     [SerializeField] string outroCutsceneSound;
 
+    [SerializeField] Transform FinalPlayer1Position; 
+    [SerializeField] Transform FinalPlayer2Position; 
+    [SerializeField] Transform FinalBossPosition; 
+
+    public bool FinishedOutroCutscene { get; private set; } = false;
+
     protected void Start()
     {
         this.GetComponentOrError(out rb);
@@ -106,6 +112,12 @@ public class Boss : MonoBehaviour
     protected IEnumerator IntroCutscene() {
         CutsceneStarting?.Invoke();
 
+        foreach (var player in FindObjectsOfType<Player>()) {
+            if (player.ComboSoundSource != null) {
+                player.ComboSoundSource.Stop();
+            }
+        }
+
         var source = SoundManager.Instance.PlaySoundGlobal(introCutsceneSound);
         while (source.isPlaying) yield return null;
 
@@ -122,12 +134,15 @@ public class Boss : MonoBehaviour
     }
 
     protected IEnumerator OutroCutscene() {
+        FindObjectOfType<PlayerMover>()?.MovePlayers();
+
         CutsceneStarting?.Invoke();
 
-        var source = SoundManager.Instance.PlaySoundGlobal(outroCutsceneSound);
-        while (source.isPlaying) yield return null;
+        foreach (var player in FindObjectsOfType<Player>()) {
+            player.ComboSoundSource.Stop();
+        }
 
-        source = SoundManager.Instance.PlaySoundGlobal(
+        var source = SoundManager.Instance.PlaySoundGlobal(
                 FindObjectsOfType<Player>()
                     .OrderBy(_p => UnityEngine.Random.Range(0f, 1f))
                     .First()
@@ -136,6 +151,11 @@ public class Boss : MonoBehaviour
         );
         while (source.isPlaying) yield return null;
 
+        source = SoundManager.Instance.PlaySoundGlobal(outroCutsceneSound);
+        while (source.isPlaying) yield return null;
+
+
+        FinishedOutroCutscene = true;
         OutroCutsceneOver?.Invoke();
     }
 }
