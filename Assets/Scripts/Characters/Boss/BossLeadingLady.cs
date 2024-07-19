@@ -15,6 +15,8 @@ enum LeadingLadyState
     BigJump,
     Grabbed,
     InAir,
+    OpeningCutscene,
+    Dead,
 }
 
 public class BossLeadingLady : Boss
@@ -57,12 +59,24 @@ public class BossLeadingLady : Boss
         stateMachine.AddState(LeadingLadyState.BigJump, BigJumpEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.InAir, InAirEnter, InAirUpdate, InAirExit);
         stateMachine.AddState(LeadingLadyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
-        stateMachine.FinalizeAndSetState(LeadingLadyState.Aggressive);
+        stateMachine.AddState(LeadingLadyState.OpeningCutscene, OpeningCutsceneEnter, null, null);
+        stateMachine.AddState(LeadingLadyState.Dead, DeadEnter, null, null);
+        stateMachine.FinalizeAndSetState(LeadingLadyState.OpeningCutscene);
 
         grabbable.onGrab.AddListener(OnGrabCallback);
         grabbable.onThrow.AddListener(OnThrowCallback);
         grabbable.onForceRelease.AddListener(OnForceReleaseCallback);
 
+        Boss.IntroCutsceneOver += OnIntroCutsceneOver;
+        health.onDeath += () => stateMachine.SetState(LeadingLadyState.Dead);
+    }
+
+    void OnIntroCutsceneOver() {
+        stateMachine.SetState(LeadingLadyState.Aggressive);
+    }
+
+    void OnDestroy() {
+        Boss.IntroCutsceneOver -= OnIntroCutsceneOver;
     }
 
     void Update()
@@ -247,5 +261,16 @@ public class BossLeadingLady : Boss
     {
         Debug.Log("Force released");
         stateMachine.SetState(LeadingLadyState.InAir);
+    }
+
+    void OpeningCutsceneEnter() {
+        StartCoroutine(IntroCutscene());
+    }
+
+    void DeadEnter() {
+        anim.Play("Idle");
+        rb.isKinematic = true;
+        StartCoroutine(OutroCutscene());
+        // TODO: animation
     }
 }
