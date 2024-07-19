@@ -151,7 +151,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0.5469595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1885046235}
   m_Father: {fileID: 1422303486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -216,6 +217,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: {fileID: 7100662763824513437, guid: 6aa772acffd2362d7805b4f9f399b0de, type: 3}
   inputSensorPrefab: {fileID: 7926348053947604145, guid: 41afc4beee3d6bb5286094451d67b7ae, type: 3}
+  onPerformed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &31146346
 Transform:
   m_ObjectHideFlags: 0
@@ -432,8 +436,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: e3b42ebc88e952642b7e4d0e10b5b7c2, type: 2}
+  m_sharedMaterial: {fileID: -1417694502483469394, guid: e3b42ebc88e952642b7e4d0e10b5b7c2, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -463,7 +467,7 @@ MonoBehaviour:
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 1
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -493,7 +497,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -6.442444, y: 14.86734, z: 46.58545, w: -7.4355316}
+  m_margin: {x: -6.442444, y: 14.86734, z: -109.73709, w: -7.4355316}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -535,7 +539,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0.5469595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1523373723}
   m_Father: {fileID: 1422303486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -836,6 +841,140 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 833909638}
   m_CullTransparentMesh: 1
+--- !u!1 &857896861
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 857896862}
+  - component: {fileID: 857896864}
+  - component: {fileID: 857896863}
+  m_Layer: 5
+  m_Name: Title
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &857896862
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857896861}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341327924}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &857896863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857896861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Enemies
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_sharedMaterial: {fileID: -1417694502483469394, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &857896864
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 857896861}
+  m_CullTransparentMesh: 1
 --- !u!1 &991044204
 GameObject:
   m_ObjectHideFlags: 0
@@ -867,6 +1006,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: {fileID: 7949985840770005250, guid: 6aa772acffd2362d7805b4f9f399b0de, type: 3}
   inputSensorPrefab: {fileID: 7926348053947604145, guid: 41afc4beee3d6bb5286094451d67b7ae, type: 3}
+  onPerformed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &991044206
 Transform:
   m_ObjectHideFlags: 0
@@ -1016,8 +1158,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_sharedMaterial: {fileID: -1417694502483469394, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1041,8 +1183,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 15
-  m_fontSizeBase: 15
+  m_fontSize: 18
+  m_fontSizeBase: 18
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -1077,7 +1219,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 1.4949646, y: 0.17019653, z: -0.5109253, w: 0.07519531}
+  m_margin: {x: 1.4949646, y: 0.17019653, z: -147.11076, w: 0.07519531}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1253,7 +1395,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0.5469595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 857896862}
   m_Father: {fileID: 1422303486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -1523,6 +1666,140 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1523373722
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1523373723}
+  - component: {fileID: 1523373725}
+  - component: {fileID: 1523373724}
+  m_Layer: 5
+  m_Name: Title
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1523373723
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523373722}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 715041854}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1523373724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523373722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Characters
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_sharedMaterial: {fileID: -1417694502483469394, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1523373725
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1523373722}
+  m_CullTransparentMesh: 1
 --- !u!1 &1526319277
 GameObject:
   m_ObjectHideFlags: 0
@@ -1782,8 +2059,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_AnchoredPosition: {x: -26, y: 59}
+  m_SizeDelta: {x: 144.54, y: 144.5427}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1587093775
 MonoBehaviour:
@@ -1801,13 +2078,13 @@ MonoBehaviour:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
+  m_Maskable: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 65bd35f84f74504439f597639093a335, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1822,6 +2099,140 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1587093773}
+  m_CullTransparentMesh: 1
+--- !u!1 &1591326808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1591326809}
+  - component: {fileID: 1591326811}
+  - component: {fileID: 1591326810}
+  m_Layer: 5
+  m_Name: Title
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1591326809
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591326808}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1615956424}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1591326810
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591326808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Levels
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_sharedMaterial: {fileID: -1417694502483469394, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1591326811
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591326808}
   m_CullTransparentMesh: 1
 --- !u!1 &1615956423
 GameObject:
@@ -1851,7 +2262,8 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0.5469595}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1591326809}
   m_Father: {fileID: 1422303486}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
@@ -2094,6 +2506,140 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1882112734}
   m_CullTransparentMesh: 1
+--- !u!1 &1885046234
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1885046235}
+  - component: {fileID: 1885046237}
+  - component: {fileID: 1885046236}
+  m_Layer: 5
+  m_Name: Title
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1885046235
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885046234}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 13050780}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 200, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1885046236
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885046234}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: Bosses
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_sharedMaterial: {fileID: -1417694502483469394, guid: f8657f7e9c754fe489df0e88158f758e, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 1
+  m_VerticalAlignment: 256
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_enableWordWrapping: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 1
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &1885046237
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1885046234}
+  m_CullTransparentMesh: 1
 --- !u!1 &1973431680
 GameObject:
   m_ObjectHideFlags: 0
@@ -2124,8 +2670,8 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1422303486}
-  - {fileID: 366773225}
   - {fileID: 203163936}
+  - {fileID: 366773225}
   - {fileID: 1587093774}
   - {fileID: 1413760572}
   m_Father: {fileID: 197476629}
@@ -2160,55 +2706,114 @@ MonoBehaviour:
   - {fileID: 1615956424}
   entries:
   - category: 0
-    name: Coconut
-    description: This is a round brown object that is hard and hurts your skull
-    image: {fileID: 0}
-    buttonTransform: {fileID: 0}
-  - category: 0
-    name: Nut
-    description: Very wet. It can be used to reach new heights.
-    image: {fileID: 21300000, guid: 2a3fc403d4e7eb0488a501aefe1613fb, type: 3}
-    buttonTransform: {fileID: 0}
-  - category: 0
-    name: Rock
-    description: A curious rock with the letter "R" on it. Someone must have reused
-      a button sprite as a rock.
-    image: {fileID: 21300000, guid: 2a3fc403d4e7eb0488a501aefe1613fb, type: 3}
-    buttonTransform: {fileID: 0}
-  - category: 0
-    name: Carrot
-    description: Hey wait a minute, what is a character doing in the items category?
-    image: {fileID: 21300000, guid: b75217906d4b5eb4aa33a51f2d82347b, type: 3}
-    buttonTransform: {fileID: 0}
-  - category: 1
     name: Apple
-    description: Rotten to the core, this character is truly a bad apple :)
-    image: {fileID: 21300000, guid: 7c58ea3121b0bc7418ffb831cc683e85, type: 3}
+    description: "Hailing from the Orchard Clan, he\u2019s fueled by revenge alone.
+      Long before joining the Dojo, Apple lived with his family, raised by Granny-Smith.
+      This life abruptly ended on the day the Blender destroyed the village. Rising
+      from the ashes, Apple fights with an unquenching flame: a fire to make the
+      Blender pay. "
+    image: {fileID: 21300000, guid: f8748a443cb90aa4ca28de7c97a9af2d, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 0
+    name: Banana
+    description: "A cocky jokester by trade, Banana\u2019s demeanor reflects that
+      of a laid-back yet powerful foe. Growing up in the city, he ended up joining
+      the local boxing club at a young age, and gained quite the following. He has
+      won numerous fights, and even gained himself a rival."
+    image: {fileID: 21300000, guid: 407e4e1440fdab141b977c75fc2a2b57, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 0
+    name: Watermelon
+    description: "The sweetest member of the Dojo! Watermelon is friendly, eager
+      to help, and gives particularly good hugs, according to her comrades (and the
+      enemies she fights). She came to the Dojo to train and search for her sister,
+      Wintermelon, but has yet to find any trace of her. \r\n"
+    image: {fileID: 21300000, guid: 95a7bc8b58e83bf4db907bf6a788fc29, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 0
+    name: Grapes (Sensei)
+    description: "Long before Nature had a name, the first juicejitsu techniques
+      were developed. Passed down through the dojo, Grape-Sensei is now the instructor
+      of these techniques, bequeathing them to his pupils. And yet despite his great
+      skill, even he has made mistakes in the past\u2026 He\u2019s also annoyingly
+      fond of proverbs."
+    image: {fileID: 21300000, guid: 48b26a5b823da094f87c894d06d8dbba, type: 3}
     buttonTransform: {fileID: 0}
   - category: 1
-    name: Apple Feet
-    description: I love your feet Michael.
-    image: {fileID: 21300000, guid: f27e8df03ec3536579f0428fae40690d, type: 3}
+    name: Julianate
+    description: "Tomato\u2019s feisty co-star, and a temperamental boxer. She was
+      rivals with Banana back in the day, but could never win against him. Tomato
+      gave her the chance she needed to become stronger, but she tends to try and
+      steal the spotlight when on stage with him."
+    image: {fileID: 21300000, guid: 44eafe06cd6353b4d927e7247a1035d7, type: 3}
     buttonTransform: {fileID: 0}
   - category: 1
-    name: Apple Feet!
-    description: Ok who keeps posting apple's feet pics on twitter
-    image: {fileID: 21300000, guid: f9a9f623956a68c64b62e8fd7f63d214, type: 3}
+    name: Frankenpine
+    description: "Made from the flesh of various missing fruits including, but not
+      limited to: pineapple, apples, cherries, and wintermelons. Frankenpine is an
+      abomination that could only have been created by a truly rotten vegetable.
+      Though in constant pain, he finds some enjoyment in being a stagehand.\r"
+    image: {fileID: -206038216, guid: f988c8f73d1e7566484d8af2dbe98cbd, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 1
+    name: Phantomato
+    description: "Once a student at the Dojo, a trip to the theatre changed his life.
+      However, his life on the stage was one of isolation, never once finding an
+      audience. So, he made his own: the Veggies. His failures in acting only strengthened
+      his rage, with the allure of the Blender and his amalgamations growing stronger
+      every day. \r"
+    image: {fileID: 867420647, guid: 2e45852ccdc6ae6ea9850450da4b22cb, type: 3}
     buttonTransform: {fileID: 0}
   - category: 2
-    name: A Nuisance
-    description: Don't tell cutscene team
-    image: {fileID: 21300000, guid: 384a30aedb1c7154cbe121773c076027, type: 3}
+    name: Cabbage
+    description: "Cabbage Jack, one of the most notorious gangsters in town, infamous
+      for his short temper and cabbage attitude. Watch out! After a bit of time,
+      he\u2019ll explode in anger!\r"
+    image: {fileID: 21300000, guid: 6ec53c8d41364423da0c30f70ef5ea3b, type: 3}
     buttonTransform: {fileID: 0}
   - category: 2
-    name: Shadow
-    description: Where is the raycast lighting in fruitpunch?
-    image: {fileID: 21300000, guid: 6073f8d19b528e24f816a67c1ece6b7f, type: 3}
+    name: Jack-o-Lantern
+    description: "Spits seeds at you with hauntingly accurate aim, but is scared
+      of fruit (ironic, huh?). Works on lighting for Phantomato\u2019s shows by placing
+      different colored gels over its eyes."
+    image: {fileID: 1839052564, guid: 1b75524e24984eb85914523a44687644, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 2
+    name: Eggplant Goon
+    description: "Uses its large fists to punch the vitamin B directly into your
+      guts. It\u2019s so determined to give people their daily nutrition that it
+      somehow missed its cue while playing a tree."
+    image: {fileID: -227675172, guid: 59e0f3d0c6c6f6917935636210edbb2f, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 2
+    name: Splitting Peapod
+    description: "Your average peapod, until it\u2019s not! When its pod hits zero,
+      it\u2019ll split, making three smaller issues for you to deal with."
+    image: {fileID: -1237721246, guid: 2e4c048161f47228084de16d7393c796, type: 3}
     buttonTransform: {fileID: 0}
   - category: 3
-    name: Left Button
-    description: The long lost twin of the rock.
-    image: {fileID: 21300000, guid: 3f923262c62eefd4aa51f81b2cc317ae, type: 3}
+    name: The Streets
+    description: The City, where fruits live in harmony. Overgrown Skyscrapers dot
+      the cityscape, though none know their origins. Blessed by Mother Nature herself,
+      vines fill the city, their divinity causing them to glow a wonderful green
+      at night. However, in the light of that glow, rot and mold fester in the shadows.
+    image: {fileID: 21300000, guid: c2bbd18ab84390641817884d0f8098da, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 3
+    name: Fast Fruit
+    description: The hustle and bustle of the City, filled with various stores and
+      markets, is at its liveliest here. Just make sure to watch out for some of
+      the back alleys. Rumor has it that any fruits that have gone missing in the
+      past end up in the smoothie shop.
+    image: {fileID: 21300000, guid: e7238067fc5a6c94288d83a08cda9c6d, type: 3}
+    buttonTransform: {fileID: 0}
+  - category: 3
+    name: Power Park
+    description: 'Home of luscious gardens, and slightly less luscious atomic fumes,
+      the Power Park is the energy center of the City. Tours are held frequently
+      in this area, but there seems to be one locale in whisper only: the infamous
+      Nuclear Theatre. What secrets could be held within?'
+    image: {fileID: 21300000, guid: cbc6db5c757d2f74793853680a843c6f, type: 3}
     buttonTransform: {fileID: 0}
 --- !u!1001 &2011751082
 PrefabInstance:
