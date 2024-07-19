@@ -74,15 +74,25 @@ public class ScreenSpawner : MonoBehaviour
 
     #endregion
 
+    private bool beingDestroyed = false;
+
+    void DestroyThyself() {
+        beingDestroyed = true;
+        Destroy(gameObject);
+    }
+
     void Start()
     {
         Health.OnAnyDeath += OnAnyDeath;
+        Boss.OutroCutsceneOver += CheckForWaveClear;
+
         LoadSpawnQueue();
     }
 
     void OnDestroy()
     {
         Health.OnAnyDeath -= OnAnyDeath;
+        Boss.OutroCutsceneOver -= CheckForWaveClear;
     }
 
     // Update is called once per frame
@@ -121,10 +131,11 @@ public class ScreenSpawner : MonoBehaviour
 
     int CountEnemies()
     {
-        var enemies = FindObjectsOfType<Enemy>().Concat<MonoBehaviour>(FindObjectsOfType<Boss>());
+        var enemies = FindObjectsOfType<Enemy>();
         var persistingEnemies = 
-            enemies.Where(e => e.GetComponent<Health>().CurrentHealth != 0)
-            .Concat<MonoBehaviour>(FindObjectsOfType<DeadEnemy>().Where(de => de.ShouldPersistWave));
+            FindObjectsOfType<Enemy>().Where(e => e.GetComponent<Health>().CurrentHealth != 0)
+            .Concat<MonoBehaviour>(FindObjectsOfType<DeadEnemy>().Where(de => de.ShouldPersistWave))
+            .Concat<MonoBehaviour>(FindObjectsOfType<Boss>().Where(b => !b.FinishedOutroCutscene));
         
         return persistingEnemies.Count();
     }
@@ -143,8 +154,9 @@ public class ScreenSpawner : MonoBehaviour
     /// </summary>
     private void OnAnyDeath(GameObject thingThatDied)
     {
-        if (thingThatDied.GetComponent<Enemy>() == null && thingThatDied.GetComponent<Boss>() == null) return;
-        CheckForWaveClear();
+        if (thingThatDied.GetComponent<Enemy>() != null) {
+            CheckForWaveClear();
+        }
     }
 
     private void CheckForWaveClear()
@@ -156,10 +168,12 @@ public class ScreenSpawner : MonoBehaviour
             var doneSpawning = enemySpawnQueue.Count == 0;
             var allDead = CountEnemies() == 0;
 
-            if (doneSpawning && allDead) {
+            // because we waited a frame, there is the possibility that several enemies died last frame.
+            // we better not fire this event more than once this frame.
+            if (doneSpawning && allDead && !beingDestroyed) {
                 onWaveComplete?.Invoke();
                 Debug.Log("Wave Complete");
-                Destroy(this.gameObject);
+                DestroyThyself();
             }
         }
 
