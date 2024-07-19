@@ -166,8 +166,9 @@ public class Player : MonoBehaviour
     {
         if (playerInput.actions["gameplay/Pause"].triggered)
 		{
-            pauseManager.Pause();
+            pauseManager.OnPause();
         }
+
 		if (Time.timeScale == 0)
 		{
 			return;

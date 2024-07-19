@@ -10,13 +10,11 @@ public class PauseScreenButtons : MonoBehaviour
 {
 
     public string OptionsScene;
+    private PauseManager pauseManager;
 
-    /// <summary>
-    /// Pause key hit, Resume game
-    /// </summary>
-    public void OnPause()
+    private void Start()
     {
-        Resume();
+        pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
     }
 
     /// <summary>
@@ -24,8 +22,7 @@ public class PauseScreenButtons : MonoBehaviour
     /// </summary>
     public void Resume() 
     {
-        Time.timeScale = 1.0f;
-        SceneManager.UnloadSceneAsync("PauseScreen");
+        pauseManager.OnBack();
     }
 
     /// <summary>
@@ -59,6 +56,6 @@ public class PauseScreenButtons : MonoBehaviour
     /// </summary>
     public void OptionsMenu() 
     {
-        SceneManager.LoadSceneAsync(OptionsScene, LoadSceneMode.Additive);
+        pauseManager.PushSubmenu(OptionsScene);
     }
 }
