@@ -18,6 +18,7 @@ public class ExploderEnemy : Enemy
     float preExplosionCountdown;
 
     bool InPreCountdown => preExplosionCountdown > 0;
+    public bool IsExploding => stateMachine.currentState == EnemyState.Attacking;
 
     [Tooltip("How many seconds until the enemy explodes.")]
     [SerializeField] float explosionTimerDuration = 10f;

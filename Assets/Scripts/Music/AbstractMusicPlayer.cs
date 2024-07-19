@@ -19,7 +19,9 @@ public abstract class AbstractMusicPlayer : MonoBehaviour, System.IEquatable<Abs
         if (this.Equals(CurrentMusicPlayer)) {
             Destroy(gameObject);
         } else {
+            transform.parent = null;
             DontDestroyOnLoad(gameObject);
+
             Destroy(CurrentMusicPlayer?.gameObject);
             CurrentMusicPlayer = this;
             Play();

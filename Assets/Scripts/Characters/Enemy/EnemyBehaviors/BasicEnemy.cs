@@ -18,6 +18,7 @@ class BasicEnemy : Enemy {
 
     protected override EnemyState AttackingUpdate()
     {
+        base.AttackingUpdate();
         if (groundCheck.IsGrounded() == false) return EnemyState.InAir;
 
         return attackingAnimationOver ? EnemyState.Wandering : stateMachine.currentState;
@@ -25,7 +26,7 @@ class BasicEnemy : Enemy {
 
     protected override void AttackingExit(EnemyState _newState)
     {
-        animator.Play("Idle", 0, 0f);
+        animator.Play("Wander", 0, 0f);
     }
 
     public void AttackingAnimationOver() {
