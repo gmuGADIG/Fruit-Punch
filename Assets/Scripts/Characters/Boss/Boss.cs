@@ -138,8 +138,10 @@ public class Boss : MonoBehaviour
 
         CutsceneStarting?.Invoke();
 
+
         foreach (var player in FindObjectsOfType<Player>()) {
             player.ComboSoundSource.Stop();
+            player.GetComponent<PlayerScore>().StopScoreCountdown();
         }
 
         var source = SoundManager.Instance.PlaySoundGlobal(
