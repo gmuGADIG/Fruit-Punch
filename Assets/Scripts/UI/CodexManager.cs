@@ -32,10 +32,10 @@ public class Codex : MonoBehaviour
 
     public enum Category
     {
-        ChangeMeOne=0,
-        ChangeMeTwo=1,
-        ChangeMeThree=2,
-        ChangeMeFour=3
+        Characters,
+        Bosses,
+        Enemies,
+        Levels,
     }
 
     [System.Serializable]
@@ -43,7 +43,7 @@ public class Codex : MonoBehaviour
     {
         public Category category;
         public string name;
-        public string description;
+        [TextArea] public string description;
         public Sprite image;
         //[HideInInspector]
         //public GameObject button; Not nessesary at the current moment
