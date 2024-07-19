@@ -68,11 +68,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hitLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 2048
   damage: 50
   knockback: 0.1
-  parentTransform: {fileID: 4855111692145963414}
-  aura: -1
+  aura: 2
 --- !u!1 &2680212675313349019
 GameObject:
   m_ObjectHideFlags: 0
@@ -386,6 +385,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   grabIndicator: {fileID: 2680212675313349019}
+  damageOnLandingMultiplier: 1
   throwingHurtBox: {fileID: 8223698001359900932}
   onGrab:
     m_PersistentCalls:
@@ -433,6 +433,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 435879144fcef144e9fcdc34d9f58200, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GroundHit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1001 &1216067319493004288
 PrefabInstance:
   m_ObjectHideFlags: 0
