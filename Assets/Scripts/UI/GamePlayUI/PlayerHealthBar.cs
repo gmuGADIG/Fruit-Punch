@@ -23,14 +23,15 @@ public class PlayerHealthBar : MonoBehaviour
     {
         var health = player.GetComponent<Health>();
         this.maxHealth = health.MaxHealth;
-        health.onHealthChange += UIUpdate;
+        health.onHealthChange += (h) => UpdateHealth(h.newHealthValue);
+        UpdateHealth(health.MaxHealth);
 
         characterPortrait.sprite = portraits[(int)player.playerCharacter];
     }
 
-    void UIUpdate(HealthChange healthChange)
+    void UpdateHealth(float newHealth)
     {
-        hpText.text = healthChange.newHealthValue + "/" + maxHealth;
-        hpFill.fillAmount = healthChange.newHealthValue / maxHealth;
+        hpText.text = newHealth + "/" + maxHealth;
+        hpFill.fillAmount = newHealth / maxHealth;
     }
 }
