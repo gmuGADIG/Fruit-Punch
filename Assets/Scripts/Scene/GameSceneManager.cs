@@ -92,6 +92,10 @@ public class GameSceneManager : MonoBehaviour
             
             return;
         }
+        else
+        {
+            GoGoGo.Go();
+        }
 
         currentScene = scenes[currentSceneNumber];
         currentState = CameraState.follow;
