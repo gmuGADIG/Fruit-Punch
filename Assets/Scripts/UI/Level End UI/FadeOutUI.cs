@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +11,23 @@ public class FadeOutUI : MonoBehaviour
     [SerializeField] float fadeSpeed = .1f;
 
     string nextScene;
+
+    void Start()
+    {
+        StartCoroutine(FadeInCoroutine());
+    }
+
+    IEnumerator FadeInCoroutine()
+    {
+        fadeImage.color = new Color(0, 0, 0, 1);
+        while (fadeImage.color.a > 0)
+        {
+            yield return null;
+            Color c = fadeImage.color;
+            c.a = Mathf.Clamp(c.a - fadeSpeed * Time.deltaTime, 0, 1);
+            fadeImage.color = c;
+        }
+    }
 
     public void FadeOutToNextScene(string nextScene)
     {

@@ -23,13 +23,10 @@ public class OptionsMenu : MonoBehaviour
     float timeSinceSoundDemo = 0f;
     bool setupFinished = false;
     
-    private PauseManager pauseManager;
-
     private void Start()
     {
         Utils.Assert(masterSlider != null && sfxSlider != null && musicSlider != null);
         Utils.Assert(masterValueLabel != null && sfxValueLabel != null && musicValueLabel != null);
-        pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
         masterSlider.onValueChanged.AddListener((value) =>
         {
             PlayDemoSound();
@@ -81,6 +78,14 @@ public class OptionsMenu : MonoBehaviour
 
     public void backButton()
     {
-        pauseManager.OnBack();
+        var pauseManager = GameObject.Find("PauseManager");
+        if (pauseManager != null)
+        {
+            pauseManager.GetComponent<PauseManager>().OnBack();
+        }
+        else
+        {
+            SceneManager.UnloadSceneAsync("OptionsMenu");
+        }
     }
 }
