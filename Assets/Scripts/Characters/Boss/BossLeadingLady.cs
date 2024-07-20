@@ -41,6 +41,8 @@ public class BossLeadingLady : Boss
     [SerializeField] Transform spitEmitPoint;
     [SerializeField] GameObject spitProjectilePrefab;
 
+    [SerializeField] LeadingLadyState state = LeadingLadyState.BigJump;
+
     List<Transform> ropePoints;
     IEnumerator activeCoroutine;
     
@@ -53,7 +55,7 @@ public class BossLeadingLady : Boss
         this.GetComponentOrError(out anim);
         
         stateMachine = new StateMachine<LeadingLadyState>();
-        stateMachine.AddState(LeadingLadyState.Aggressive, null, AggressiveUpdate, null);
+        stateMachine.AddState(LeadingLadyState.Aggressive, AggressiveEnter, null, null);
         stateMachine.AddState(LeadingLadyState.Punching, PunchingEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.Spitting, SpittingEnter, null, AttackStateExit);
         stateMachine.AddState(LeadingLadyState.BigJump, BigJumpEnter, null, AttackStateExit);
@@ -61,14 +63,50 @@ public class BossLeadingLady : Boss
         stateMachine.AddState(LeadingLadyState.Grabbed, GrabbedEnter, GrabbedUpdate, GrabbedExit);
         stateMachine.AddState(LeadingLadyState.OpeningCutscene, OpeningCutsceneEnter, null, null);
         stateMachine.AddState(LeadingLadyState.Dead, DeadEnter, null, null);
+
+        stateMachine.OnStateChange += s => state = s;
+
         stateMachine.FinalizeAndSetState(LeadingLadyState.OpeningCutscene);
 
         grabbable.onGrab.AddListener(OnGrabCallback);
         grabbable.onThrow.AddListener(OnThrowCallback);
         grabbable.onForceRelease.AddListener(OnForceReleaseCallback);
 
+        Boss.CutsceneStarting += OnCutsceneStarted;
         Boss.IntroCutsceneOver += OnIntroCutsceneOver;
+        Boss.OutroCutsceneOver += OnOutroCutsceneOver;
         health.onDeath += () => stateMachine.SetState(LeadingLadyState.Dead);
+    }
+
+    IEnumerator AggressiveCoro() {
+        yield return WalkToPlayer(walkSpeed * 0.5f);
+        LeadingLadyState[] stateOptions = { 
+            LeadingLadyState.Punching, 
+            LeadingLadyState.Spitting, 
+            LeadingLadyState.BigJump 
+        };
+        
+        var newState = stateOptions[Random.Range(0, stateOptions.Length)];
+        print($"Boss entering state {newState}");
+        stateMachine.SetState(newState);
+    }
+
+    Coroutine coro;
+    void AggressiveEnter() {
+        anim.Play("Idle");
+        coro = StartCoroutine(AggressiveCoro());
+    }
+
+    void AggressiveExit() {
+        StopCoroutine(coro);
+    }
+
+    void OnCutsceneStarted() {
+        anim.Play("StandingOnBuisness");
+    }
+
+    void OnOutroCutsceneOver() {
+        anim.Play("Dead");
     }
 
     void OnIntroCutsceneOver() {
@@ -85,27 +123,13 @@ public class BossLeadingLady : Boss
         FlipWithVelocity(rb.velocity);
     }
 
-    LeadingLadyState AggressiveUpdate()
-    {
-        rb.velocity += Vector3.down * 9.8f * Time.deltaTime; // gravity
-        
-        if (stateMachine.timeInState >= timeBetweenAttacks)
-        {
-            LeadingLadyState[] stateOptions = { LeadingLadyState.Punching, LeadingLadyState.Spitting, LeadingLadyState.BigJump };
-            // LeadingLadyState[] stateOptions = { LeadingLadyState.Spitting };
-            var newState = stateOptions[Random.Range(0, stateOptions.Length)];
-            print($"Boss entering state {newState}");
-            return newState;
-        }
-        else return stateMachine.currentState;
-    }
-
     void PunchingEnter()
     {
         activeCoroutine = Coroutine();
         StartCoroutine(activeCoroutine);
         IEnumerator Coroutine()
         {
+            anim.Play("Idle");
             yield return WalkToPlayer(walkSpeed);
             anim.Play("Punch");
             yield return new WaitForSeconds(punchDuration);
@@ -129,6 +153,11 @@ public class BossLeadingLady : Boss
         }
     }
 
+    private bool landingAnimationOver = false;
+    void LandingAnimationOver() {
+        landingAnimationOver = true;
+    }
+
     void BigJumpEnter()
     {
         activeCoroutine = Coroutine();
@@ -145,7 +174,8 @@ public class BossLeadingLady : Boss
             // jump to player
             yield return JumpTo(GetNearestPlayer().transform.position, 2, 10);
             anim.Play("Landing");
-            yield return new WaitForSeconds(jumpEndLag);
+            landingAnimationOver = false;
+            while (!landingAnimationOver) yield return null;
             
             stateMachine.SetState(LeadingLadyState.Aggressive);
         }
@@ -193,8 +223,9 @@ public class BossLeadingLady : Boss
         var proj =
             Instantiate(spitProjectilePrefab, spitEmitPoint.position, Quaternion.identity)
             .GetComponent<EnemyProjectile>();
-        //proj.GetComponent<HurtBox>().parentTransform = this.transform;
-        proj.Setup(projectileDamage, transform.right * projectileSpeed);
+        proj.Setup(projectileDamage, 
+                (GetNearestPlayer().transform.position - spitEmitPoint.position + 0.5f * Vector3.up).normalized * projectileSpeed
+        );
     }
 
     //TODO: this is duplicated code from Enemy because state changes can't happen in the base Boss class. Extract throw and air state logic to a new class?
@@ -249,7 +280,10 @@ public class BossLeadingLady : Boss
 
     void GrabbedExit(LeadingLadyState newState) { }
 
-    void OnGrabCallback() => stateMachine.SetState(LeadingLadyState.Grabbed);
+    void OnGrabCallback() {
+        print("grabbed!@");
+        stateMachine.SetState(LeadingLadyState.Grabbed);
+    }
 
     void OnThrowCallback()
     {
@@ -265,6 +299,7 @@ public class BossLeadingLady : Boss
 
     void OpeningCutsceneEnter() {
         StartCoroutine(IntroCutscene());
+        rb.velocity = Vector3.zero;
     }
 
     void DeadEnter() {

@@ -141,29 +141,31 @@ public class BossPhantomato : Boss {
     }
 
     IEnumerator WanderCoroutine() {
-        var targetPos = GetNearestPlayer().transform.position;
-        navMesh.enabled = true; // justin probably turned off the navmesh and i dont care enough to fix it
-        navMesh.SetDestination(targetPos);
+        // var targetPos = GetNearestPlayer().transform.position;
+        // navMesh.enabled = true; // justin probably turned off the navmesh and i dont care enough to fix it
+        // navMesh.SetDestination(targetPos);
+        //
+        // var timeStart = Time.time;
+        //
+        // while (Vector3.Distance(transform.position, targetPos) > 0.5f && Time.time - timeStart < 3f) { 
+        //     rb.velocity = (navMesh.steeringTarget - transform.position).normalized * walkSpeed;
+        //
+        //     if (rb.velocity.x > 0) {
+        //         transform.localEulerAngles = new Vector3(0f, 180f, 0f);
+        //     } else if (rb.velocity.x < 0) {
+        //         transform.localEulerAngles = new Vector3(0f, 0f, 0f);
+        //     }
+        //     
+        //     yield return null;
+        //     if (stateMachine.currentState != BossPhantomatoState.Wander) yield break;
+        // }
 
-        var timeStart = Time.time;
-
-        while (Vector3.Distance(transform.position, targetPos) > 0.5f && Time.time - timeStart < 3f) { 
-            rb.velocity = (navMesh.steeringTarget - transform.position).normalized * walkSpeed;
-
-            if (rb.velocity.x > 0) {
-                transform.localEulerAngles = new Vector3(0f, 180f, 0f);
-            } else if (rb.velocity.x < 0) {
-                transform.localEulerAngles = new Vector3(0f, 0f, 0f);
-            }
-            
-            yield return null;
-            if (stateMachine.currentState != BossPhantomatoState.Wander) yield break;
-        }
+        yield return WalkToPlayer(walkSpeed);
 
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
 
-        yield return new WaitForSeconds(1f);
+        // yield return new WaitForSeconds(1f);
         if (stateMachine.currentState != BossPhantomatoState.Wander) yield break;
 
         stateMachine.SetState(GetRandomAttackState());
