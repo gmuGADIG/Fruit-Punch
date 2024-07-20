@@ -34,10 +34,6 @@ public class Boss : MonoBehaviour
     [SerializeField] string introCutsceneSound;
     [SerializeField] string outroCutsceneSound;
 
-    [SerializeField] Transform FinalPlayer1Position; 
-    [SerializeField] Transform FinalPlayer2Position; 
-    [SerializeField] Transform FinalBossPosition; 
-
     public bool FinishedOutroCutscene { get; private set; } = false;
 
     protected void Start()
@@ -104,8 +100,8 @@ public class Boss : MonoBehaviour
     /// </summary>
     protected void FlipWithVelocity(Vector3 velocity)
     {
-        if (velocity.x < 0) transform.localEulerAngles = new Vector3(0, 180, 0);
-        else if (velocity.x > 0) transform.localEulerAngles = Vector3.zero;
+        if (velocity.x > 0) transform.localEulerAngles = new Vector3(0, 180, 0);
+        else if (velocity.x < 0) transform.localEulerAngles = Vector3.zero;
     }
 
 
@@ -117,10 +113,12 @@ public class Boss : MonoBehaviour
                 player.ComboSoundSource.Stop();
             }
         }
+        print("1 hai :3");
 
         var source = SoundManager.Instance.PlaySoundGlobal(introCutsceneSound);
         while (source.isPlaying) yield return null;
 
+        print("2 hai :3");
         source = SoundManager.Instance.PlaySoundGlobal(
                 FindObjectsOfType<Player>()
                     .OrderBy(_p => UnityEngine.Random.Range(0f, 1f))
@@ -130,6 +128,7 @@ public class Boss : MonoBehaviour
         );
         while (source.isPlaying) yield return null;
 
+        print("3 hai :3");
         IntroCutsceneOver?.Invoke();
     }
 

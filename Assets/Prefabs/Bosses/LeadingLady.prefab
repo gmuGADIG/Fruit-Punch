@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 1441560253605470065}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.686, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -169,7 +169,7 @@ Transform:
   m_GameObject: {fileID: 7296487775826919424}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.48, z: 0}
+  m_LocalPosition: {x: -0.39, y: 1.368, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -203,9 +203,29 @@ PrefabInstance:
       propertyPath: maxHealth
       value: 1000
       objectReference: {fileID: 0}
+    - target: {fileID: 3352485793102636876, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3662827940676610809, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
       propertyPath: m_Name
       value: LeadingLady
+      objectReference: {fileID: 0}
+    - target: {fileID: 3867373416937874151, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.495
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364914062528230208, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364914062528230208, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364914062528230208, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4364914062528230208, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
       propertyPath: m_LocalPosition.x
@@ -246,6 +266,14 @@ PrefabInstance:
     - target: {fileID: 4364914062528230208, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4364914062528230208, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4565213841127429882, guid: cbea7f6c0f0beaa44afcfa2263939f40, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -298,6 +326,7 @@ MonoBehaviour:
   projectileDamage: 10
   spitEmitPoint: {fileID: 7436066720225871218}
   spitProjectilePrefab: {fileID: 4009673977994042145, guid: 6fc8a0e3ab816a04d9f4195538fe26bc, type: 3}
+  state: 4
 --- !u!114 &9391161693534056
 MonoBehaviour:
   m_ObjectHideFlags: 0

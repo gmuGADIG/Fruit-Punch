@@ -170,7 +170,7 @@ public class BossFrankenpine : Boss
         rb.velocity = Vector3.zero;
         rb.isKinematic = true;
 
-        yield return new WaitForSeconds(3f);
+        // yield return new WaitForSeconds(3f);
         if (stateMachine.currentState != BossFrankenpineState.Wander) yield break;
 
         stateMachine.SetState(GetRandomAttackState());
