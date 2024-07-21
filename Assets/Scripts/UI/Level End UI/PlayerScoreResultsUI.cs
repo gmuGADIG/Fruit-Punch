@@ -22,12 +22,8 @@ public class PlayerScoreResultsUI : MonoBehaviour
             .FirstOrDefault()?
             .GetComponent<PlayerScore>();
 
-        if (playerScore == null) {
-            Destroy(gameObject);
-        } else {
-            scoreNumber.gameObject.SetActive(false);
-            ranking.gameObject.SetActive(false);
-        }
+        scoreNumber.gameObject.SetActive(false);
+        ranking.gameObject.SetActive(false);
     }
 
     public void DisplayResults()

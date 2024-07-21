@@ -1,20 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.InputSystem.Processors;
-using UnityEngine.SceneManagement;
+using System;
 
 public class GameSceneManager : MonoBehaviour
-{   
+{
     [System.Serializable]//The camera moves between scenes using a serializable object
     public class Scene
     {
         public Vector3 transitionLocation;
         public ScreenSpawner spawner;
     }
+
+    public static event Action<int> OnStageIndexChange;
     
     [SerializeField]
     float cameraFreezeThreshold = 1.0f; //The distance from the freeze location before it triggers the start.
@@ -22,7 +21,7 @@ public class GameSceneManager : MonoBehaviour
     public float cameraSmoothSpeed = 0.125f; // Smoothness of camera movement
     [SerializeField]
     public Vector3 cameraOffset = new Vector3(0f, 2f); // Adjust as needed
-
+    [SerializeField] int currentStageIndex = 0;
     [SerializeField]
     public Scene[] scenes;
 
@@ -62,6 +61,7 @@ public class GameSceneManager : MonoBehaviour
         }
 
         currentState = CameraState.follow;
+        OnStageIndexChange?.Invoke(currentStageIndex);
     }
 
     public void FreezeCamera(Vector3 pos)

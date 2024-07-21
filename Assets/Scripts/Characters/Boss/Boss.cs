@@ -139,7 +139,10 @@ public class Boss : MonoBehaviour
 
 
         foreach (var player in FindObjectsOfType<Player>()) {
-            player.ComboSoundSource.Stop();
+            if (player.ComboSoundSource != null)
+            {
+                player.ComboSoundSource.Stop();
+            }
             player.GetComponent<PlayerScore>().StopScoreCountdown();
         }
 

@@ -34,14 +34,14 @@ public class ButtonDisplay : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("hai :3", this);
+        //Debug.Log("hai :3", this);
 
         var imageIndex = (int)Time.time % images.Count;
         image.sprite = images[imageIndex];
 
-        Debug.Log("images.Count = " + images.Count, this);
-        Debug.Log("imageIndex = " + imageIndex, this);
-        Debug.Log("image.sprite = " + image.sprite, this);
+        //Debug.Log("images.Count = " + images.Count, this);
+        //Debug.Log("imageIndex = " + imageIndex, this);
+        //Debug.Log("image.sprite = " + image.sprite, this);
     }
 
 

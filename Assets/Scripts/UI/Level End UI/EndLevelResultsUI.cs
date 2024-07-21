@@ -27,7 +27,7 @@ public class EndLevelResultsUI : MonoBehaviour
     {
         var playerScores = FindObjectsOfType<PlayerScore>();
 
-        ScorePersister.Instance.Clear(); // reset the scores after showing
+        //ScorePersister.Instance.Clear(); // reset the scores after showing
 
         foreach (var score in playerScores)
         {
