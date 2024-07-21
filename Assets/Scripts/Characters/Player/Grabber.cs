@@ -19,14 +19,23 @@ public class Grabber : MonoBehaviour
 
     [Tooltip("The radius of which the player has the ability to grab an object.")]
     [SerializeField] float grabRadius = 1f;
+
+    [Tooltip("The player's cooldown after throwing. After cooldown, player can throw again.")]
+    [SerializeField] float grabCooldown = 1f;
     
     public bool IsGrabbing => this.transform.childCount > 0;
     Grabbable GetGrabbedItem() => this.transform.GetChild(0).GetComponent<Grabbable>();
+
+    public float timer = 0f;
 
     void Update()
     {
         // keep rotation fixed
         transform.eulerAngles = new Vector3(0, 0, 0);
+        if (timer > 0)
+        {
+            timer -= Time.deltaTime;
+        }
     }
 
 
@@ -46,10 +55,8 @@ public class Grabber : MonoBehaviour
         item.onForceRelease.RemoveListener(ForceReleaseCallback);
         item.GetComponent<Rigidbody>().AddForce(throwDir.normalized * throwForce);
         item.GetComponent<Grabbable>().damageOnLandingMultiplier = throwDamageMultiplier;
+        timer = grabCooldown;
     }
-
-    public float grabCoolDown = 2f;
-    public float currentTime;
 
     /// <summary>
     /// Attempts to grab nearby grabbables. Returns false if nothing can be grabbed. <br/>
@@ -58,7 +65,7 @@ public class Grabber : MonoBehaviour
     /// <returns></returns>
     public bool GrabItem()
     {
-        if (currentTime <= 0.0f) {
+        if (timer <= 0.0f) {
             //currentOverlaps.Clear();
             
             // Perform a shape cast
@@ -96,11 +103,7 @@ public class Grabber : MonoBehaviour
 
             return true;
         }
-        else
-        {
-            currentTime -= Time.deltaTime;
-            return false;
-        }
+        return false;
     }
 
     /// <summary>
