@@ -322,6 +322,39 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!21 &90995505
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!1001 &91715175
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -705,7 +738,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1354886599}
+  - {fileID: 2116802899}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1089,7 +1122,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1265633295}
+  - {fileID: 259618746}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1857,6 +1890,39 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!21 &259618746
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 1, g: 1, b: 1, a: 1}
+    - _UvOffset: {r: 0, g: 0, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!1001 &263345942
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3751,7 +3817,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1620668108}
+  - {fileID: 1917208931}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5394,39 +5460,6 @@ Transform:
   - {fileID: 834918065}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &456830687
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!43 &461605580
 Mesh:
   m_ObjectHideFlags: 0
@@ -6515,6 +6548,39 @@ Transform:
   m_Children: []
   m_Father: {fileID: 818326869}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!21 &579176820
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!43 &621700036
 Mesh:
   m_ObjectHideFlags: 0
@@ -7385,39 +7451,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 818326869}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &661192439
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &684397015
 GameObject:
   m_ObjectHideFlags: 0
@@ -7524,39 +7557,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!21 &744898969
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &818326868
 GameObject:
   m_ObjectHideFlags: 0
@@ -8723,7 +8723,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2121110033}
+  - {fileID: 1454747942}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9423,6 +9423,72 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!21 &966666095
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
+  m_BuildTextureStacks: []
+--- !u!21 &984329499
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!1 &1018039864
 GameObject:
   m_ObjectHideFlags: 0
@@ -9495,7 +9561,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1118703828}
+  - {fileID: 90995505}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9882,39 +9948,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e7f5aa2bb6a7930fd8170cd445717ac3, type: 3}
---- !u!21 &1048097812
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &1051649450
 GameObject:
   m_ObjectHideFlags: 0
@@ -9987,7 +10020,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1048097812}
+  - {fileID: 966666095}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11704,39 +11737,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1095654776}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!21 &1118703828
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &1143861913
 GameObject:
   m_ObjectHideFlags: 0
@@ -12483,7 +12483,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 1777006915}
+  - {fileID: 1168193454}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13231,6 +13231,39 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8bde682432814564d8e42a9fd0401d1e, type: 3}
+--- !u!21 &1168193454
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!1 &1211920690
 GameObject:
   m_ObjectHideFlags: 0
@@ -13303,7 +13336,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 661192439}
+  - {fileID: 579176820}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13677,39 +13710,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a67524f48bf8f418db2f7c3d30c508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!21 &1265633295
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 1, g: 1, b: 1, a: 1}
-    - _UvOffset: {r: 0, g: 0, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!43 &1280152878
 Mesh:
   m_ObjectHideFlags: 0
@@ -13875,7 +13875,7 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!21 &1354886599
+--- !u!21 &1454747942
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -13899,14 +13899,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 0}
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _CamToTexScale: {r: 1, g: 1, b: 1, a: 1}
-    - _UvOffset: {r: 0, g: 0, b: 0, a: 0}
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!1 &1466766506
 GameObject:
@@ -13980,7 +13980,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 456830687}
+  - {fileID: 984329499}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -14835,7 +14835,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 744898969}
+  - {fileID: 1962542502}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15125,39 +15125,6 @@ MonoBehaviour:
   texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
   anchor: {fileID: 657279494}
   pixelOffset: {x: 0, y: 0}
---- !u!21 &1620668108
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1 &1632008304
 GameObject:
   m_ObjectHideFlags: 0
@@ -16377,39 +16344,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!21 &1777006915
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Custom/InnerBillboard
-  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats: []
-    m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
-  m_BuildTextureStacks: []
 --- !u!1001 &1886056845
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16648,6 +16582,72 @@ Mesh:
     offset: 0
     size: 0
     path: 
+--- !u!21 &1917208931
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
+  m_BuildTextureStacks: []
+--- !u!21 &1962542502
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Custom/InnerBillboard
+  m_Shader: {fileID: 4800000, guid: e981d8c666f2c1a4ea5cce8cfafe2304, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats: []
+    m_Colors:
+    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
+    - _UvOffset: {r: 0.006696433, g: -0.00053557754, b: 0, a: 0}
+  m_BuildTextureStacks: []
 --- !u!43 &1986219661
 Mesh:
   m_ObjectHideFlags: 0
@@ -17228,7 +17228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59a67524f48bf8f418db2f7c3d30c508, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!21 &2121110033
+--- !u!21 &2116802899
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -17252,14 +17252,14 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 7e56a9a713e705f459c2cca179b2155c, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats: []
     m_Colors:
-    - _CamToTexScale: {r: 4, g: 1, b: 0, a: 0}
-    - _UvOffset: {r: 0.006600827, g: -0.00053557754, b: 0, a: 0}
+    - _CamToTexScale: {r: 1, g: 1, b: 1, a: 1}
+    - _UvOffset: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!1 &2140679692
 GameObject:
@@ -18320,6 +18320,10 @@ PrefabInstance:
     - target: {fileID: 1026044141694885313, guid: d7cc6de796ce15040992d144b84c9c3c, type: 3}
       propertyPath: nextStage
       value: Level2-4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1026044141694885313, guid: d7cc6de796ce15040992d144b84c9c3c, type: 3}
+      propertyPath: currentStageIndex
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1026044141694885313, guid: d7cc6de796ce15040992d144b84c9c3c, type: 3}
       propertyPath: scenes.Array.size
