@@ -90,6 +90,9 @@ public class Player : MonoBehaviour
     [Tooltip("Initial vertical speed when the player jumps (m/s).")]
     [SerializeField] float jumpSpeed = 3.2f;
 
+    [Tooltip("Speed at which the player falls when jump striking (m/s).")]
+    [SerializeField] float jumpStrikeVertSpeed = .5f;
+
     [Tooltip("How quickly the player accelerates down when in mid-air (m/s^2). Should be positive.")]
     [SerializeField] float gravity = 16;
 
@@ -173,7 +176,7 @@ public class Player : MonoBehaviour
         stateMachine.AddState(PlayerState.Strike1, () => StrikeEnter(1), () => StrikeUpdate(1), null);
         stateMachine.AddState(PlayerState.Strike2, () => StrikeEnter(2), () => StrikeUpdate(2), null);
         stateMachine.AddState(PlayerState.Strike3, () => StrikeEnter(3), () => StrikeUpdate(3), null);
-        stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpUpdate, null);
+        stateMachine.AddState(PlayerState.JumpStrike, JumpStrikeEnter, JumpStrikeUpdate, null);
         stateMachine.AddState(PlayerState.Pearry, PearryEnter, PearryUpdate, PearryExit);
         stateMachine.AddState(PlayerState.Grabbing, GrabbingEnter, GrabbingUpdate, null);
         stateMachine.AddState(PlayerState.Throwing, ThrowingEnter, ThrowingUpdate, null);
@@ -315,7 +318,6 @@ public class Player : MonoBehaviour
         rb.velocity += Vector3.up * jumpSpeed;
     }
     
-    // NOTE: Is also the update function for jump attack!
     PlayerState JumpUpdate()
     {
         ApplyDirectionalMovement(jumpControlMult);
@@ -407,6 +409,21 @@ public class Player : MonoBehaviour
     void JumpStrikeEnter() {
         colorTweaker.SetAuraColor(AuraType.JumpAtk);
         anim.Play("JumpStrike");
+    }
+
+    PlayerState JumpStrikeUpdate()
+    {
+        // while the player is in air
+        var isFalling = rb.velocity.y < 0;
+        if (isFalling && groundCheck.IsGrounded())
+        {
+            return PlayerState.Normal;
+        }
+        else
+        {
+            transform.Translate(jumpStrikeVertSpeed * Time.deltaTime * Vector3.down);
+        }
+        return stateMachine.currentState;
     }
 
     void PearryEnter() {
