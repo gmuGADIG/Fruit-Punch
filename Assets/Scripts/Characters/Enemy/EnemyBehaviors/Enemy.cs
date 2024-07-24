@@ -21,13 +21,6 @@ public enum EnemyState
 [RequireComponent(typeof(Health))]
 public class Enemy : MonoBehaviour
 {
-    /// <summary>
-    /// To prevent too many enemies from attacking at once, this stores the current amount. <br/>
-    /// Incremented when aggressive, decremented when an attack ends.
-    /// </summary>
-    private static int currentAttackingEnemies = 0;
-    private const int MaxSimultaneousAttackers = 2;
-    
     [Tooltip("How fast the enemy approaches the player, in \"meters\" per second")]
     [SerializeField] protected float walkingSpeed;
 
@@ -204,10 +197,7 @@ public class Enemy : MonoBehaviour
         wanderingTimeTillAttack -= Time.deltaTime;
         if (wanderingTimeTillAttack <= 0 || Vector3.Distance(transform.position, wanderingToPosition) < .3f)
         {
-            if (currentAttackingEnemies < MaxSimultaneousAttackers) // TODO: multiply by player count
-            {
-                return EnemyState.Aggressive;
-            } 
+            return EnemyState.Aggressive;
         }
         
         // approach randomly set wander point
@@ -235,7 +225,6 @@ public class Enemy : MonoBehaviour
     // and break the currentAttackingEnemies invariant.
     // non-ext code should contain behavior-specific code.
     void AggressiveEnterExt() {
-        currentAttackingEnemies += 1;
         AggressiveEnter();
     }
     
@@ -259,9 +248,6 @@ public class Enemy : MonoBehaviour
     }
 
     void AggressiveExitExt(EnemyState newState) {
-        if (newState != EnemyState.Attacking) {
-            currentAttackingEnemies -= 1;
-        } 
         AggressiveExit(newState);
     }
 
@@ -279,7 +265,6 @@ public class Enemy : MonoBehaviour
 
     void AttackingExitExt(EnemyState newState)
     {
-        currentAttackingEnemies -= 1;
         AttackingExit(newState);
     }
 
