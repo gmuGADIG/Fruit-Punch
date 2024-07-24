@@ -47,13 +47,15 @@ public class ExploderEnemy : Enemy
     // In-Air is impossible if the NavMesh works
     // Attacking is when it explodes
     // Grabbed is impossible because the grabbable is disabled
-
     protected override EnemyState AggressiveUpdate()
     {
         if (InPreCountdown) {
             preExplosionCountdown -= Time.deltaTime;
-        } else {
+            base.AggressiveUpdate(); // ignore the output of base.AggressiveUpdate()
+        }
+        else {
             // enemy in exploding countdown cannot be grabbed.
+            rb.velocity = Vector3.zero;
             grabbable.enabled = false;
             explosionTimerDuration -= Time.deltaTime;
 
@@ -63,7 +65,6 @@ public class ExploderEnemy : Enemy
         if (explosionTimerDuration <= 0) {
             return EnemyState.Attacking;
         }
-        base.AggressiveUpdate(); // ignore the output of base.AggressiveUpdate()
         return stateMachine.currentState;
     }
 
