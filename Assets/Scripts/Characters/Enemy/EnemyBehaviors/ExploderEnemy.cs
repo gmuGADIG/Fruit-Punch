@@ -24,6 +24,7 @@ public class ExploderEnemy : Enemy
     [SerializeField] float explosionTimerDuration = 10f;
 
     SpriteRenderer sprite;
+    Animator anim;
 
     protected override void Start()
     {
@@ -31,6 +32,8 @@ public class ExploderEnemy : Enemy
 
         preExplosionCountdown = preExplosionTimerDuration;
         sprite = GetComponentInChildren<SpriteRenderer>();
+        anim = GetComponent<Animator>();
+        anim.Play("ExploderEnemyIdle");
     }
 
     protected override void AggressiveEnter()
@@ -55,6 +58,7 @@ public class ExploderEnemy : Enemy
         }
         else {
             // enemy in exploding countdown cannot be grabbed.
+            anim.Play("ExploderFuse");
             rb.velocity = Vector3.zero;
             grabbable.enabled = false;
             explosionTimerDuration -= Time.deltaTime;
