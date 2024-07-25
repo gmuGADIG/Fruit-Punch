@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 enum LeadingLadyState
@@ -72,9 +71,9 @@ public class BossLeadingLady : Boss
         grabbable.onThrow.AddListener(OnThrowCallback);
         grabbable.onForceRelease.AddListener(OnForceReleaseCallback);
 
-        Boss.CutsceneStarting += OnCutsceneStarted;
-        Boss.IntroCutsceneOver += OnIntroCutsceneOver;
-        Boss.OutroCutsceneOver += OnOutroCutsceneOver;
+        CutsceneStarting += OnCutsceneStarted;
+        IntroCutsceneOver += OnIntroCutsceneOver;
+        OutroCutsceneOver += OnOutroCutsceneOver;
         health.onDeath += () => stateMachine.SetState(LeadingLadyState.Dead);
     }
 
@@ -116,7 +115,9 @@ public class BossLeadingLady : Boss
     }
 
     void OnDestroy() {
-        Boss.IntroCutsceneOver -= OnIntroCutsceneOver;
+        CutsceneStarting -= OnCutsceneStarted;
+        IntroCutsceneOver -= OnIntroCutsceneOver;
+        IntroCutsceneOver -= OnIntroCutsceneOver;
     }
 
     void Update()
@@ -310,4 +311,5 @@ public class BossLeadingLady : Boss
         StartCoroutine(OutroCutscene());
         // TODO: animation
     }
+
 }
