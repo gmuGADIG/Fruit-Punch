@@ -13,6 +13,11 @@ public class AnyInput : MonoBehaviour
     public bool triggered => action.action.triggered;
     [SerializeField] UnityEvent onPerformed;
 
+    bool hasBeenPerformedThisFrame = false;
+    void Update() {
+        hasBeenPerformedThisFrame = false;
+    }
+
     void Start() {
         foreach (Gamepad gamepad in Gamepad.all) {
             var playerInput = PlayerInput.Instantiate(
@@ -29,7 +34,12 @@ public class AnyInput : MonoBehaviour
                 controlScheme: scheme,
                 pairWithDevice: Keyboard.current
             );
-            playerInput.PlayerInputActionOfActionId(action.action.id).performed += (c) => performed?.Invoke(c);
+            playerInput.PlayerInputActionOfActionId(action.action.id).performed += (c) =>  {
+                if (!hasBeenPerformedThisFrame) {
+                    performed?.Invoke(c);
+                    hasBeenPerformedThisFrame = true;
+                }
+            };
         }
 
         performed += _context => onPerformed.Invoke();
