@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7553380887386112407}
   - component: {fileID: 5598347896596942085}
+  - component: {fileID: 3517903064224362507}
   m_Layer: 0
   m_Name: PauseManager
   m_TagString: Untagged
@@ -46,6 +47,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   frameDelay: 2
+--- !u!114 &3517903064224362507
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4541576761515595158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ba941d9531f10c69ba64fdf030a3cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  action: {fileID: -2143052906174711608, guid: 6aa772acffd2362d7805b4f9f399b0de, type: 3}
+  inputSensorPrefab: {fileID: 7926348053947604145, guid: 41afc4beee3d6bb5286094451d67b7ae, type: 3}
+  onPerformed:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 5598347896596942085}
+        m_TargetAssemblyTypeName: PauseManager, Assembly-CSharp
+        m_MethodName: OnPause
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &5744845240859203751
 GameObject:
   m_ObjectHideFlags: 0
