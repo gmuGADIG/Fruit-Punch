@@ -37,11 +37,24 @@ public class HurtBox : MonoBehaviour
     /// Invoked when this hurt box tries to hurt something, but is pearried.
     /// </summary>
     public Action<DamageInfo> onPearried;
+
+    private HashSet<Health> hurtThisCycle = new();
+
+    public bool HasHurtThisCycle(Health health) {
+        if (hurtThisCycle.Contains(health)) {
+            return true;
+        } 
+
+        hurtThisCycle.Add(health);
+        return false;
+    }
+    
+    void OnEnable() {
+        hurtThisCycle.Clear();
+    }
     
     void Start()
     {
-        //Assert(aura != 0);
-        //Assert(parentTransform != null);
         Assert(hitLayers != 0);
     }
 
