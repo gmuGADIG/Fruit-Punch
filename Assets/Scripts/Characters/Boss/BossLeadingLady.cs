@@ -117,7 +117,7 @@ public class BossLeadingLady : Boss
     void OnDestroy() {
         CutsceneStarting -= OnCutsceneStarted;
         IntroCutsceneOver -= OnIntroCutsceneOver;
-        IntroCutsceneOver -= OnIntroCutsceneOver;
+        OutroCutsceneOver -= OnOutroCutsceneOver;
     }
 
     void Update()
