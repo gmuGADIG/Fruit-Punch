@@ -53,7 +53,7 @@ public class Boss : MonoBehaviour
     /// </summary>
     protected IEnumerator WalkToPlayer(float speed)
     {
-        const float DIST_THRESHOLD = 0.5f; // stops walking when this close
+        const float DIST_THRESHOLD = 0.65f; // stops walking when this close
         const float SAFETY_TIMEOUT = 10f; // aborts coroutine after this many seconds, to prevent soft-lock in case of error
 
         var player = GetNearestPlayer();
@@ -64,6 +64,10 @@ public class Boss : MonoBehaviour
         var safetyTimer = 0f; // if traversal fails for too long, just exit
         while (true)
         {
+            if (!navMesh.isOnNavMesh) {
+                yield return null;
+                continue;
+            }
             navMesh.SetDestination(player.transform.position);
             rb.velocity = (navMesh.steeringTarget - transform.position).normalized * speed;
             
@@ -113,12 +117,9 @@ public class Boss : MonoBehaviour
                 player.ComboSoundSource.Stop();
             }
         }
-        print("1 hai :3");
-
         var source = SoundManager.Instance.PlaySoundGlobal(introCutsceneSound);
         while (source.isPlaying) yield return null;
 
-        print("2 hai :3");
         source = SoundManager.Instance.PlaySoundGlobal(
                 FindObjectsOfType<Player>()
                     .OrderBy(_p => UnityEngine.Random.Range(0f, 1f))
@@ -128,7 +129,6 @@ public class Boss : MonoBehaviour
         );
         while (source.isPlaying) yield return null;
 
-        print("3 hai :3");
         IntroCutsceneOver?.Invoke();
     }
 

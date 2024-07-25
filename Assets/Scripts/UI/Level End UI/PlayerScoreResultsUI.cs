@@ -13,7 +13,8 @@ public class PlayerScoreResultsUI : MonoBehaviour
     [SerializeField] float initialDelay = 2;
     [SerializeField] float scoreCountUpDuration = 8f;
 
-    PlayerScore playerScore;
+    #nullable enable
+    PlayerScore? playerScore;
 
     private void Start()
     {
@@ -21,6 +22,10 @@ public class PlayerScoreResultsUI : MonoBehaviour
             .Where(p => p.PlayerNum == playerNum)
             .FirstOrDefault()?
             .GetComponent<PlayerScore>();
+
+        if (playerScore == null) {
+            Destroy(gameObject);
+        }
 
         scoreNumber.gameObject.SetActive(false);
         ranking.gameObject.SetActive(false);
