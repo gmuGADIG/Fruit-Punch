@@ -29,7 +29,7 @@ public class ButtonDisplay : MonoBehaviour
 
         if (keyboardSchemes.Contains("keyboardLeft")) images.Add(keyboardLeftImage);
         if (keyboardSchemes.Contains("keyboardRight")) images.Add(keyboardRightImage);
-        if (keyboardSchemes.Contains("controller")) images.Add(controllerImage);
+        if (keyboardSchemes.Contains("Controller")) images.Add(controllerImage);
     }
 
     void Update()
