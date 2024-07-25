@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 public class PlayerSelectorSpawner : MonoBehaviour
 {
     public GameObject selectorPrefab;
-    public ButtonDisplay joinIndicator;
+    public List<ButtonDisplay> joinIndicators;
 
     /// <summary>
     /// called by <see cref="InputLobby.OnPlayerJoin"/>. Instantiates controls for the player the just 
@@ -29,19 +29,23 @@ public class PlayerSelectorSpawner : MonoBehaviour
         var characterSelector = playerInput.gameObject.GetComponent<CharacterSelector>();
         characterSelector.transform.SetParent(this.transform, true);
         characterSelector.Setup(context);
-
+        
         // adjust or destroy join indicator
-        if (CharacterSelector.selectorCount == 2)
-            Destroy(joinIndicator.gameObject);
-        else
+        if (joinIndicators.Count > 0)
         {
-            joinIndicator.transform.SetAsLastSibling();
+            Destroy(joinIndicators[0].gameObject);
+            joinIndicators.RemoveAt(0);
+            if (joinIndicators.Count > 0)
+            {
+                joinIndicators[0].transform.SetAsLastSibling();
 
-            var otherSchemes = new List<string> { "controller" };
-            if (context.ControlScheme == "keyboardLeft") otherSchemes.Add("keyboardRight");
-            if (context.ControlScheme == "keyboardRight") otherSchemes.Add("keyboardLeft");
-            
-            joinIndicator.keyboardSchemes = otherSchemes.ToArray();
+                var otherSchemes = new List<string> { "controller" };
+                if (context.ControlScheme == "keyboardLeft") otherSchemes.Add("keyboardRight");
+                if (context.ControlScheme == "keyboardRight") otherSchemes.Add("keyboardLeft");
+
+                joinIndicators[0].keyboardSchemes = otherSchemes.ToArray();
+            }
         }
+
     }
 }
