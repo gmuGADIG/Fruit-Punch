@@ -40,7 +40,7 @@ public class PauseScreenButtons : MonoBehaviour
     public void MainMenu()
     {
         Time.timeScale = 1.0f;
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(SwitchScene.mainMenu);
     }
     /// <summary>
     /// Quits the Game
