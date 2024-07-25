@@ -41,6 +41,8 @@ public class HurtBox : MonoBehaviour
     private HashSet<Health> hurtThisCycle = new();
 
     public bool HasHurtThisCycle(Health health) {
+        if (GetComponentInParent<Player>() != null) return false;
+
         if (hurtThisCycle.Contains(health)) {
             return true;
         } 
