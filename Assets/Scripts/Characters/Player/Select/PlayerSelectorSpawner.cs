@@ -29,7 +29,8 @@ public class PlayerSelectorSpawner : MonoBehaviour
         var characterSelector = playerInput.gameObject.GetComponent<CharacterSelector>();
         characterSelector.transform.SetParent(this.transform, true);
         characterSelector.Setup(context);
-        
+        playerInput.transform.localScale = Vector3.one;
+
         // adjust or destroy join indicator
         if (joinIndicators.Count > 0)
         {
@@ -46,6 +47,5 @@ public class PlayerSelectorSpawner : MonoBehaviour
                 joinIndicators[0].keyboardSchemes = otherSchemes.ToArray();
             }
         }
-
     }
 }
