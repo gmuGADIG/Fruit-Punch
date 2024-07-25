@@ -217,10 +217,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        if (playerInput.actions["gameplay/Pause"].triggered)
-		{
-            pauseManager.OnPause();
-        }
+  //       if (playerInput.actions["gameplay/Pause"].triggered)
+		// {
+  //           pauseManager.OnPause();
+  //       }
 
 		if (Time.timeScale == 0)
 		{

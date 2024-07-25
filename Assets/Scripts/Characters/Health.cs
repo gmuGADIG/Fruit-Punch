@@ -81,7 +81,7 @@ public class Health : MonoBehaviour
         if (other.TryGetComponent<HurtBox>(out var hurtBox))
         { // TODO: should we be handle hurting in the hurtbox?
             var hitsThisLayer = ((1 << this.gameObject.layer) & hurtBox.hitLayers) > 0;
-            if (hitsThisLayer) {
+            if (hitsThisLayer && !hurtBox.HasHurtThisCycle(this)) {
                 var info = hurtBox.GetDamageInfo();
                 bool success = Damage(info);
                 if (success)

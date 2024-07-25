@@ -49,6 +49,7 @@ public class PauseManager : MonoBehaviour
     /// </summary>
     public void OnPause()
     {
+        print("hai");
         if (Paused)
         {
             OnBack();
