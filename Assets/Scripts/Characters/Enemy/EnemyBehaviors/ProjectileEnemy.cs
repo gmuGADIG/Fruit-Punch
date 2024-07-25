@@ -83,6 +83,12 @@ class ProjectileEnemy : Enemy {
 
     protected override void AttackingEnter()
     {
+        if (transform.position.x - aggressiveCurrentTarget.position.x > 0) {
+            transform.localEulerAngles = Vector3.up * 180;
+        } else {
+            transform.localEulerAngles = Vector3.zero;
+        }
+        
         // TODO: probably should cache this
         GetComponent<Animator>().Play("Shoot");
 
