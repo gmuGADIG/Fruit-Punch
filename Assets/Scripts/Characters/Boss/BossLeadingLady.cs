@@ -80,6 +80,8 @@ public class BossLeadingLady : Boss
 
     IEnumerator AggressiveCoro() {
         yield return WalkToPlayer(walkSpeed * 0.5f);
+        yield return new WaitForSeconds(1f);
+
         LeadingLadyState[] stateOptions = { 
             LeadingLadyState.Punching, 
             LeadingLadyState.Spitting, 
