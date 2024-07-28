@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 
 public class ScorePersister : MonoBehaviour
 {
+    // first index = player index, second index = level index
     public int[][] playerLevelScores = { new int[] { 0, 0, 0 }, new int[] { 0, 0, 0 } };
     int currentLevelIndex = 0;
 
@@ -21,11 +22,23 @@ public class ScorePersister : MonoBehaviour
         } else {
 
             transform.parent = null; // unity wont let you DontDestroyOnLoad something that has a parent
-            GameSceneManager.OnStageIndexChange += (int index) => currentLevelIndex = index;
+            GameSceneManager.OnStageIndexChange += (int index) => SetLevelIndex(index);
+            PauseScreenButtons.OnLevelRestart += ResetLevelScore;
             DontDestroyOnLoad(gameObject);
 
             Instance = this;
         }
+    }
+
+    void SetLevelIndex(int index)
+    {
+        currentLevelIndex = index;
+    }
+
+    public void ResetLevelScore()
+    {
+        playerLevelScores[0][currentLevelIndex] = 0;
+        playerLevelScores[1][currentLevelIndex] = 0;
     }
 
     public void HydrateScore(PlayerScore score) {
@@ -36,5 +49,11 @@ public class ScorePersister : MonoBehaviour
         score.OnUpdateScoreAndRank += _animate => {
             playerLevelScores[playerIndex][currentLevelIndex] = score.GetScore();
         };
+    }
+
+    private void OnDestroy()
+    {
+        PauseScreenButtons.OnLevelRestart -= ResetLevelScore;
+        GameSceneManager.OnStageIndexChange -= (int index) => SetLevelIndex(index);
     }
 }

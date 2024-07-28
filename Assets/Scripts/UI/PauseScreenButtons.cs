@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.Windows;
+using System;
 
 public class PauseScreenButtons : MonoBehaviour
 {
+    public static event Action OnLevelRestart;
 
     public string OptionsScene;
     private PauseManager pauseManager;
@@ -32,6 +31,7 @@ public class PauseScreenButtons : MonoBehaviour
     {
         Scene currScene = SceneManager.GetActiveScene();
         Time.timeScale = 1.0f;
+        OnLevelRestart?.Invoke();
         SceneManager.LoadScene(currScene.buildIndex);
     }
     /// <summary>
