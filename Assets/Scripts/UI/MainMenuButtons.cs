@@ -1,9 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.Serialization;
 
 public class MainMenuButtons : MonoBehaviour
 {
@@ -18,6 +16,7 @@ public class MainMenuButtons : MonoBehaviour
     {
         SceneManager.LoadScene(SwitchScene.controlsMenu);
     }
+
     /// <summary>
     /// Goes to Options Menu
     /// </summary>
@@ -25,6 +24,7 @@ public class MainMenuButtons : MonoBehaviour
     {
         SceneManager.LoadSceneAsync(SwitchScene.optionsMenu, LoadSceneMode.Additive);
     }
+
     /// <summary>
     /// Goes to the Codex
     /// </summary>
