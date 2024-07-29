@@ -5,6 +5,7 @@
 /// </summary>
 public static class SwitchScene
 {
+    public const string controlsMenu = "ControlsMenu";
     public const string characterSelect = "CharacterSelect";
     public const string codex = "Codex";
     public const string cutscene01 = "Cutscene01";

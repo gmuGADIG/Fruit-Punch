@@ -16,7 +16,7 @@ public class MainMenuButtons : MonoBehaviour
     /// </summary>
     public void StartGame()
     {
-        SceneManager.LoadScene(SwitchScene.characterSelect);
+        SceneManager.LoadScene(SwitchScene.controlsMenu);
     }
     /// <summary>
     /// Goes to Options Menu
