@@ -7,26 +7,37 @@ using UnityEngine.Events;
 public class GroundCheck : MonoBehaviour
 {
     /// <summary>
-    /// Amount of triggers currently colliding. If zero, the object must be in the air.
+    /// List of colliders currently colliding. If count is zero, the object must be in the air.
     /// </summary>
-    private int collisionCount = 0;
+    List<Collider> collidingWith = new List<Collider>();
 
     public UnityEvent GroundHit;
+
+    private void Update()
+    {
+        for (int i = 0; i < collidingWith.Count; i++)
+        {
+            if (collidingWith[i] == null)
+            {
+                collidingWith.Remove(collidingWith[i]);
+            }
+        }
+    }
 
     void OnTriggerEnter(Collider other)
     {
         Debug.Assert(other.gameObject.layer == LayerMask.NameToLayer("World"));
         GroundHit.Invoke();
-        collisionCount += 1;
+        collidingWith.Add(other);
     }
     
     void OnTriggerExit(Collider other)
     {
-        collisionCount -= 1;
+        collidingWith.Remove(other);
     }
 
     public bool IsGrounded()
     {
-        return collisionCount > 0;
+        return collidingWith.Count > 0;
     }
 }
