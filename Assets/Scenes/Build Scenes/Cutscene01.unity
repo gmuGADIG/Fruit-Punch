@@ -232,59 +232,59 @@ MonoBehaviour:
   testComic:
   - approachTime: 0
     panelPosition: {x: 0, y: 16, z: -8}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 4
   - approachTime: 3
     panelPosition: {x: -4.33, y: 9.74, z: -4.13}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 2.8
   - approachTime: 2
     panelPosition: {x: -3.52, y: 6.3, z: -4.13}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 1
   - approachTime: 2
     panelPosition: {x: 3.99, y: 10.63, z: -4.13}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 1.8
   - approachTime: 2
     panelPosition: {x: 3.99, y: 6.62, z: -5.69}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 1.8
   - approachTime: 2
     panelPosition: {x: -4.05, y: 2.36, z: -3.56}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 1.8
   - approachTime: 2
     panelPosition: {x: -4.05, y: -3.06, z: -4.63}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 1.8
   - approachTime: 2
     panelPosition: {x: 3.82, y: -0.39, z: -3.79}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 1.8
   - approachTime: 1
     panelPosition: {x: 3.82, y: -4, z: -3.79}
-    hangTime: 1
+    hangTime: 0.5
     cameraScale: 1.8
   - approachTime: 0.5
     panelPosition: {x: -3.8, y: -6.66, z: -3.79}
-    hangTime: 1
+    hangTime: 0.5
     cameraScale: 1.8
   - approachTime: 0.5
     panelPosition: {x: 3.57, y: -8.14, z: -3.79}
-    hangTime: 1
+    hangTime: 0.5
     cameraScale: 1.8
   - approachTime: 0.5
     panelPosition: {x: -3.9, y: -8.97, z: -3.79}
-    hangTime: 1
+    hangTime: 0.5
     cameraScale: 1.8
   - approachTime: 0.5
     panelPosition: {x: 3.7, y: -10.42, z: -3.79}
-    hangTime: 1
+    hangTime: 0.5
     cameraScale: 1.8
   - approachTime: 2
     panelPosition: {x: -0.12, y: -15.46, z: -8.21}
-    hangTime: 3
+    hangTime: 2
     cameraScale: 1.8
   comicCamera: {fileID: 0}
   cameraMoving: 0
@@ -304,6 +304,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   action: {fileID: 9150581822233749636, guid: 6aa772acffd2362d7805b4f9f399b0de, type: 3}
   inputSensorPrefab: {fileID: 7926348053947604145, guid: 41afc4beee3d6bb5286094451d67b7ae, type: 3}
+  onPerformed:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &882170041
 GameObject:
   m_ObjectHideFlags: 0
