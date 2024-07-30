@@ -15,6 +15,7 @@ public class GroundCheck : MonoBehaviour
 
     private void Update()
     {
+        // look for and remove colliders that were destroyed.
         for (int i = 0; i < collidingWith.Count; i++)
         {
             if (collidingWith[i] == null)
