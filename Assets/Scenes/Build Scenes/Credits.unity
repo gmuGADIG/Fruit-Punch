@@ -805,7 +805,6 @@ GameObject:
   - component: {fileID: 42278051}
   - component: {fileID: 42278050}
   - component: {fileID: 42278049}
-  - component: {fileID: 42278048}
   m_Layer: 5
   m_Name: ItemsCanvas
   m_TagString: Untagged
@@ -813,21 +812,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &42278048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 42278047}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c88a6fc8c1edc4479342ec38d0ac3b5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playScene: 
-  codexScene: 
-  optionsScene: 
 --- !u!114 &42278049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5068,7 +5052,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 334683621}
-  scrollSpeed: 30
+  scrollSpeed: 90
 --- !u!1 &487740872
 GameObject:
   m_ObjectHideFlags: 0

@@ -9,6 +9,13 @@ public class CreditsScroller : MonoBehaviour
 
     private void Update()
     {
-        target.Translate(scrollSpeed * Time.deltaTime * Vector3.up);
+        if (Input.GetKey(KeyCode.Space))
+        {
+            target.Translate(3f * scrollSpeed * Time.deltaTime * Vector3.up);
+        }
+        else
+        {
+            target.Translate(scrollSpeed * Time.deltaTime * Vector3.up);
+        }
     }
 }
