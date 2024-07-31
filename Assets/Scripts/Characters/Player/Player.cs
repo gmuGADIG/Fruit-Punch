@@ -102,6 +102,9 @@ public class Player : MonoBehaviour
     [Tooltip("Name of the sound effect to play on combo finish")]
     [SerializeField] string comboSoundEffect;
 
+    // The probability of a voiceline being played after a combo.
+    float voicelinePlayChance = .1f;
+
     LayerMask collidingLayers;
 
     float strike1Length = -1;
@@ -370,7 +373,7 @@ public class Player : MonoBehaviour
             transform.position
         );
 
-        if (strikeState == 3 && (ComboSoundSource == null || !ComboSoundSource.isPlaying)) {
+        if (strikeState == 3 && (ComboSoundSource == null || !ComboSoundSource.isPlaying) && UnityEngine.Random.value < voicelinePlayChance) {
             ComboSoundSource = SoundManager.Instance.PlaySoundGlobal(comboSoundEffect);
         }
     }
