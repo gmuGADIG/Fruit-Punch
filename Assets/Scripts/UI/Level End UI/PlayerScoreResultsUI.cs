@@ -43,19 +43,16 @@ public class PlayerScoreResultsUI : MonoBehaviour
         scoreNumber.text = "0";
         float startingScore = 0;
         int target = playerScore.GetScore();
-        float velocity = target / scoreCountUpDuration;
 
-        float timeRemaining = scoreCountUpDuration;
-        while (timeRemaining > 0f)
+        var elapsed = 0f;
+        while (elapsed < scoreCountUpDuration)
         {
-            startingScore = Mathf.MoveTowards(
-                    startingScore, 
-                    target, 
-                    velocity * Time.deltaTime
-            );
-            scoreNumber.text = ((int)startingScore).ToString();
-
-            timeRemaining -= Time.deltaTime;
+            elapsed += Time.deltaTime;
+            var t = elapsed / scoreCountUpDuration;
+            
+            // https://easings.net/#easeOutSine
+            var displayedScore = Mathf.Lerp(0, target, Mathf.Sin((t * Mathf.PI) / 2));
+            scoreNumber.text = ((int)displayedScore).ToString();
 
             yield return null;
         }
