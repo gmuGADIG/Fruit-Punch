@@ -259,6 +259,7 @@ public class BossPhantomato : Boss {
 
     void DeadEnter() {
         animator.Play(WanderVars.AnimationName);
+        StopAllCoroutines();
         StartCoroutine(OutroCutscene());
     }
 }

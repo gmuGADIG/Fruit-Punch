@@ -175,6 +175,8 @@ public class Health : MonoBehaviour
 
     public void Die(DamageInfo fatalDamage)
     {
+        if (fatalDamage.source == null) return;
+
         print(fatalDamage.source);
         var score = fatalDamage.source.GetComponentInParent<PlayerScore>();
         if (score != null)

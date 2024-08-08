@@ -308,6 +308,7 @@ public class BossLeadingLady : Boss
     void DeadEnter() {
         anim.Play("Idle");
         rb.isKinematic = true;
+        StopAllCoroutines();
         StartCoroutine(OutroCutscene());
         // TODO: animation
     }

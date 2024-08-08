@@ -393,6 +393,7 @@ public class BossFrankenpine : Boss
             health.Die();
         }
 
+        StopAllCoroutines();
         StartCoroutine(OutroCutscene());
     }
 }
