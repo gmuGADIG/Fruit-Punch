@@ -525,6 +525,7 @@ Transform:
   - {fileID: 4031000408320180701}
   - {fileID: 288910465}
   - {fileID: 818326869}
+  - {fileID: 1010047832}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &497344585
@@ -545,7 +546,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2041914266722745632, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: m_NormalizedViewPortRect.x
-      value: 0
+      value: 0.09533169
       objectReference: {fileID: 0}
     - target: {fileID: 2041914266722745632, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: m_NormalizedViewPortRect.y
@@ -553,11 +554,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2041914266722745632, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: m_NormalizedViewPortRect.width
-      value: 1
+      value: 0.81070167
       objectReference: {fileID: 0}
     - target: {fileID: 2041914266722745632, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: m_NormalizedViewPortRect.height
-      value: 1
+      value: 1.0010787
       objectReference: {fileID: 0}
     - target: {fileID: 4516043418829481033, guid: f3c8c46fdcfd35640b6a8ff52b61e4ec, type: 3}
       propertyPath: m_Name
@@ -1247,7 +1248,7 @@ Transform:
   m_LocalScale: {x: 1.75742, y: 1, z: 1.2368}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 415726515}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1010047833
 MonoBehaviour:
@@ -1512,7 +1513,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6316761661117584375, guid: 8bde682432814564d8e42a9fd0401d1e, type: 3}
       propertyPath: debugCharacter
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6573396518630556986, guid: 8bde682432814564d8e42a9fd0401d1e, type: 3}
       propertyPath: m_Name
@@ -2673,7 +2674,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1026044141694885313, guid: d7cc6de796ce15040992d144b84c9c3c, type: 3}
       propertyPath: nextStage
-      value: WinScreen
+      value: Cutscene04
       objectReference: {fileID: 0}
     - target: {fileID: 1026044141694885313, guid: d7cc6de796ce15040992d144b84c9c3c, type: 3}
       propertyPath: currentStageIndex
@@ -2900,7 +2901,6 @@ SceneRoots:
   - {fileID: 4475057277121074228}
   - {fileID: 1206233427}
   - {fileID: 1557938162}
-  - {fileID: 1010047832}
   - {fileID: 1679902563}
   - {fileID: 6456545890598550269}
   - {fileID: 337235729}

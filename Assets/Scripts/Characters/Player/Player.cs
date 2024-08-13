@@ -71,8 +71,6 @@ public class Player : MonoBehaviour
     private GroundCheck groundCheck;
     private Health health;
 
-    private PauseManager pauseManager;
-
     private ColorTweaker colorTweaker;
 
     [Tooltip("Which of the 4 characters the player is. Necessary for character-specific moves")]
@@ -104,8 +102,6 @@ public class Player : MonoBehaviour
 
     // The probability of a voiceline being played after a combo.
     float voicelinePlayChance = .1f;
-
-    LayerMask collidingLayers;
 
     float strike1Length = -1;
     float strike2Length = -1;
@@ -168,9 +164,6 @@ public class Player : MonoBehaviour
         }
         if (strike1Length < 0 || strike2Length < 0 || strike3Length < 0)
             throw new Exception("Animation clips weren't found!");
-        
-        // set layer
-        collidingLayers = Utils.GetCollidingLayerMask(LayerMask.NameToLayer("Player"));
 
         // set up state machine
         stateMachine = new StateMachine<PlayerState>();
@@ -190,9 +183,6 @@ public class Player : MonoBehaviour
         
         stateMachine.FinalizeAndSetState(PlayerState.Normal);
         stateMachine.OnStateChange += (PlayerState state) => OnPlayerStateChange?.Invoke(state);
-
-        // get the PauseManager script to allow player to pause the game
-        pauseManager = GameObject.Find("PauseManager").GetComponent<PauseManager>();
         
         // attach death state to health component's events
         health.onDeath += () => stateMachine.SetState(PlayerState.Dead);
@@ -220,11 +210,6 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-  //       if (playerInput.actions["gameplay/Pause"].triggered)
-		// {
-  //           pauseManager.OnPause();
-  //       }
-
 		if (Time.timeScale == 0)
 		{
 			return;
