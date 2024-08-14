@@ -6,6 +6,12 @@ public class PlayerMover : MonoBehaviour {
     [SerializeField] Transform Position2;
     [SerializeField] Transform BossPosition;
 
+    public void Start() {
+        Debug.Assert(Position1 != null);
+        Debug.Assert(Position2 != null);
+        Debug.Assert(BossPosition != null);
+    }
+
     public void MovePlayers() {
         var player1 = FindObjectsOfType<Player>().Where(p => p.PlayerNum == 1).FirstOrDefault();
         var player2 = FindObjectsOfType<Player>().Where(p => p.PlayerNum == 2).FirstOrDefault();

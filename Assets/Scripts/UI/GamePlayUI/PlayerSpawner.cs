@@ -13,23 +13,40 @@ public class PlayerSpawner : MonoBehaviour
     // During development, it's helpful to start directly from a scene instead of the main menu.
     // When the character-select scene is skipped, a single player with these values is spawned.
     [Header("Debug")]
+    [SerializeField] bool twoDebugCharacters = false;
     [SerializeField] string debugControlScheme;
+    [SerializeField] string debugControlScheme2;
     [SerializeField] Character debugCharacter;
+    [SerializeField] Character debugCharacter2;
     [SerializeField] InputDevice debugInputDevice;
     
-    private void Start()
+    private IEnumerator Start()
     {
         var playerCount = PlayerInfo.PlayerCount();
         if (playerCount == 0) // debug spawn 
         {
             if (Application.isEditor == false) Debug.LogError("Debug spawn should not be used in a build!");
-            var playerGO = SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
-            Player player = playerGO.GetComponent<Player>();
-            player.PlayerNum = 1;
-            PlayerHealthBarHolder.SetHealthBar(0, player);
-            PlayerHealthBarHolder.SetPlayerTwoVisible(false);
-            PlayerScoreHolder.SetupPlayerScore(0, player);
-            PlayerScoreHolder.SetPlayerTwoVisible(false);
+            {
+                var playerGO = SpawnPlayer(debugCharacter, debugControlScheme, debugInputDevice, playerOneSpawnPoint);
+                Player player = playerGO.GetComponent<Player>();
+                player.PlayerNum = 1;
+                PlayerHealthBarHolder.SetHealthBar(0, player);
+                PlayerHealthBarHolder.SetPlayerTwoVisible(false);
+                PlayerScoreHolder.SetupPlayerScore(0, player);
+                PlayerScoreHolder.SetPlayerTwoVisible(false);
+            }
+
+            if (twoDebugCharacters) {
+                yield return null;
+                debugInputDevice = Keyboard.current;
+                var playerGO = SpawnPlayer(debugCharacter2, debugControlScheme2, debugInputDevice, playerOneSpawnPoint);
+                Player player = playerGO.GetComponent<Player>();
+                player.PlayerNum = 2;
+                PlayerHealthBarHolder.SetHealthBar(0, player);
+                PlayerHealthBarHolder.SetPlayerTwoVisible(true);
+                PlayerScoreHolder.SetupPlayerScore(0, player);
+                PlayerScoreHolder.SetPlayerTwoVisible(true);
+            }
         }
         else // normal spawn
         { 
